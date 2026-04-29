@@ -129,9 +129,6 @@ const FIELDS: Field[] = [
   },
 ];
 
-const WEBHOOK_URL =
-  "https://hook.us1.make.com/6ryi9x0r8gboof6j7y1ovfxfwi8p9tlt";
-
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function getUTMParams(): Partial<FormData> {
@@ -289,14 +286,13 @@ export default function MultiStepForm() {
   async function handleSubmit() {
     setStatus("submitting");
     try {
-      await fetch(WEBHOOK_URL, {
+      await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(buildPayload(data)),
-        mode: "no-cors",
       });
     } catch {
-      // no-cors: fetch resolve mesmo sem resposta legível
+      // falha silenciosa — lead ainda marcado como enviado
     }
     setStatus(isLowPriorityProfile(data) ? "success_low" : "success_priority");
   }
