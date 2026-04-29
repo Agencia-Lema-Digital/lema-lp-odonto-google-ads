@@ -1,8 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import FadeInSection from "@/components/ui/FadeInSection";
 import { SmileDesignArc, OcclusalGrid } from "@/components/ui/DentalAccents";
-
 
 const COPY = {
   eyebrow: "Últimas vagas disponíveis",
@@ -13,6 +13,15 @@ const COPY = {
 };
 
 export default function LeadForm() {
+  useEffect(() => {
+    if (document.querySelector("#respondi_src")) return;
+    const script = document.createElement("script");
+    script.id = "respondi_src";
+    script.src = "https://embed.respondi.app/embed.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
   return (
     <section
       id="lead-form"
@@ -26,12 +35,10 @@ export default function LeadForm() {
         className="absolute top-0 left-0 right-0 h-1"
         style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4, #143E66)" }}
       />
-      {/* Curva DSD — canto superior esquerdo */}
       <SmileDesignArc
         className="absolute left-[-1%] top-[6%] w-72 h-auto text-[#6A48F4] pointer-events-none"
         opacity={0.065}
       />
-      {/* Vista oclusal — canto inferior direito */}
       <OcclusalGrid
         className="absolute right-[-1%] bottom-[4%] w-44 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block"
         opacity={0.055}
@@ -64,19 +71,16 @@ export default function LeadForm() {
             className="overflow-hidden rounded-2xl"
             style={{ boxShadow: "0 4px 32px rgba(106,72,244,0.10)" }}
           >
-            <iframe
-              src="https://app.respondi.app/s/YPsomgNk"
-              width="100%"
-              height="600"
-              frameBorder="0"
-              title="Formulário de diagnóstico gratuito — Lema Digital"
-              loading="lazy"
-              allow="camera; microphone"
+            <div
+              data-respondi-container=""
+              data-respondi-mode="regular"
+              data-respondi-src="https://form.respondi.app/YPsomgNk"
+              data-respondi-width="100%"
+              data-respondi-height="600px"
             />
           </div>
         </FadeInSection>
 
-        {/* Microcopy LGPD */}
         <FadeInSection delay={0.25} className="mt-6 text-center">
           <p className="font-body text-gray-400 text-xs">
             Seus dados são confidenciais e protegidos pela LGPD. Não enviamos spam.
