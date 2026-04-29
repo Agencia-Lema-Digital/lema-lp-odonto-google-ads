@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Target, Settings2, TrendingUp } from "lucide-react";
 import FadeInSection from "@/components/ui/FadeInSection";
 import CTAButton from "@/components/ui/CTAButton";
@@ -301,82 +301,94 @@ function TrinoSVG({
   );
 }
 
-// ─── Painel de conteúdo do pilar ────────────────────────────────────────────
+// ─── Conteúdo de um pilar ───────────────────────────────────────────────────
 
-function PillarPanel({ pillar }: { pillar: typeof PILLARS[0] }) {
+function PillarContent({ pillar }: { pillar: typeof PILLARS[0] }) {
   const Icon = pillar.Icon;
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={pillar.id}
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
-        className="flex flex-col gap-5"
-      >
-        {/* Header do pilar */}
-        <div className="flex items-start gap-4">
-          <div
-            className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 mt-0.5"
-            style={{
-              background: `linear-gradient(135deg, ${pillar.color}40, ${pillar.color}15)`,
-              border: `1px solid ${pillar.color}50`,
-            }}
-          >
-            <Icon className="w-5 h-5" style={{ color: pillar.color }} aria-hidden="true" />
-          </div>
-          <div>
-            <p className="font-body font-semibold text-xs uppercase tracking-widest mb-1" style={{ color: pillar.color }}>
-              Pilar {pillar.number}
-            </p>
-            <h3 className="font-headline font-semibold text-white text-xl leading-tight">
-              {pillar.name}
-            </h3>
-          </div>
-        </div>
-
-        {/* Âncora */}
-        <p
-          className="font-headline text-sm italic leading-relaxed px-4 py-3 rounded-xl"
+    <div className="flex flex-col gap-5">
+      <div className="flex items-start gap-4">
+        <div
+          className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 mt-0.5"
           style={{
-            color: "#C4B5FD",
-            background: `${pillar.color}12`,
-            borderLeft: `3px solid ${pillar.color}80`,
+            background: `linear-gradient(135deg, ${pillar.color}40, ${pillar.color}15)`,
+            border: `1px solid ${pillar.color}50`,
           }}
         >
-          &ldquo;{pillar.anchor}&rdquo;
-        </p>
-
-        {/* Descrição */}
-        <p className="font-body text-gray-300 text-sm leading-relaxed">
-          {pillar.description}
-        </p>
-
-        {/* Entregáveis */}
-        <div>
-          <p className="font-body font-semibold text-xs uppercase tracking-widest text-gray-500 mb-3">
-            O que inclui
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {pillar.includes.map((tag) => (
-              <span
-                key={tag}
-                className="font-body text-xs px-2.5 py-1 rounded-full"
-                style={{
-                  background: `${pillar.color}18`,
-                  color: "#C4B5FD",
-                  border: `1px solid ${pillar.color}30`,
-                }}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+          <Icon className="w-5 h-5" style={{ color: pillar.color }} aria-hidden="true" />
         </div>
+        <div>
+          <p className="font-body font-semibold text-xs uppercase tracking-widest mb-1" style={{ color: pillar.color }}>
+            Pilar {pillar.number}
+          </p>
+          <h3 className="font-headline font-semibold text-white text-xl leading-tight">
+            {pillar.name}
+          </h3>
+        </div>
+      </div>
 
-      </motion.div>
-    </AnimatePresence>
+      <p
+        className="font-headline text-sm italic leading-relaxed px-4 py-3 rounded-xl"
+        style={{
+          color: "#C4B5FD",
+          background: `${pillar.color}12`,
+          borderLeft: `3px solid ${pillar.color}80`,
+        }}
+      >
+        &ldquo;{pillar.anchor}&rdquo;
+      </p>
+
+      <p className="font-body text-gray-300 text-sm leading-relaxed">
+        {pillar.description}
+      </p>
+
+      <div>
+        <p className="font-body font-semibold text-xs uppercase tracking-widest text-gray-500 mb-3">
+          O que inclui
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {pillar.includes.map((tag) => (
+            <span
+              key={tag}
+              className="font-body text-xs px-2.5 py-1 rounded-full"
+              style={{
+                background: `${pillar.color}18`,
+                color: "#C4B5FD",
+                border: `1px solid ${pillar.color}30`,
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Painel com altura fixa — todos os pilares renderizados, inativos ocultos ─
+
+function PillarPanel({ active }: { active: number }) {
+  return (
+    <div className="relative" style={{ minHeight: 320 }}>
+      {PILLARS.map((pillar) => (
+        <motion.div
+          key={pillar.id}
+          animate={{ opacity: active === pillar.id ? 1 : 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          style={{
+            position: active === pillar.id ? "relative" : "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            pointerEvents: active === pillar.id ? "auto" : "none",
+          }}
+          aria-hidden={active !== pillar.id}
+        >
+          <PillarContent pillar={pillar} />
+        </motion.div>
+      ))}
+    </div>
   );
 }
 
@@ -509,7 +521,7 @@ export default function TrinoMethod() {
                   style={{ borderLeft: "1px solid rgba(106,72,244,0.15)" }}
                 >
                   <div className="p-8 lg:p-10 h-full flex flex-col justify-center">
-                    <PillarPanel pillar={PILLARS[active]} />
+                    <PillarPanel active={active} />
                   </div>
                 </div>
               </div>
@@ -521,9 +533,7 @@ export default function TrinoMethod() {
               style={{ borderTop: "1px solid rgba(106,72,244,0.15)" }}
             >
               <MobileTabs active={active} onSelect={handleSelect} />
-              <div className="min-h-[340px]">
-                <PillarPanel pillar={PILLARS[active]} />
-              </div>
+              <PillarPanel active={active} />
             </div>
           </div>
 
