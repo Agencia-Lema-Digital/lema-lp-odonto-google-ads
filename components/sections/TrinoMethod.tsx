@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Target, Settings2, TrendingUp } from "lucide-react";
 import FadeInSection from "@/components/ui/FadeInSection";
@@ -366,18 +366,30 @@ function PillarContent({ pillar }: { pillar: typeof PILLARS[0] }) {
   );
 }
 
-// ─── Painel com altura fixa — todos os pilares renderizados, inativos ocultos ─
+// ─── Painel com altura fixa — todos os pilares em absolute, container não muda ─
 
 function PillarPanel({ active }: { active: number }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+  const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Mede a altura de cada painel e usa a maior
+  useEffect(() => {
+    const heights = panelRefs.current.map((el) => el?.scrollHeight ?? 0);
+    const max = Math.max(...heights);
+    if (max > 0) setHeight(max);
+  }, []);
+
   return (
-    <div className="relative" style={{ minHeight: 320 }}>
-      {PILLARS.map((pillar) => (
+    <div ref={containerRef} className="relative" style={{ height: height || "auto" }}>
+      {PILLARS.map((pillar, i) => (
         <motion.div
           key={pillar.id}
           animate={{ opacity: active === pillar.id ? 1 : 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
+          ref={(el) => { panelRefs.current[i] = el; }}
           style={{
-            position: active === pillar.id ? "relative" : "absolute",
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
