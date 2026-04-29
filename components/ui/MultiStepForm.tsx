@@ -178,7 +178,7 @@ function buildPayload(data: FormData) {
 
   // String completa formatada
   const resumo = Object.entries(labels)
-    .map(([key, label]) => `${label}: ${(data as Record<string, string>)[key] || "—"}`)
+    .map(([key, label]) => `${label}: ${(data as unknown as Record<string, string>)[key] || "—"}`)
     .join("\n");
 
   return {
