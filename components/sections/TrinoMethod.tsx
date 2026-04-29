@@ -521,7 +521,9 @@ export default function TrinoMethod() {
               style={{ borderTop: "1px solid rgba(106,72,244,0.15)" }}
             >
               <MobileTabs active={active} onSelect={handleSelect} />
-              <PillarPanel pillar={PILLARS[active]} />
+              <div className="min-h-[340px]">
+                <PillarPanel pillar={PILLARS[active]} />
+              </div>
             </div>
           </div>
 
