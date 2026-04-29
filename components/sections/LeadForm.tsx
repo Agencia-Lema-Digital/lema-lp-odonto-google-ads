@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import FadeInSection from "@/components/ui/FadeInSection";
+import MultiStepForm from "@/components/ui/MultiStepForm";
 import { SmileDesignArc, OcclusalGrid } from "@/components/ui/DentalAccents";
 
 const COPY = {
@@ -13,15 +13,6 @@ const COPY = {
 };
 
 export default function LeadForm() {
-  useEffect(() => {
-    if (document.querySelector("#respondi_src")) return;
-    const script = document.createElement("script");
-    script.id = "respondi_src";
-    script.src = "https://embed.respondi.app/embed.js";
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
-
   return (
     <section
       id="lead-form"
@@ -44,7 +35,7 @@ export default function LeadForm() {
         opacity={0.055}
       />
 
-      <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <FadeInSection className="text-center mb-10">
           <p className="font-sub text-brand-primary text-base tracking-wide mb-4 inline-flex items-center justify-center gap-2">
             <span
@@ -68,16 +59,10 @@ export default function LeadForm() {
 
         <FadeInSection delay={0.15}>
           <div
-            className="overflow-hidden rounded-2xl"
-            style={{ boxShadow: "0 4px 32px rgba(106,72,244,0.10)" }}
+            className="bg-white rounded-2xl p-8 lg:p-10"
+            style={{ boxShadow: "0 4px 32px rgba(106,72,244,0.10)", border: "1px solid rgba(106,72,244,0.10)" }}
           >
-            <div
-              data-respondi-container=""
-              data-respondi-mode="regular"
-              data-respondi-src="https://form.respondi.app/YPsomgNk"
-              data-respondi-width="100%"
-              data-respondi-height="600px"
-            />
+            <MultiStepForm />
           </div>
         </FadeInSection>
 
