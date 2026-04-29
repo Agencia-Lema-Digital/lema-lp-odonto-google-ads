@@ -31,9 +31,9 @@ export const metadata: Metadata = {
   title: "Marketing e Vendas para Clínicas Odontológicas | Método TRINO — Lema Digital",
   description:
     "Assessoria especializada em clínicas odontológicas premium. Anúncio, atendimento e processo comercial num funil só. Diagnóstico gratuito de 30 minutos.",
-  metadataBase: new URL("https://lemaagdigital.com.br"),
+  metadataBase: new URL("https://diagnostico.lemaagdigital.com.br"),
   alternates: {
-    canonical: "https://lemaagdigital.com.br/diagnostico",
+    canonical: "https://diagnostico.lemaagdigital.com.br",
   },
   robots: {
     index: true,
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     title: "Marketing e Vendas para Clínicas Odontológicas | Método TRINO — Lema Digital",
     description:
       "Assessoria especializada em clínicas odontológicas premium. Anúncio, atendimento e processo comercial num funil só. Diagnóstico gratuito de 30 minutos.",
-    url: "https://lemaagdigital.com.br/diagnostico",
+    url: "https://diagnostico.lemaagdigital.com.br",
     siteName: "Lema Digital",
     images: [
       {
