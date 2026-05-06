@@ -3,6 +3,7 @@ import { Fraunces, Caveat, Poppins } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
+
 const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
@@ -74,20 +75,9 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${fraunces.variable} ${caveat.variable} ${poppins.variable}`}
     >
-      <head>
-        {/* Google Tag Manager — script no topo do head conforme instruções oficiais */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${GTM_ID}');`,
-          }}
-        />
-      </head>
+      <head />
       <body className="font-body antialiased bg-white text-brand-text">
-        {/* Google Tag Manager (noscript) — imediatamente após abertura do body */}
+        {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
@@ -99,6 +89,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
 
         {children}
+
+        {/* GTM loader — afterInteractive para não bloquear o parser */}
+        <Script
+          id="gtm-loader"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');`,
+          }}
+        />
 
         {/* Listeners de eventos para o GTM */}
         <Script id="tracking-events" strategy="afterInteractive">

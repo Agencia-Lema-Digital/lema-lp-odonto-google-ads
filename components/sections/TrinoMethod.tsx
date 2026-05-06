@@ -204,8 +204,8 @@ function TrinoSVG({
             {/* Halo grande */}
             <motion.circle
               cx={n.cx} cy={n.cy}
-              r={NODE_R + 32}
               fill={`url(#tm-halo-${n.id})`}
+              initial={{ r: NODE_R + 32, opacity: 0 }}
               animate={{ opacity: highlighted ? 1 : 0, r: highlighted ? NODE_R + 40 : NODE_R + 24 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
             />
@@ -213,10 +213,11 @@ function TrinoSVG({
             {/* Anel pulsante — apenas no ativo */}
             {isActive && (
               <motion.circle
-                cx={n.cx} cy={n.cy} r={NODE_R}
+                cx={n.cx} cy={n.cy}
                 fill="none"
                 stroke={p.color}
                 strokeWidth="1.5"
+                initial={{ r: NODE_R, opacity: 0.7 }}
                 animate={{ r: [NODE_R, NODE_R + 22], opacity: [0.7, 0] }}
                 transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
               />
@@ -366,22 +367,28 @@ function PillarContent({ pillar }: { pillar: typeof PILLARS[0] }) {
   );
 }
 
-// ─── Painel com altura fixa — todos os pilares em absolute, container não muda ─
+// ─── Painel com altura fixa — todos os pilares em absolute, container travado ──
 
 function PillarPanel({ active }: { active: number }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(0);
+  const [height, setHeight] = useState<number | "auto">("auto");
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Mede a altura de cada painel e usa a maior
   useEffect(() => {
-    const heights = panelRefs.current.map((el) => el?.scrollHeight ?? 0);
-    const max = Math.max(...heights);
-    if (max > 0) setHeight(max);
+    const measure = () => {
+      const heights = panelRefs.current.map((el) => el?.scrollHeight ?? 0);
+      const max = Math.max(...heights);
+      if (max > 0) setHeight(max);
+    };
+
+    measure();
+
+    const observer = new ResizeObserver(measure);
+    panelRefs.current.forEach((el) => { if (el) observer.observe(el); });
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <div ref={containerRef} className="relative" style={{ height: height || "auto" }}>
+    <div className="relative" style={{ height }}>
       {PILLARS.map((pillar, i) => (
         <motion.div
           key={pillar.id}
