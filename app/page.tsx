@@ -1,24 +1,22 @@
+"use client";
+
 import dynamic from "next/dynamic";
 import Hero from "@/components/sections/Hero";
-import AudienceFilter from "@/components/sections/AudienceFilter";
-import PainPoints from "@/components/sections/PainPoints";
-import HowItWorks from "@/components/sections/HowItWorks";
-import AboutFounders from "@/components/sections/AboutFounders";
-import FAQ from "@/components/sections/FAQ";
-import LeadForm from "@/components/sections/LeadForm";
-import FinalCTA from "@/components/sections/FinalCTA";
-import Footer from "@/components/sections/Footer";
 
-// Framer Motion só carrega quando a seção entra na viewport
-const TrinoMethod = dynamic(() => import("@/components/sections/TrinoMethod"), {
-  ssr: false,
-  loading: () => <div style={{ minHeight: "600px" }} />,
-});
+function SectionPlaceholder({ height }: { height: string }) {
+  return <div style={{ minHeight: height }} />;
+}
 
-const SocialProof = dynamic(() => import("@/components/sections/SocialProof"), {
-  ssr: false,
-  loading: () => <div style={{ minHeight: "400px" }} />,
-});
+const AudienceFilter = dynamic(() => import("@/components/sections/AudienceFilter"), { ssr: false, loading: () => <SectionPlaceholder height="300px" /> });
+const PainPoints     = dynamic(() => import("@/components/sections/PainPoints"),     { ssr: false, loading: () => <SectionPlaceholder height="400px" /> });
+const TrinoMethod    = dynamic(() => import("@/components/sections/TrinoMethod"),    { ssr: false, loading: () => <SectionPlaceholder height="600px" /> });
+const SocialProof    = dynamic(() => import("@/components/sections/SocialProof"),    { ssr: false, loading: () => <SectionPlaceholder height="400px" /> });
+const HowItWorks     = dynamic(() => import("@/components/sections/HowItWorks"),     { ssr: false, loading: () => <SectionPlaceholder height="400px" /> });
+const AboutFounders  = dynamic(() => import("@/components/sections/AboutFounders"),  { ssr: false, loading: () => <SectionPlaceholder height="400px" /> });
+const FAQ            = dynamic(() => import("@/components/sections/FAQ"),            { ssr: false, loading: () => <SectionPlaceholder height="300px" /> });
+const LeadForm       = dynamic(() => import("@/components/sections/LeadForm"),       { ssr: false, loading: () => <SectionPlaceholder height="500px" /> });
+const FinalCTA       = dynamic(() => import("@/components/sections/FinalCTA"),       { ssr: false, loading: () => <SectionPlaceholder height="200px" /> });
+const Footer         = dynamic(() => import("@/components/sections/Footer"),         { ssr: false, loading: () => <SectionPlaceholder height="120px" /> });
 
 export default function LandingPage() {
   return (
