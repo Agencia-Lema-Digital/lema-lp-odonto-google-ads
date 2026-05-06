@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { ReactNode } from "react";
+import { useEffect, useRef, ReactNode } from "react";
 
 interface FadeInSectionProps {
   children: ReactNode;
@@ -14,22 +13,36 @@ export default function FadeInSection({
   className = "",
   delay = 0,
 }: FadeInSectionProps) {
-  const reduced = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
 
-  // Se prefers-reduced-motion, não anima — aparece imediatamente
-  if (reduced) {
-    return <div className={className}>{children}</div>;
-  }
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.style.opacity = "1";
+      el.style.transform = "none";
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.transitionDelay = `${delay}s`;
+          el.classList.add("fade-in-visible");
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "-80px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [delay]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.5, delay, ease: "easeOut" }}
-      className={className}
-    >
+    <div ref={ref} className={`fade-in-section ${className}`}>
       {children}
-    </motion.div>
+    </div>
   );
 }
