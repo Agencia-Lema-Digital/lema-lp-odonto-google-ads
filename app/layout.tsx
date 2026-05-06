@@ -6,16 +6,20 @@ import "./globals.css";
 const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
-  weight: ["200", "400", "600", "700", "900"],
+  weight: ["200", "600", "700"],
   style: ["normal", "italic"],
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const caveat = Caveat({
   subsets: ["latin"],
   variable: "--font-caveat",
-  weight: ["400", "600", "700"],
+  weight: ["600"],
   display: "swap",
+  preload: false,
+  adjustFontFallback: true,
 });
 
 const poppins = Poppins({
@@ -23,6 +27,8 @@ const poppins = Poppins({
   variable: "--font-poppins",
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const GTM_ID = "GTM-KKZC4XQ6";
