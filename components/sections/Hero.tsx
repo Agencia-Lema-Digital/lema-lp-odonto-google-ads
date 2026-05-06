@@ -24,7 +24,7 @@ const fadeUp = (delay: number): React.CSSProperties => ({
 
 export default function Hero() {
   return (
-    <header className="relative overflow-hidden min-h-[80dvh] flex flex-col" style={{ background: "#0C0F1A" }}>
+    <header className="relative overflow-hidden min-h-[100dvh] flex flex-col" style={{ background: "#0C0F1A" }}>
       <style>{`
         @keyframes hero-fade-up {
           from { opacity: 0; transform: translateY(20px); }
@@ -55,7 +55,7 @@ export default function Hero() {
         />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 lg:pt-24 lg:pb-28 flex-1">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 lg:pt-24 lg:pb-28 flex-1 flex flex-col justify-center">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-20 items-center">
           {/* Coluna principal */}
           <div className="flex flex-col gap-5 lg:gap-7 max-w-2xl">
