@@ -98,6 +98,7 @@ export default function HeroBackground() {
         sizes="100vw"
         priority
         quality={75}
+        decoding="sync"
       />
 
       {/* Camada base escura */}

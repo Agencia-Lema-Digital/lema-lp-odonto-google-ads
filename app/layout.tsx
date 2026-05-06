@@ -76,6 +76,13 @@ export default function RootLayout({
       className={`${fraunces.variable} ${caveat.variable} ${poppins.variable}`}
     >
       <head>
+        {/* Preload da imagem LCP — browser descobre antes do JS executar */}
+        <link
+          rel="preload"
+          as="image"
+          href="/_next/image?url=%2Fimages%2Fclinic-hero.png&w=1080&q=75"
+          fetchPriority="high"
+        />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="preconnect" href="https://connect.facebook.net" crossOrigin="" />
