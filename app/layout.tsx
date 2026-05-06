@@ -75,7 +75,12 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${fraunces.variable} ${caveat.variable} ${poppins.variable}`}
     >
-      <head />
+      <head>
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://connect.facebook.net" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://embed.respondi.app" />
+      </head>
       <body className="font-body antialiased bg-white text-brand-text">
         {/* Google Tag Manager (noscript) */}
         <noscript>
