@@ -32,7 +32,7 @@ const poppins = Poppins({
   adjustFontFallback: true,
 });
 
-const GTM_ID = "GTM-KKZC4XQ6";
+const GTM_ID = "GTM-56DF7VH";
 
 export const metadata: Metadata = {
   title: "Marketing e Vendas para Clínicas Odontológicas | Método TRINO — Lema Digital",
