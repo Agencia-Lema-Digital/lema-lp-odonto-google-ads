@@ -28,12 +28,12 @@ export default function CTAButton({
   return (
     <button
       onClick={handleClick}
+      style={{ touchAction: "manipulation" }}
       className={`
         inline-flex items-center justify-center
         rounded-[8px] bg-brand-primary text-white
         font-body font-semibold
         cursor-pointer
-        touch-action-manipulation
         hover:bg-[#5538d4]
         active:scale-[0.98]
         transition-all duration-150 ease-out

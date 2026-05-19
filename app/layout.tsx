@@ -34,35 +34,9 @@ const poppins = Poppins({
 
 const GTM_ID = "GTM-56DF7VH";
 
+// Metadados base — cada page.tsx define os seus próprios (title, description, canonical, og, twitter)
 export const metadata: Metadata = {
-  title: "Marketing e Vendas para Clínicas Odontológicas | Método TRINO — Lema Digital",
-  description:
-    "Assessoria especializada em clínicas odontológicas premium. Anúncio, atendimento e processo comercial num funil só. Diagnóstico gratuito de 30 minutos.",
   metadataBase: new URL("https://diagnostico.lemaagdigital.com.br"),
-  alternates: {
-    canonical: "https://diagnostico.lemaagdigital.com.br",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  openGraph: {
-    title: "Marketing e Vendas para Clínicas Odontológicas | Método TRINO — Lema Digital",
-    description:
-      "Assessoria especializada em clínicas odontológicas premium. Anúncio, atendimento e processo comercial num funil só. Diagnóstico gratuito de 30 minutos.",
-    url: "https://diagnostico.lemaagdigital.com.br",
-    siteName: "Lema Digital",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Lema Digital — Marketing para Clínicas Odontológicas",
-      },
-    ],
-    locale: "pt_BR",
-    type: "website",
-  },
 };
 
 export default function RootLayout({

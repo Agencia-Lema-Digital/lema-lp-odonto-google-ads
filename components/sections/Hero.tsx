@@ -2,33 +2,57 @@
 
 import CTAButton from "@/components/ui/CTAButton";
 import HeroBackground from "@/components/ui/HeroBackground";
+import type { PageHeroContent } from "@/lib/pages-config";
 
-const COPY = {
-  eyebrow: "Diagnóstico gratuito",
-  h1First: "Sua clínica com",
-  h1Accent: "agenda cheia",
-  h1Rest: "de pacientes particulares. Sem depender de indicação.",
-  subheadline:
-    "Método TRINO da Lema Digital: anúncio, atendimento e processo comercial conectados num funil só. Diagnóstico estratégico gratuito de 30 minutos com o sócio.",
-  trustLine: "Exclusivo para clínicas odontológicas",
-  seals: [],
-  stat: {
-    number: "−81%",
-    label: "no custo por conversão com o funil integrado",
-  },
+const STAT = {
+  number: "−81%",
+  label: "no custo por conversão com o funil integrado",
 };
 
 const fadeUp = (delay: number): React.CSSProperties => ({
   animation: `hero-fade-up 0.55s ease-out ${delay}s both`,
 });
 
-export default function Hero() {
+// Destaca a palavra-chave dentro do h1 com gradient — busca a substring exata
+function H1WithAccent({ text, accentWord }: { text: string; accentWord?: string }) {
+  if (!accentWord || !text.includes(accentWord)) {
+    return <>{text}</>;
+  }
+  const [before, after] = text.split(accentWord);
   return (
+    <>
+      {before}
+      <span
+        style={{
+          background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
+          WebkitBackgroundClip: "text",
+          backgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          color: "transparent",
+        }}
+      >
+        {accentWord}
+      </span>
+      {after}
+    </>
+  );
+}
+
+interface HeroProps {
+  content: PageHeroContent;
+}
+
+export default function Hero({ content }: HeroProps) {
+  return (
+    <>
     <header className="relative overflow-hidden min-h-[100dvh] flex flex-col" style={{ background: "#0C0F1A" }}>
       <style>{`
         @keyframes hero-fade-up {
           from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          * { animation-duration: 0.01ms !important; animation-delay: 0ms !important; }
         }
       `}</style>
 
@@ -37,7 +61,7 @@ export default function Hero() {
         className="relative z-10 text-white text-center py-2.5 px-4 text-xs font-body font-medium tracking-widest uppercase"
         style={{ background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)" }}
       >
-        {COPY.trustLine}
+        Exclusivo para clínicas odontológicas
       </div>
 
       {/* Foto da clínica + overlays + animações bokeh */}
@@ -55,36 +79,34 @@ export default function Hero() {
         />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 lg:pt-24 lg:pb-28 flex-1 flex flex-col justify-center">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-20 items-center">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-10 sm:pt-12 sm:pb-16 lg:pt-14 lg:pb-14 flex-1 flex flex-col justify-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center">
           {/* Coluna principal */}
-          <div className="flex flex-col gap-5 lg:gap-7 max-w-2xl">
+          <div className="flex flex-col gap-3 sm:gap-5 lg:gap-5 max-w-2xl">
             <p
               style={fadeUp(0)}
-              className="font-sub text-brand-primary text-base tracking-wide inline-flex items-center gap-2"
+              className="font-sub text-brand-primary text-sm sm:text-base tracking-wide inline-flex items-center gap-2 leading-snug"
             >
               <span
-                className="inline-block w-6 h-px"
+                className="inline-block w-6 h-px flex-shrink-0"
                 style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4)" }}
                 aria-hidden="true"
               />
-              {COPY.eyebrow}
+              {content.kicker}
             </p>
 
             <h1
               style={fadeUp(0.1)}
-              className="font-headline font-bold text-white text-3xl sm:text-4xl lg:text-[3.6rem] leading-[1.1] lg:leading-[1.05] tracking-tight"
+              className="font-headline font-bold text-white text-2xl sm:text-4xl lg:text-[3.6rem] leading-[1.15] sm:leading-[1.1] lg:leading-[1.05] tracking-tight"
             >
-              {COPY.h1First}{" "}
-              <span className="gradient-text">{COPY.h1Accent}</span>{" "}
-              {COPY.h1Rest}
+              <H1WithAccent text={content.h1} accentWord={content.h1AccentWord} />
             </h1>
 
             <p
               style={fadeUp(0.2)}
-              className="font-body text-gray-400 text-base lg:text-lg leading-relaxed"
+              className="hidden sm:block font-body text-gray-400 text-sm sm:text-base lg:text-lg leading-relaxed"
             >
-              {COPY.subheadline}
+              {content.subheadline}
             </p>
 
             <div style={fadeUp(0.3)}>
@@ -106,13 +128,21 @@ export default function Hero() {
             }}
           >
             <span
-              className="font-headline leading-none gradient-text italic"
-              style={{ fontSize: "clamp(3rem, 5vw, 4.5rem)", fontWeight: 200 }}
+              className="font-headline leading-none italic"
+              style={{
+                fontSize: "clamp(3rem, 5vw, 4.5rem)",
+                fontWeight: 200,
+                background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                color: "transparent",
+              }}
             >
-              {COPY.stat.number}
+              {STAT.number}
             </span>
             <p className="font-body text-gray-400 text-sm text-center leading-snug max-w-[160px]">
-              {COPY.stat.label}
+              {STAT.label}
             </p>
             <div
               className="w-12 h-px mt-1"
@@ -126,5 +156,27 @@ export default function Hero() {
         </div>
       </div>
     </header>
+
+      {/* firstH2 — ponte SSR entre Hero e corpo; renderizado no servidor nas três rotas */}
+      <section
+        className="relative py-14 lg:py-20 overflow-hidden"
+        style={{ background: "#0C0F1A" }}
+        aria-label="Contexto da página"
+      >
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div
+            className="pl-6 py-1"
+            style={{ borderLeft: "4px solid", borderImage: "linear-gradient(180deg, #6A48F4, #143E66) 1" }}
+          >
+            <h2 className="font-headline font-bold text-white text-2xl sm:text-3xl lg:text-[2.2rem] leading-tight tracking-tight max-w-3xl">
+              {content.firstH2}
+            </h2>
+          </div>
+          <p className="font-body text-gray-400 text-base lg:text-lg leading-relaxed mt-6 max-w-2xl">
+            {content.agitationBody}
+          </p>
+        </div>
+      </section>
+    </>
   );
 }

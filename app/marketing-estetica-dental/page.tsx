@@ -3,7 +3,7 @@ import Hero from "@/components/sections/Hero";
 import LandingPageBody from "@/components/sections/LandingPageBody";
 import { PAGES_CONFIG } from "@/lib/pages-config";
 
-const config = PAGES_CONFIG["/"];
+const config = PAGES_CONFIG["/marketing-estetica-dental"];
 
 export const metadata: Metadata = {
   title: config.meta.title,
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function LandingPage() {
+export default function MarketingEsteticaDentalPage() {
   return (
     <main>
       <Hero content={config.hero} />
