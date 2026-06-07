@@ -6,7 +6,7 @@ export interface PageHeroContent {
   firstH2: string;
   agitationBody: string;
   topBanner?: string; // texto da barra superior; omitir usa o padrão odonto
-  heroImage?: string; // caminho em /public; omitir usa clinic-hero.png
+  heroImage?: string; // caminho em /public; omitir usa clinic-hero.webp
 }
 
 export interface PageMeta {

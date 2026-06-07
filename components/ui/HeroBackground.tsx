@@ -32,7 +32,7 @@ interface HeroBackgroundProps {
   imageSrc?: string;
 }
 
-export default function HeroBackground({ imageSrc = "/images/clinic-hero.png" }: HeroBackgroundProps) {
+export default function HeroBackground({ imageSrc = "/images/clinic-hero.webp" }: HeroBackgroundProps) {
   const [isMobile, setIsMobile] = useState(true);
   const [reduced, setReduced] = useState(false);
 
