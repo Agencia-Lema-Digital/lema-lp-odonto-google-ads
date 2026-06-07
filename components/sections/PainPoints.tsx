@@ -144,14 +144,6 @@ export default function PainPoints() {
                 <span className="gradient-text">{COPY.headingAccent}</span>
               </h2>
             </div>
-            {/* Número decorativo com degradê — desktop */}
-            <div
-              aria-hidden="true"
-              className="hidden lg:block font-headline text-[110px] leading-none select-none flex-shrink-0 gradient-text italic"
-              style={{ fontWeight: 200 }}
-            >
-              6×
-            </div>
           </div>
         </FadeInSection>
 

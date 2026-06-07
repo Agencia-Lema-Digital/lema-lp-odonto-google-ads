@@ -117,7 +117,7 @@ function VideoLightbox({ videoId, onClose }: { videoId: string; onClose: () => v
 }
 
 /* Chip de vídeo compacto — thumbnail 72px alta + info à direita */
-function VideoChip({ v, index }: { v: typeof TESTIMONIAL_VIDEOS[0]; index: number }) {
+function VideoChip({ v }: { v: typeof TESTIMONIAL_VIDEOS[0] }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -308,8 +308,8 @@ function FeaturedCard() {
             Ouça os fundadores
           </p>
           <div className="flex gap-2.5">
-            {TESTIMONIAL_VIDEOS.map((v, i) => (
-              <VideoChip key={v.id} v={v} index={i} />
+            {TESTIMONIAL_VIDEOS.map((v) => (
+              <VideoChip key={v.id} v={v} />
             ))}
           </div>
         </div>
