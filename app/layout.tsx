@@ -10,7 +10,7 @@ const fraunces = Fraunces({
   weight: ["200", "600", "700"],
   style: ["normal", "italic"],
   display: "swap",
-  preload: true,
+  preload: false,
   adjustFontFallback: true,
 });
 
