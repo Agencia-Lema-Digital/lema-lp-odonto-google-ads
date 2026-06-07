@@ -18,7 +18,7 @@ const caveat = Caveat({
   subsets: ["latin"],
   variable: "--font-caveat",
   weight: ["600"],
-  display: "swap",
+  display: "optional",
   preload: false,
   adjustFontFallback: true,
 });
@@ -27,8 +27,8 @@ const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-poppins",
   weight: ["400", "500", "600", "700"],
-  display: "swap",
-  preload: true,
+  display: "optional",
+  preload: false,
   adjustFontFallback: true,
 });
 
@@ -50,16 +50,7 @@ export default function RootLayout({
       className={`${fraunces.variable} ${caveat.variable} ${poppins.variable}`}
     >
       <head>
-        {/* Preload da imagem LCP — browser descobre antes do JS executar */}
-        <link
-          rel="preload"
-          as="image"
-          href="/_next/image?url=%2Fimages%2Fclinic-hero.png&w=1080&q=75"
-          fetchPriority="high"
-        />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://www.google-analytics.com" />
-        <link rel="preconnect" href="https://connect.facebook.net" crossOrigin="" />
         <link rel="dns-prefetch" href="https://embed.respondi.app" />
       </head>
       <body className="font-body antialiased bg-white text-brand-text">
