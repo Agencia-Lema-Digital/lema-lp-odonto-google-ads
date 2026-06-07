@@ -45,7 +45,8 @@ const COPY = {
   ],
 };
 
-export default function Footer() {
+export default function Footer({ tagline }: { tagline?: string }) {
+  const resolvedTagline = tagline ?? COPY.tagline;
   return (
     <footer style={{ background: "#060A14" }} className="text-white">
       {/* Linha de topo degradê */}
@@ -71,7 +72,7 @@ export default function Footer() {
                 />
               </div>
               <p className="font-body text-gray-400 text-sm leading-relaxed mb-4">
-                {COPY.tagline}
+                {resolvedTagline}
               </p>
               <p className="font-body text-gray-600 text-xs">
                 {COPY.razaoSocial}

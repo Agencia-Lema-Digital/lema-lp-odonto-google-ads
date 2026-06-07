@@ -3,8 +3,10 @@
 import { CheckCircle2, XCircle } from "lucide-react";
 import FadeInSection from "@/components/ui/FadeInSection";
 import { OcclusalGrid, DentalMirror } from "@/components/ui/DentalAccents";
+import { FunnelLines, DataGrid } from "@/components/ui/GeneralistAccents";
+import { useBodyVariant } from "@/lib/body-variant-context";
 
-const COPY = {
+const COPY_ODONTO = {
   eyebrow: "Essa assessoria foi construída para um perfil específico",
   headingMain: "Antes de conversar,",
   headingAccent: "veja se esse é o seu perfil.",
@@ -35,7 +37,40 @@ const COPY = {
     "Se você está na Coluna A, esse diagnóstico vai mostrar exatamente onde está travado o seu crescimento.",
 };
 
+const COPY_GENERAL = {
+  eyebrow: "Essa assessoria foi construída para um perfil específico",
+  headingMain: "Antes de conversar,",
+  headingAccent: "veja se esse é o seu perfil.",
+  subheading:
+    "A Lema Digital não atende qualquer empresa. Trabalhamos com negócios prontos para estruturar o processo comercial e crescer com previsibilidade.",
+  forWho: {
+    title: "Para quem é",
+    items: [
+      "Empresas com faturamento mensal acima de R$30 mil",
+      "Negócios que já investem em tráfego pago (Google ou Meta Ads)",
+      "Pelo menos uma pessoa dedicada ao atendimento de leads",
+      "WhatsApp Business ativo e CRM ou planilha de acompanhamento",
+      "Disposição para padronizar processos comerciais e medir resultados",
+      "Decisor com poder de aprovar mudanças internas no time comercial",
+    ],
+  },
+  notForWho: {
+    title: "Para quem não é",
+    items: [
+      "Empresas sem faturamento recorrente ou em fase pré-receita",
+      "Negócios que dependem 100% de indicação e não querem mudar",
+      "Quem espera resultado em 30 dias ou \"fórmula mágica\"",
+      "Quem não quer mexer em processos internos de vendas",
+      "Quem quer só \"rodar anúncio\" sem estrutura comercial",
+    ],
+  },
+  closing:
+    "Se você está na Coluna A, esse diagnóstico vai mostrar exatamente onde está travado o seu crescimento.",
+};
+
 export default function AudienceFilter() {
+  const variant = useBodyVariant();
+  const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
   return (
     <section className="relative py-14 lg:py-28 bg-white overflow-hidden">
       {/* Linha de acento diagonal no topo — degradê primário */}
@@ -44,16 +79,17 @@ export default function AudienceFilter() {
         className="absolute top-0 left-0 right-0 h-1"
         style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4, #143E66)" }}
       />
-      {/* Vista oclusal da arcada — canto superior esquerdo */}
-      <OcclusalGrid
-        className="absolute left-[-2%] top-[5%] w-52 h-auto text-[#6A48F4] pointer-events-none"
-        opacity={0.055}
-      />
-      {/* Espelho clínico — canto inferior direito */}
-      <DentalMirror
-        className="absolute right-[3%] bottom-[5%] w-14 h-auto text-[#6A48F4] pointer-events-none hidden lg:block"
-        opacity={0.065}
-      />
+      {variant === "general" ? (
+        <>
+          <FunnelLines className="absolute left-[-2%] top-[5%] w-44 h-auto text-[#6A48F4] pointer-events-none" opacity={0.055} />
+          <DataGrid className="absolute right-[3%] bottom-[5%] w-40 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.065} />
+        </>
+      ) : (
+        <>
+          <OcclusalGrid className="absolute left-[-2%] top-[5%] w-52 h-auto text-[#6A48F4] pointer-events-none" opacity={0.055} />
+          <DentalMirror className="absolute right-[3%] bottom-[5%] w-14 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.065} />
+        </>
+      )}
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho */}

@@ -5,6 +5,8 @@ export interface PageHeroContent {
   subheadline: string;
   firstH2: string;
   agitationBody: string;
+  topBanner?: string; // texto da barra superior; omitir usa o padrão odonto
+  heroImage?: string; // caminho em /public; omitir usa clinic-hero.png
 }
 
 export interface PageMeta {
@@ -58,6 +60,28 @@ export const PAGES_CONFIG: Record<string, PageConfig> = {
       description:
         "Cansou de agência que só entrega relatório? A Lema é assessoria de marketing e vendas para clínicas odontológicas. Diagnóstico gratuito de 30 min.",
       canonical: `${BASE_URL}/agencia-marketing-odontologico`,
+    },
+  },
+
+  // Intenção "Geral" — empresas +R$30k/mês
+  "/assessoria-marketing-vendas": {
+    hero: {
+      topBanner: "Para empresas que faturam +R$30k/mês",
+      heroImage: "/images/hero-general.webp",
+      kicker: "Para empresas que faturam +R$30k/mês",
+      h1: "Seus anúncios geram muitos leads, mas poucos clientes?",
+      h1AccentWord: "poucos clientes",
+      subheadline:
+        "A Lema Digital é uma Assessoria de Marketing & Vendas que conecta suas campanhas ao resultado final: vendas reais e previsíveis.",
+      firstH2: "Por que gerar lead não é o mesmo que gerar cliente",
+      agitationBody:
+        "O anúncio roda, os leads chegam, o time responde — e no final do mês o faturamento não mudou. O problema quase nunca está no anúncio. Está no que acontece entre o clique e a venda: atendimento lento, processo comercial sem padrão, follow-up que não existe. Lead sem processo vira custo.",
+    },
+    meta: {
+      title: "Assessoria de Marketing e Vendas | Lema Digital",
+      description:
+        "Assessoria de Marketing & Vendas para empresas que faturam +R$30k/mês. Conectamos suas campanhas ao processo comercial para gerar vendas reais e previsíveis.",
+      canonical: `${BASE_URL}/assessoria-marketing-vendas`,
     },
   },
 

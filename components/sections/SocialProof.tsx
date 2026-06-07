@@ -4,6 +4,8 @@ import { useRef, useEffect } from "react";
 import { motion, useInView, useMotionValue, useTransform, animate, useReducedMotion } from "framer-motion";
 import FadeInSection from "@/components/ui/FadeInSection";
 import { SmileDesignArc, XRayFragment, GoldenRatioSpiral } from "@/components/ui/DentalAccents";
+import { TrendChart, AdSignal, ROASArrow } from "@/components/ui/GeneralistAccents";
+import { useBodyVariant } from "@/lib/body-variant-context";
 
 const TESTIMONIALS = [
   {
@@ -174,7 +176,7 @@ function TestimonialTrack({
   );
 }
 
-const COPY = {
+const COPY_ODONTO = {
   eyebrow: "Métricas reais de clínicas reais",
   headingMain: "O que muda quando",
   headingAccent: "o funil inteiro funciona.",
@@ -204,6 +206,40 @@ const COPY = {
       suffix: "",
       text: "CPL",
       label: "Saber exatamente quanto custa cada novo paciente e ajustar com clareza.",
+    },
+  ],
+};
+
+const COPY_GENERAL = {
+  eyebrow: "Por que escolher a Lema?",
+  headingMain: "Números que provam",
+  headingAccent: "o que a Lema entrega.",
+  subheading: "Métricas reais de clientes que aplicam o Método TRINO.",
+  stats: [
+    {
+      prefix: "",
+      value: 4,
+      suffix: "+ anos",
+      label: "entregando resultados reais",
+    },
+    {
+      prefix: "",
+      value: 7,
+      suffix: "%",
+      label: "de CTR médio no Google Ads",
+    },
+    {
+      prefix: "",
+      value: 87,
+      suffix: "%",
+      label: "de presença no topo do Google",
+    },
+    {
+      prefix: "",
+      value: null,
+      suffix: "",
+      text: "R$10/lead",
+      label: "custo por lead abaixo do mercado",
     },
   ],
 };
@@ -246,24 +282,23 @@ function AnimatedCounter({
 }
 
 export default function SocialProof() {
+  const variant = useBodyVariant();
+  const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
   return (
-    <section className="relative py-14 lg:py-28 bg-white overflow-hidden">
-      {/* Smile arc decorativo — odontologia estética */}
-      {/* Curva DSD — análise de sorriso, canto superior direito */}
-      <SmileDesignArc
-        className="absolute right-[-2%] top-[6%] w-[420px] h-auto text-[#6A48F4] pointer-events-none"
-        opacity={0.06}
-      />
-      {/* Radiografia panorâmica — canto inferior esquerdo */}
-      <XRayFragment
-        className="absolute left-[-1%] bottom-[6%] w-56 h-auto text-[#6A48F4] pointer-events-none hidden lg:block"
-        opacity={0.055}
-      />
-      {/* Espiral áurea — centro superior, atrás do heading */}
-      <GoldenRatioSpiral
-        className="absolute left-[45%] top-[2%] w-28 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block"
-        opacity={0.045}
-      />
+    <section className="relative pt-14 lg:pt-28 pb-0 bg-white overflow-hidden">
+      {variant === "general" ? (
+        <>
+          <TrendChart className="absolute right-[-2%] top-[6%] w-[380px] h-auto text-[#6A48F4] pointer-events-none" opacity={0.06} />
+          <ROASArrow className="absolute left-[-1%] bottom-[6%] w-32 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.055} />
+          <AdSignal className="absolute left-[45%] top-[2%] w-28 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.04} />
+        </>
+      ) : (
+        <>
+          <SmileDesignArc className="absolute right-[-2%] top-[6%] w-[420px] h-auto text-[#6A48F4] pointer-events-none" opacity={0.06} />
+          <XRayFragment className="absolute left-[-1%] bottom-[6%] w-56 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.055} />
+          <GoldenRatioSpiral className="absolute left-[45%] top-[2%] w-28 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.045} />
+        </>
+      )}
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho alinhado à esquerda — estilo editorial */}
@@ -296,7 +331,7 @@ export default function SocialProof() {
               <div className="bg-white p-4 lg:p-8 flex flex-col gap-2 lg:gap-3 h-full hover:bg-brand-soft transition-colors duration-200">
                 {/* Número com degradê primário */}
                 <p
-                  className="font-headline font-bold text-3xl lg:text-5xl leading-none whitespace-pre-line"
+                  className={`font-headline font-bold leading-none break-words ${stat.value !== null ? "text-3xl lg:text-5xl" : "text-2xl lg:text-4xl"}`}
                   style={{
                     background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
                     WebkitBackgroundClip: "text",
@@ -341,19 +376,13 @@ export default function SocialProof() {
       {/* Carrossel de depoimentos — full width, fundo escuro */}
       <FadeInSection delay={0.2}>
         <div
-          className="relative py-8 overflow-hidden"
+          className="relative pt-8 pb-14 lg:pb-20 overflow-hidden"
           style={{ background: "linear-gradient(135deg, #0C0F1A 0%, #0F1E33 100%)" }}
         >
           {/* Linha de topo */}
           <div
             className="absolute top-0 left-0 right-0 h-px"
             style={{ background: "linear-gradient(90deg, transparent, #6A48F4, #4C2FC4, #143E66, transparent)" }}
-            aria-hidden="true"
-          />
-          {/* Linha de fundo */}
-          <div
-            className="absolute bottom-0 left-0 right-0 h-px"
-            style={{ background: "linear-gradient(90deg, transparent, #143E66, #4C2FC4, #6A48F4, transparent)" }}
             aria-hidden="true"
           />
 

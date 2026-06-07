@@ -3,8 +3,10 @@
 import { ClipboardList, Phone, Video, CheckCircle2 } from "lucide-react";
 import FadeInSection from "@/components/ui/FadeInSection";
 import { GoldenRatioSpiral, ProbeGrid, CephalometricLines } from "@/components/ui/DentalAccents";
+import { AdSignal, ClickCursor, DataGrid } from "@/components/ui/GeneralistAccents";
+import { useBodyVariant } from "@/lib/body-variant-context";
 
-const COPY = {
+const COPY_ODONTO = {
   eyebrow: "30 minutos. Análise honesta.",
   headingMain: "Como funciona",
   headingAccent: "o diagnóstico.",
@@ -42,27 +44,65 @@ const COPY = {
   ],
 };
 
+const COPY_GENERAL = {
+  eyebrow: "30 minutos. Análise honesta.",
+  headingMain: "Como funciona",
+  headingAccent: "o diagnóstico.",
+  subheading:
+    "Não é reunião de vendas. É análise consultiva do seu funil.",
+  steps: [
+    {
+      icon: ClipboardList,
+      number: "01",
+      title: "Você preenche o formulário",
+      description: "Conta o cenário atual do seu negócio em 2 minutos. Sem pegadinha.",
+    },
+    {
+      icon: Phone,
+      number: "02",
+      title: "Conversa rápida de qualificação",
+      time: "10 min",
+      description:
+        "Vamos te ligar para alinhar expectativa e confirmar se faz sentido seguir.",
+    },
+    {
+      icon: Video,
+      number: "03",
+      title: "Reunião estratégica com o sócio",
+      time: "30 min",
+      description:
+        "O Maurílio entra com você no Google Meet e mostra, na prática, onde está o gargalo do seu funil de vendas.",
+    },
+  ],
+  outputTitle: "O que sai do diagnóstico",
+  outputs: [
+    "Análise honesta do funil atual: anúncio, atendimento e processo comercial",
+    "Identificação dos gargalos específicos do seu negócio",
+    "Plano de ação prioritário (você sai com clareza sobre o próximo passo)",
+  ],
+};
+
 export default function HowItWorks() {
+  const variant = useBodyVariant();
+  const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
   return (
     <section
       className="relative py-14 lg:py-28 overflow-hidden"
       style={{ background: "linear-gradient(135deg, #EDE9FE 0%, #F5F1EA 100%)" }}
     >
-      {/* Espiral áurea — proporção científica, canto inferior esquerdo */}
-      <GoldenRatioSpiral
-        className="absolute left-[2%] bottom-[6%] w-40 h-auto text-[#6A48F4] pointer-events-none"
-        opacity={0.065}
-      />
-      {/* Sonda periodontal — lateral direita */}
-      <ProbeGrid
-        className="absolute right-[5%] top-[20%] w-8 h-auto text-[#6A48F4] pointer-events-none hidden lg:block"
-        opacity={0.08}
-      />
-      {/* Traçado cefalométrico — canto superior direito */}
-      <CephalometricLines
-        className="absolute right-[-1%] top-[5%] w-36 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block"
-        opacity={0.05}
-      />
+      {variant === "general" ? (
+        <>
+          <AdSignal className="absolute left-[2%] bottom-[6%] w-40 h-auto text-[#6A48F4] pointer-events-none" opacity={0.065} />
+          <ClickCursor className="absolute right-[5%] top-[20%] w-20 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.08} />
+          <DataGrid className="absolute right-[-1%] top-[5%] w-44 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.05} />
+        </>
+      ) : (
+        <>
+          <GoldenRatioSpiral className="absolute left-[2%] bottom-[6%] w-40 h-auto text-[#6A48F4] pointer-events-none" opacity={0.065} />
+          <ProbeGrid className="absolute right-[5%] top-[20%] w-8 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.08} />
+          <CephalometricLines className="absolute right-[-1%] top-[5%] w-36 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.05} />
+        </>
+      )}
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho */}

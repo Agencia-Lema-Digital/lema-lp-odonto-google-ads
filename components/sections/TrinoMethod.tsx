@@ -6,6 +6,8 @@ import { Target, Settings2, TrendingUp } from "lucide-react";
 import FadeInSection from "@/components/ui/FadeInSection";
 import CTAButton from "@/components/ui/CTAButton";
 import { PorcelainReflection, XRayFragment } from "@/components/ui/DentalAccents";
+import { ROASArrow, TrendChart } from "@/components/ui/GeneralistAccents";
+import { useBodyVariant } from "@/lib/body-variant-context";
 
 // ─── Dados dos pilares ──────────────────────────────────────────────────────
 
@@ -54,14 +56,48 @@ const PILLARS = [
   },
 ];
 
-const COPY = {
+const COPY_ODONTO = {
   eyebrow: "Por que assessoria, não agência.",
   headingMain: "A maioria das agências entrega só o anúncio.",
   headingAccent: "A gente entrega o funil inteiro.",
   intro:
     "Rodar anúncio sem processo comercial estruturado é jogar dinheiro fora. O Método TRINO conecta os 3 pilares que precisam funcionar juntos para a agenda da sua clínica ser previsível.",
   anchorFinal: "Três pilares. Um sistema. Crescimento integrado.",
-  ctaLabel: "Quero entender como isso se aplica à minha clínica",
+  ctaLabel: "Quero meu diagnóstico gratuito",
+};
+
+const PILLARS_GENERAL = [
+  {
+    ...PILLARS[0],
+    anchor: "Atrair as pessoas certas, não as mais baratas.",
+    description:
+      "Fluxo previsível de leads via Google Ads, Meta Ads e atração orgânica — focado em perfis prontos para comprar, não volume vazio.",
+    includes: ["Google Ads", "Meta Ads", "Posicionamento orgânico", "Qualificação automatizada no funil"],
+  },
+  {
+    ...PILLARS[1],
+    anchor: "Onde leads viram clientes.",
+    description:
+      "CRM implementado, scripts de abordagem, follow-up estruturado e cadência comercial. Resolvemos a fricção entre o lead chegar e o fechamento acontecer.",
+    includes: ["CRM implementado e treinado", "Scripts de abordagem e fechamento", "Cadência comercial estruturada"],
+  },
+  {
+    ...PILLARS[2],
+    anchor: "Crescer com dados, não com achismo.",
+    description:
+      "Analisamos o funil completo a cada ciclo para identificar gargalos, aumentar conversão e expandir ticket médio com previsibilidade.",
+    includes: ["Relatórios semanais de performance", "Análise de gargalos e oportunidades", "Aumento de ticket médio e retenção"],
+  },
+];
+
+const COPY_GENERAL = {
+  eyebrow: "Não somos agência de anúncio. Somos um sistema de vendas.",
+  headingMain: "Três pilares interdependentes",
+  headingAccent: "do clique ao cliente fechado.",
+  intro:
+    "O Método TRINO conecta anúncio, atendimento e processo comercial num sistema cíclico — porque gerar lead sem processo comercial é jogar dinheiro fora. Cada pilar alimenta o próximo.",
+  anchorFinal: "Três pilares. Um sistema. Vendas previsíveis.",
+  ctaLabel: "Quero meu diagnóstico gratuito",
 };
 
 // ─── SVG Diagram interativo ─────────────────────────────────────────────────
@@ -369,7 +405,7 @@ function PillarContent({ pillar }: { pillar: typeof PILLARS[0] }) {
 
 // ─── Painel com altura fixa — todos os pilares em absolute, container travado ──
 
-function PillarPanel({ active }: { active: number }) {
+function PillarPanel({ active, pillars }: { active: number; pillars: typeof PILLARS }) {
   const [height, setHeight] = useState<number | "auto">("auto");
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -389,7 +425,7 @@ function PillarPanel({ active }: { active: number }) {
 
   return (
     <div className="relative" style={{ height }}>
-      {PILLARS.map((pillar, i) => (
+      {pillars.map((pillar, i) => (
         <motion.div
           key={pillar.id}
           animate={{ opacity: active === pillar.id ? 1 : 0 }}
@@ -416,13 +452,15 @@ function PillarPanel({ active }: { active: number }) {
 function MobileTabs({
   active,
   onSelect,
+  pillars,
 }: {
   active: number;
   onSelect: (id: number) => void;
+  pillars: typeof PILLARS;
 }) {
   return (
     <div className="flex rounded-xl overflow-hidden" style={{ border: "1px solid rgba(106,72,244,0.20)" }}>
-      {PILLARS.map((p) => (
+      {pillars.map((p) => (
         <button
           key={p.id}
           onClick={() => onSelect(p.id)}
@@ -446,6 +484,9 @@ function MobileTabs({
 // ─── Seção principal ─────────────────────────────────────────────────────────
 
 export default function TrinoMethod() {
+  const variant = useBodyVariant();
+  const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
+  const activePillars = variant === "general" ? PILLARS_GENERAL : PILLARS;
   const [active, setActive] = useState(0);
   const [autoRunning, setAutoRunning] = useState(true);
 
@@ -475,16 +516,17 @@ export default function TrinoMethod() {
         style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4, #143E66)" }}
       />
 
-      {/* Reflexo de porcelana — faceta estética, canto superior esquerdo */}
-      <PorcelainReflection
-        className="absolute left-[-1%] top-[8%] w-32 h-auto text-[#6A48F4] pointer-events-none"
-        opacity={0.055}
-      />
-      {/* Radiografia panorâmica — canto inferior direito */}
-      <XRayFragment
-        className="absolute right-[-1%] bottom-[5%] w-56 h-auto text-[#6A48F4] pointer-events-none hidden lg:block"
-        opacity={0.05}
-      />
+      {variant === "general" ? (
+        <>
+          <ROASArrow className="absolute left-[-1%] top-[8%] w-28 h-auto text-[#6A48F4] pointer-events-none" opacity={0.055} />
+          <TrendChart className="absolute right-[-1%] bottom-[5%] w-56 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.05} />
+        </>
+      ) : (
+        <>
+          <PorcelainReflection className="absolute left-[-1%] top-[8%] w-32 h-auto text-[#6A48F4] pointer-events-none" opacity={0.055} />
+          <XRayFragment className="absolute right-[-1%] bottom-[5%] w-56 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.05} />
+        </>
+      )}
 
       {/* Mesh radial */}
       <div
@@ -540,7 +582,7 @@ export default function TrinoMethod() {
                   style={{ borderLeft: "1px solid rgba(106,72,244,0.15)" }}
                 >
                   <div className="p-8 lg:p-10 h-full flex flex-col justify-center">
-                    <PillarPanel active={active} />
+                    <PillarPanel active={active} pillars={activePillars} />
                   </div>
                 </div>
               </div>
@@ -551,14 +593,14 @@ export default function TrinoMethod() {
               className="lg:hidden p-5 flex flex-col gap-5"
               style={{ borderTop: "1px solid rgba(106,72,244,0.15)" }}
             >
-              <MobileTabs active={active} onSelect={handleSelect} />
-              <PillarPanel active={active} />
+              <MobileTabs active={active} onSelect={handleSelect} pillars={activePillars} />
+              <PillarPanel active={active} pillars={activePillars} />
             </div>
           </div>
 
           {/* Indicadores de pilar — bolinhas clicáveis */}
           <div className="flex items-center justify-center gap-3 mb-14">
-            {PILLARS.map((p) => (
+            {activePillars.map((p) => (
               <button
                 key={p.id}
                 onClick={() => handleSelect(p.id)}

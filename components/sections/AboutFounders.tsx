@@ -3,8 +3,10 @@
 import Image from "next/image";
 import FadeInSection from "@/components/ui/FadeInSection";
 import { CephalometricLines, XRayFragment, ProbeGrid } from "@/components/ui/DentalAccents";
+import { TrendChart, FunnelLines, ROASArrow } from "@/components/ui/GeneralistAccents";
+import { useBodyVariant } from "@/lib/body-variant-context";
 
-const COPY = {
+const COPY_ODONTO = {
   eyebrow: "Você vai conversar com gente que entende do seu nicho.",
   headingMain: "Você fala com sócio.",
   headingAccent: "Não com atendente de agência.",
@@ -30,7 +32,35 @@ const COPY = {
     "Time especializado. Você fala com sócio e não com atendente de agência.",
 };
 
+const COPY_GENERAL = {
+  eyebrow: "Você vai conversar com gente que entende de marketing e vendas.",
+  headingMain: "Você fala com sócio.",
+  headingAccent: "Não com atendente de agência.",
+  subheading:
+    "A Lema Digital é uma assessoria de marketing e vendas para empresas que querem crescer com previsibilidade. Não atendemos qualquer negócio — só quem está pronto para estruturar o funil e medir resultado de verdade.",
+  founders: [
+    {
+      name: "Maurílio Moreira",
+      role: "Sócio — Estratégia, Marketing & Vendas",
+      bio: "Estrategista de marketing, vendas e tráfego. Conduz a estratégia comercial dos clientes da Lema. É quem vai conversar com você no diagnóstico.",
+      photo: "/images/maurilio.jpg",
+      initial: "M",
+    },
+    {
+      name: "Letícia Marques",
+      role: "Sócia — Atração Orgânica & Customer Success",
+      bio: "Lidera atração orgânica, conteúdo e o sucesso do cliente. Garante que a estratégia se traduza em resultados reais e previsíveis para o seu negócio.",
+      photo: "/images/leticia.jpg",
+      initial: "L",
+    },
+  ],
+  closing:
+    "Time especializado. Você fala com sócio e não com atendente de agência.",
+};
+
 export default function AboutFounders() {
+  const variant = useBodyVariant();
+  const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
   return (
     <section
       className="relative py-14 lg:py-28 overflow-hidden"
@@ -43,21 +73,19 @@ export default function AboutFounders() {
         style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4, #143E66)" }}
       />
 
-      {/* Traçado cefalométrico — análise de perfil facial, canto inferior direito */}
-      <CephalometricLines
-        className="absolute right-[-1%] bottom-[3%] w-48 h-auto text-[#6A48F4] pointer-events-none"
-        opacity={0.055}
-      />
-      {/* Radiografia panorâmica — canto superior esquerdo */}
-      <XRayFragment
-        className="absolute left-[-1%] top-[5%] w-60 h-auto text-[#6A48F4] pointer-events-none hidden lg:block"
-        opacity={0.05}
-      />
-      {/* Sonda periodontal — lateral esquerda, meio */}
-      <ProbeGrid
-        className="absolute left-[6%] top-[40%] w-7 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block"
-        opacity={0.07}
-      />
+      {variant === "general" ? (
+        <>
+          <TrendChart className="absolute right-[-1%] bottom-[3%] w-64 h-auto text-[#6A48F4] pointer-events-none" opacity={0.055} />
+          <FunnelLines className="absolute left-[-1%] top-[5%] w-36 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.05} />
+          <ROASArrow className="absolute left-[6%] top-[40%] w-24 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.07} />
+        </>
+      ) : (
+        <>
+          <CephalometricLines className="absolute right-[-1%] bottom-[3%] w-48 h-auto text-[#6A48F4] pointer-events-none" opacity={0.055} />
+          <XRayFragment className="absolute left-[-1%] top-[5%] w-60 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.05} />
+          <ProbeGrid className="absolute left-[6%] top-[40%] w-7 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.07} />
+        </>
+      )}
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho */}

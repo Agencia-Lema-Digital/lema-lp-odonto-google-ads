@@ -9,8 +9,10 @@ import {
 import FadeInSection from "@/components/ui/FadeInSection";
 import CTAButton from "@/components/ui/CTAButton";
 import { XRayFragment, ProbeGrid } from "@/components/ui/DentalAccents";
+import { DataGrid, ClickCursor } from "@/components/ui/GeneralistAccents";
+import { useBodyVariant } from "@/lib/body-variant-context";
 
-const COPY = {
+const COPY_ODONTO = {
   eyebrow: "Dúvidas frequentes",
   headingMain: "As perguntas que todo dono",
   headingAccent: "de clínica faz antes de fechar.",
@@ -34,7 +36,33 @@ const COPY = {
   ctaLabel: "Quero meu diagnóstico gratuito",
 };
 
+const COPY_GENERAL = {
+  eyebrow: "Dúvidas frequentes",
+  headingMain: "As perguntas que todo empresário",
+  headingAccent: "faz antes de fechar.",
+  faqs: [
+    {
+      question: "Já tive experiência ruim com agência. Por que vocês são diferentes?",
+      answer:
+        "Provavelmente sua agência anterior só rodava anúncio e entregava relatório. A Lema atua nos 3 pilares: anúncio, atendimento e processo comercial. O gap entre o lead chegar e a venda acontecer é onde a maioria das agências falha — e é exatamente onde o Método TRINO atua.",
+    },
+    {
+      question: "Vocês atendem qualquer tipo de empresa?",
+      answer:
+        "Não. Trabalhamos com empresas que faturam acima de R$30k/mês, já investem em tráfego pago e têm ao menos uma pessoa dedicada ao atendimento de leads. Se você não se encaixa nesse perfil agora, o diagnóstico vai deixar claro qual é o próximo passo antes de investir em assessoria.",
+    },
+    {
+      question: "Tem garantia de resultado?",
+      answer:
+        "Garantimos método, processo, métricas e acompanhamento próximo — não garantimos vendas, porque parte delas depende da sua estrutura, da sua equipe e do seu posicionamento de mercado. Qualquer empresa que garanta vendas ou está mentindo, ou está embutindo esse risco no preço.",
+    },
+  ],
+  ctaLabel: "Quero meu diagnóstico gratuito",
+};
+
 export default function FAQ() {
+  const variant = useBodyVariant();
+  const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
   return (
     <section
       className="relative py-14 lg:py-28 overflow-hidden"
@@ -46,16 +74,17 @@ export default function FAQ() {
         className="absolute top-0 left-0 right-0 h-1"
         style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4, #143E66)" }}
       />
-      {/* Radiografia panorâmica — canto superior direito */}
-      <XRayFragment
-        className="absolute right-[-1%] top-[4%] w-64 h-auto text-[#6A48F4] pointer-events-none hidden lg:block"
-        opacity={0.065}
-      />
-      {/* Sonda periodontal — canto inferior esquerdo */}
-      <ProbeGrid
-        className="absolute left-[4%] bottom-[5%] w-8 h-auto text-[#6A48F4] pointer-events-none hidden lg:block"
-        opacity={0.08}
-      />
+      {variant === "general" ? (
+        <>
+          <DataGrid className="absolute right-[-1%] top-[4%] w-56 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.065} />
+          <ClickCursor className="absolute left-[4%] bottom-[5%] w-20 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.08} />
+        </>
+      ) : (
+        <>
+          <XRayFragment className="absolute right-[-1%] top-[4%] w-64 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.065} />
+          <ProbeGrid className="absolute left-[4%] bottom-[5%] w-8 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.08} />
+        </>
+      )}
 
       <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho */}

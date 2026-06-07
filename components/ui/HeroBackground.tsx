@@ -3,34 +3,37 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const BOKEH = [
-  { x: "72%", y: "18%", size: 180, delay: 0,    dur: 7,   opacity: 0.13 },
-  { x: "85%", y: "35%", size: 130, delay: 1.2,  dur: 9,   opacity: 0.10 },
-  { x: "78%", y: "55%", size: 100, delay: 0.5,  dur: 8,   opacity: 0.11 },
-  { x: "90%", y: "70%", size: 150, delay: 2.0,  dur: 10,  opacity: 0.09 },
-  { x: "68%", y: "75%", size: 80,  delay: 1.8,  dur: 7.5, opacity: 0.10 },
-  { x: "93%", y: "25%", size: 110, delay: 0.8,  dur: 11,  opacity: 0.08 },
-  { x: "62%", y: "42%", size: 70,  delay: 3.0,  dur: 8,   opacity: 0.09 },
-  { x: "96%", y: "50%", size: 90,  delay: 1.5,  dur: 9.5, opacity: 0.08 },
-  { x: "75%", y: "88%", size: 120, delay: 2.5,  dur: 8,   opacity: 0.09 },
-  { x: "88%", y: "82%", size: 60,  delay: 0.3,  dur: 7,   opacity: 0.08 },
+// Núcleo de luz da imagem: ~67% x, 33% y (em viewBox 1040×600)
+const CORE = { cx: 697, cy: 198 };
+
+// Raios que partem do núcleo seguindo as diagonais da imagem
+const RAYS = [
+  // raio superior-esquerdo
+  { x1: CORE.cx, y1: CORE.cy, x2: 120,  y2: 20,  dur: 2.2, delay: 0.3 },
+  // raio inferior-esquerdo principal
+  { x1: CORE.cx, y1: CORE.cy, x2: 60,   y2: 580, dur: 2.8, delay: 0.6 },
+  // raio inferior-direito
+  { x1: CORE.cx, y1: CORE.cy, x2: 1020, y2: 560, dur: 2.5, delay: 0.9 },
+  // raio superior-direito
+  { x1: CORE.cx, y1: CORE.cy, x2: 1020, y2: 80,  dur: 2.0, delay: 0.2 },
 ];
 
-const LAMP_GLOW = { x: "54%", y: "8%" };
-
-const SVG_PARTICLES = [
-  { delay: 3.0, dur: 7.0, r: 3,   color: "#6A48F4" },
-  { delay: 5.5, dur: 7.0, r: 2,   color: "#8B6EF8" },
-  { delay: 4.2, dur: 8.5, r: 2.5, color: "#4C2FC4" },
+// Partículas viajando pelos raios (do núcleo para fora)
+const PARTICLES = [
+  { ray: 0, dur: 5.0, delay: 1.2, r: 2.5, color: "#C4B5FD" },
+  { ray: 1, dur: 6.5, delay: 2.4, r: 2,   color: "#A78BFA" },
+  { ray: 2, dur: 5.8, delay: 3.1, r: 3,   color: "#8B6EF8" },
+  { ray: 1, dur: 7.0, delay: 0.8, r: 1.5, color: "#C4B5FD" },
+  { ray: 3, dur: 5.5, delay: 1.9, r: 2,   color: "#6A48F4" },
+  { ray: 0, dur: 6.0, delay: 4.0, r: 1.5, color: "#A78BFA" },
 ];
 
-const DSD_DOTS = [
-  { cx: 420, cy: 200, delay: 3.2 },
-  { cx: 660, cy: 188, delay: 3.5 },
-  { cx: 840, cy: 255, delay: 3.8 },
-];
+interface HeroBackgroundProps {
+  imageSrc?: string;
+}
 
-export default function HeroBackground() {
+export default function HeroBackground({ imageSrc = "/images/clinic-hero.png" }: HeroBackgroundProps) {
+  const isGeneral = imageSrc === "/images/hero-general.webp";
   const [isMobile, setIsMobile] = useState(true);
   const [reduced, setReduced] = useState(false);
 
@@ -52,46 +55,37 @@ export default function HeroBackground() {
     >
       {!reduced && (
         <style>{`
-          @keyframes bokeh-pulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1);   opacity: var(--op-lo); }
-            35%       { transform: translate(-50%, -50%) scale(1.15); opacity: var(--op-hi); }
-            65%       { transform: translate(-50%, -50%) scale(0.92); opacity: var(--op-md); }
+          @keyframes core-pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.55; }
+            50%       { transform: translate(-50%, -50%) scale(1.22); opacity: 0.85; }
           }
-          @keyframes lamp-glow {
-            0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.6; }
-            50%       { transform: translate(-50%, -50%) scale(1.12);  opacity: 1;   }
+          @keyframes core-pulse-outer {
+            0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.25; }
+            50%       { transform: translate(-50%, -50%) scale(1.35); opacity: 0.45; }
+          }
+          @keyframes ray-appear {
+            from { stroke-dashoffset: var(--ray-len); opacity: 0; }
+            to   { stroke-dashoffset: 0; opacity: 1; }
+          }
+          @keyframes particle-travel {
+            0%        { offset-distance: 0%;   opacity: 0; }
+            8%, 80%   { opacity: 0.9; }
+            100%      { offset-distance: 100%; opacity: 0; }
           }
           @keyframes shimmer-slide {
             0%   { background-position: 200% 0%; }
             100% { background-position: -200% 0%; }
           }
-          @keyframes arc-draw {
-            from { stroke-dashoffset: 980; opacity: 0; }
-            to   { stroke-dashoffset: 0;   opacity: 1; }
-          }
-          @keyframes arc-draw-2 {
-            from { stroke-dashoffset: 880; opacity: 0; }
-            to   { stroke-dashoffset: 0;   opacity: 1; }
-          }
-          @keyframes occlusal-fade {
-            from { opacity: 0; transform: scaleX(0); }
-            to   { opacity: 1; transform: scaleX(1); }
-          }
-          @keyframes dsd-dot-appear {
-            from { opacity: 0; }
-            to   { opacity: 1; }
-          }
-          @keyframes particle-travel {
-            0%        { offset-distance: 0%;   opacity: 0; }
-            10%, 85%  { opacity: 0.7; }
-            100%      { offset-distance: 100%; opacity: 0; }
+          @keyframes ring-expand {
+            0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
           }
         `}</style>
       )}
 
-      {/* ── Foto da clínica ── */}
+      {/* ── Foto ── */}
       <Image
-        src="/images/clinic-hero.png"
+        src={imageSrc}
         alt=""
         fill
         className="object-cover object-center"
@@ -101,168 +95,179 @@ export default function HeroBackground() {
         decoding="sync"
       />
 
-      {/* Camada base escura */}
-      <div className="absolute inset-0" style={{ background: "rgba(8, 11, 22, 0.80)" }} />
-
-      {/* Gradiente direcional */}
+      {/* Mobile: cobertura vertical sólida sobre toda a tela */}
+      <div
+        className="absolute inset-0 lg:hidden"
+        style={{
+          background: "rgba(8,11,22,0.78)",
+        }}
+      />
+      {/* Desktop: degradê horizontal — escurece esquerda (copy), libera direita (imagem) */}
+      <div
+        className="absolute inset-0 hidden lg:block"
+        style={{
+          background: "linear-gradient(90deg, rgba(8,11,22,0.96) 0%, rgba(8,11,22,0.90) 28%, rgba(8,11,22,0.60) 48%, rgba(8,11,22,0.15) 66%, rgba(8,11,22,0.0) 80%)",
+        }}
+      />
+      {/* Camada vertical — suaviza topo e base (ambos os breakpoints) */}
       <div
         className="absolute inset-0"
         style={{
-          background:
-            "linear-gradient(105deg, rgba(8,11,22,0.88) 0%, rgba(8,11,22,0.72) 40%, rgba(8,11,22,0.35) 70%, rgba(8,11,22,0.10) 100%)",
+          background: "linear-gradient(180deg, rgba(8,11,22,0.40) 0%, transparent 25%, transparent 70%, rgba(8,11,22,0.80) 100%)",
         }}
       />
 
-      {/* Gradiente na base */}
+      {/* Fade para a seção seguinte */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-40"
+        className="absolute bottom-0 left-0 right-0 h-48"
         style={{ background: "linear-gradient(to top, #0C0F1A 0%, transparent 100%)" }}
-      />
-
-      {/* Tint violeta */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 70% at 20% 50%, rgba(106,72,244,0.18) 0%, transparent 65%), radial-gradient(ellipse 60% 50% at 75% 40%, rgba(20,62,102,0.20) 0%, transparent 70%)",
-        }}
       />
 
       {!reduced && (
         <>
-          {/* Bokeh — apenas desktop */}
-          {!isMobile && BOKEH.map((b, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                left: b.x,
-                top: b.y,
-                width: b.size,
-                height: b.size,
-                background: `radial-gradient(circle, rgba(180,160,255,${b.opacity * 2}) 0%, rgba(106,72,244,${b.opacity}) 40%, transparent 70%)`,
-                filter: "blur(18px)",
-                ["--op-lo" as string]: b.opacity * 8,
-                ["--op-md" as string]: b.opacity * 6,
-                ["--op-hi" as string]: b.opacity * 12,
-                animation: `bokeh-pulse ${b.dur}s ${b.delay}s ease-in-out infinite alternate`,
-              }}
-            />
-          ))}
+          {/* Pulso no núcleo de luz — apenas desktop */}
+          {!isMobile && (
+          <div
+            className="absolute rounded-full"
+            style={{
+              left: "67%",
+              top: "33%",
+              width: 120,
+              height: 120,
+              background: "radial-gradient(circle, rgba(220,180,255,0.55) 0%, rgba(160,100,255,0.30) 45%, transparent 70%)",
+              filter: "blur(14px)",
+              animation: "core-pulse 3.8s ease-in-out infinite",
+            }}
+          />
+          )}
 
-          {/* Lamp glow — apenas desktop */}
+          {/* Pulso no núcleo — anel externo mais suave — apenas desktop */}
+          {!isMobile && (
+          <div
+            className="absolute rounded-full"
+            style={{
+              left: "67%",
+              top: "33%",
+              width: 280,
+              height: 280,
+              background: "radial-gradient(circle, rgba(160,100,255,0.18) 0%, rgba(106,72,244,0.08) 50%, transparent 70%)",
+              filter: "blur(24px)",
+              animation: "core-pulse-outer 3.8s 0.4s ease-in-out infinite",
+            }}
+          />
+          )}
+
+          {/* Anel de expansão 1 — pulso lento */}
           {!isMobile && (
             <div
               className="absolute rounded-full"
               style={{
-                left: LAMP_GLOW.x,
-                top: LAMP_GLOW.y,
-                width: 220,
-                height: 220,
-                background: "radial-gradient(circle, rgba(255,245,200,0.28) 0%, rgba(255,220,100,0.10) 50%, transparent 70%)",
-                filter: "blur(28px)",
-                animation: "lamp-glow 4s ease-in-out infinite alternate",
+                left: "67%",
+                top: "33%",
+                width: 180,
+                height: 180,
+                border: "1px solid rgba(180,130,255,0.35)",
+                filter: "blur(1px)",
+                animation: "ring-expand 4s 0.5s ease-out infinite",
               }}
             />
           )}
 
-          {/* Shimmer diagonal — todos os tamanhos */}
+          {/* Anel de expansão 2 — defasado */}
+          {!isMobile && (
+            <div
+              className="absolute rounded-full"
+              style={{
+                left: "67%",
+                top: "33%",
+                width: 180,
+                height: 180,
+                border: "1px solid rgba(106,72,244,0.25)",
+                filter: "blur(1px)",
+                animation: "ring-expand 4s 2.5s ease-out infinite",
+              }}
+            />
+          )}
+
+          {/* Shimmer diagonal — apenas desktop */}
+          {!isMobile && (
           <div
             className="absolute inset-0"
             style={{
-              background: "linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.025) 50%, transparent 70%)",
+              background: "linear-gradient(135deg, transparent 25%, rgba(200,160,255,0.04) 50%, transparent 75%)",
               backgroundSize: "200% 100%",
-              animation: "shimmer-slide 12s 2s linear infinite",
+              animation: "shimmer-slide 10s 1s linear infinite",
             }}
           />
+          )}
 
-          {/* SVG: arcos + partículas */}
-          <svg
-            viewBox="0 0 1040 600"
-            preserveAspectRatio="xMidYMid slice"
-            className="absolute inset-0 w-full h-full pointer-events-none"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ zIndex: 3 }}
-          >
-            <defs>
-              <filter id="hbg-glow" x="-100%" y="-100%" width="300%" height="300%">
-                <feGaussianBlur stdDeviation="3.5" result="b" />
-                <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-              </filter>
-              <mask id="hbg-svg-mask">
-                <rect x="0" y="0" width="1040" height="600" fill="white" />
-                <radialGradient id="hbg-svg-grad" cx="22%" cy="50%" r="40%">
-                  <stop offset="0%"   stopColor="black" stopOpacity="1" />
-                  <stop offset="60%"  stopColor="black" stopOpacity="0.6" />
-                  <stop offset="100%" stopColor="black" stopOpacity="0" />
-                </radialGradient>
-                <rect x="0" y="0" width="1040" height="600" fill="url(#hbg-svg-grad)" />
-              </mask>
-            </defs>
+          {/* SVG: raios + partículas — apenas desktop */}
+          {!isMobile && (
+            <svg
+              viewBox="0 0 1040 600"
+              preserveAspectRatio="xMidYMid slice"
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ zIndex: 3 }}
+            >
+              <defs>
+                <filter id="hbg-glow" x="-100%" y="-100%" width="300%" height="300%">
+                  <feGaussianBlur stdDeviation="3" result="b" />
+                  <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+                <filter id="hbg-glow-soft" x="-200%" y="-200%" width="500%" height="500%">
+                  <feGaussianBlur stdDeviation="6" result="b" />
+                  <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+              </defs>
 
-            <g mask="url(#hbg-svg-mask)">
-              <path
-                d="M200 370 C340 220 520 170 660 190 C800 210 900 300 960 390"
-                stroke="rgba(106,72,244,0.28)"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                fill="none"
-                strokeDasharray="980"
-                style={{ animation: "arc-draw 3.5s 0.4s ease-out forwards", opacity: 0 }}
+              {/* Raios emanando do núcleo — draw-on ao carregar */}
+              {RAYS.map((ray, i) => {
+                const len = Math.hypot(ray.x2 - ray.x1, ray.y2 - ray.y1);
+                return (
+                  <line
+                    key={i}
+                    x1={ray.x1} y1={ray.y1}
+                    x2={ray.x2} y2={ray.y2}
+                    stroke={`rgba(180,130,255,${i < 2 ? 0.22 : 0.14})`}
+                    strokeWidth={i < 2 ? 1.2 : 0.7}
+                    strokeLinecap="round"
+                    strokeDasharray={len}
+                    style={{
+                      ["--ray-len" as string]: len,
+                      animation: `ray-appear ${ray.dur}s ${ray.delay}s ease-out forwards`,
+                      opacity: 0,
+                    } as React.CSSProperties}
+                  />
+                );
+              })}
+
+              {/* Partículas viajando do núcleo para fora pelos raios */}
+              {PARTICLES.map((p, i) => {
+                const ray = RAYS[p.ray];
+                return (
+                  <circle
+                    key={i}
+                    r={p.r}
+                    fill={p.color}
+                    filter="url(#hbg-glow)"
+                    style={{
+                      offsetPath: `path("M${ray.x1} ${ray.y1} L${ray.x2} ${ray.y2}")`,
+                      animation: `particle-travel ${p.dur}s ${p.delay}s linear infinite`,
+                    } as React.CSSProperties}
+                  />
+                );
+              })}
+
+              {/* Ponto de luz no núcleo */}
+              <circle
+                cx={CORE.cx} cy={CORE.cy} r={5}
+                fill="rgba(240,210,255,0.9)"
+                filter="url(#hbg-glow-soft)"
               />
-              <path
-                d="M260 345 C380 225 520 192 655 205 C790 218 880 290 940 360"
-                stroke="rgba(76,47,196,0.18)"
-                strokeWidth="0.8"
-                strokeLinecap="round"
-                fill="none"
-                strokeDasharray="880"
-                style={{ animation: "arc-draw-2 3s 0.8s ease-out forwards", opacity: 0 }}
-              />
-              <path
-                d="M280 310 L920 295"
-                stroke="rgba(106,72,244,0.14)"
-                strokeWidth="0.6"
-                strokeDasharray="5 10"
-                strokeLinecap="round"
-                style={{
-                  animation: "occlusal-fade 1.5s 2s ease-out forwards",
-                  opacity: 0,
-                  transformOrigin: "600px 302px",
-                }}
-              />
-
-              {/* Partículas + DSD dots — apenas desktop */}
-              {!isMobile && (
-                <>
-                  {SVG_PARTICLES.map((p, i) => (
-                    <circle
-                      key={i}
-                      r={p.r}
-                      fill={p.color}
-                      filter="url(#hbg-glow)"
-                      style={{
-                        offsetPath: `path("M200 370 C340 220 520 170 660 190 C800 210 900 300 960 390")`,
-                        animation: `particle-travel ${p.dur}s ${p.delay}s linear infinite`,
-                      } as React.CSSProperties}
-                    />
-                  ))}
-
-                  {DSD_DOTS.map((pt, i) => (
-                    <g
-                      key={i}
-                      style={{ animation: `dsd-dot-appear 0.5s ${pt.delay}s ease-out forwards`, opacity: 0 }}
-                    >
-                      <circle cx={pt.cx} cy={pt.cy} r={3} fill="rgba(106,72,244,0.55)" filter="url(#hbg-glow)" />
-                      <line x1={pt.cx - 9} y1={pt.cy} x2={pt.cx + 9} y2={pt.cy} stroke="rgba(106,72,244,0.28)" strokeWidth="0.7" />
-                      <line x1={pt.cx} y1={pt.cy - 9} x2={pt.cx} y2={pt.cy + 9} stroke="rgba(106,72,244,0.28)" strokeWidth="0.7" />
-                    </g>
-                  ))}
-                </>
-              )}
-            </g>
-          </svg>
+            </svg>
+          )}
         </>
       )}
     </div>

@@ -2,12 +2,14 @@
 
 import FadeInSection from "@/components/ui/FadeInSection";
 import { SmileDesignArc, GoldenRatioSpiral, OcclusalGrid } from "@/components/ui/DentalAccents";
+import { TrendChart, AdSignal, FunnelLines } from "@/components/ui/GeneralistAccents";
+import { useBodyVariant } from "@/lib/body-variant-context";
 
-const COPY = {
+const COPY_ODONTO = {
   heading: "Vamos diagnosticar seu funil em 30 minutos.",
   subheading:
     "Você sai do diagnóstico com clareza exata de onde está o gargalo da sua clínica. Mesmo que a gente não trabalhe junto depois, você leva o plano de ação. Sem custo. Sem compromisso. Sem proposta forçada.",
-  ctaLabel: "Quero meu diagnóstico",
+  ctaLabel: "Quero meu diagnóstico gratuito",
   microcopy: "30 minutos com o sócio · Análise honesta do seu funil · Sem proposta forçada",
   stats: [
     { value: "80%", label: "show rate" },
@@ -16,7 +18,22 @@ const COPY = {
   ],
 };
 
+const COPY_GENERAL = {
+  heading: "Vamos diagnosticar seu funil em 30 minutos.",
+  subheading:
+    "Você sai do diagnóstico com clareza exata de onde está o gargalo entre o lead chegar e a venda acontecer. Mesmo que a gente não trabalhe junto depois, você leva o plano de ação. Sem custo. Sem compromisso. Sem proposta forçada.",
+  ctaLabel: "Quero meu diagnóstico gratuito",
+  microcopy: "30 minutos com o sócio · Análise honesta do seu funil · Sem proposta forçada",
+  stats: [
+    { value: "−81%", label: "custo por conversão" },
+    { value: "+30%", label: "taxa de fechamento" },
+    { value: "CPL", label: "claro e mensurável" },
+  ],
+};
+
 export default function FinalCTA() {
+  const variant = useBodyVariant();
+  const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
   return (
     <section
       className="relative py-14 lg:py-28 text-white overflow-hidden"
@@ -24,21 +41,19 @@ export default function FinalCTA() {
         background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
       }}
     >
-      {/* Curva DSD — análise de sorriso, canto superior direito */}
-      <SmileDesignArc
-        className="absolute right-[-2%] top-[5%] w-96 h-auto text-white pointer-events-none"
-        opacity={0.09}
-      />
-      {/* Espiral áurea — canto inferior esquerdo */}
-      <GoldenRatioSpiral
-        className="absolute left-[-2%] bottom-[3%] w-52 h-auto text-white pointer-events-none"
-        opacity={0.06}
-      />
-      {/* Vista oclusal — canto inferior direito */}
-      <OcclusalGrid
-        className="absolute right-[-1%] bottom-[4%] w-40 h-auto text-white pointer-events-none hidden lg:block"
-        opacity={0.07}
-      />
+      {variant === "general" ? (
+        <>
+          <TrendChart className="absolute right-[-2%] top-[5%] w-96 h-auto text-white pointer-events-none" opacity={0.09} />
+          <AdSignal className="absolute left-[-2%] bottom-[3%] w-52 h-auto text-white pointer-events-none" opacity={0.06} />
+          <FunnelLines className="absolute right-[-1%] bottom-[4%] w-36 h-auto text-white pointer-events-none hidden lg:block" opacity={0.07} />
+        </>
+      ) : (
+        <>
+          <SmileDesignArc className="absolute right-[-2%] top-[5%] w-96 h-auto text-white pointer-events-none" opacity={0.09} />
+          <GoldenRatioSpiral className="absolute left-[-2%] bottom-[3%] w-52 h-auto text-white pointer-events-none" opacity={0.06} />
+          <OcclusalGrid className="absolute right-[-1%] bottom-[4%] w-40 h-auto text-white pointer-events-none hidden lg:block" opacity={0.07} />
+        </>
+      )}
 
       {/* Padrão de grade sutil */}
       <div

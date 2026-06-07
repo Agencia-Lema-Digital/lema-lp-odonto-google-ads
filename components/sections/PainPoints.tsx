@@ -10,8 +10,10 @@ import {
 } from "lucide-react";
 import FadeInSection from "@/components/ui/FadeInSection";
 import { PorcelainReflection, OcclusalGrid, SmileDesignArc } from "@/components/ui/DentalAccents";
+import { ClickCursor, FunnelLines, TrendChart } from "@/components/ui/GeneralistAccents";
+import { useBodyVariant } from "@/lib/body-variant-context";
 
-const COPY = {
+const COPY_ODONTO = {
   eyebrow: "Você reconhece pelo menos 3 dessas situações?",
   headingMain: "O problema não é o anúncio.",
   headingAccent: "É o funil inteiro.",
@@ -57,24 +59,70 @@ const COPY = {
   ],
 };
 
+const COPY_GENERAL = {
+  eyebrow: "Você reconhece pelo menos 3 dessas situações?",
+  headingMain: "O problema não é o anúncio.",
+  headingAccent: "É o funil inteiro.",
+  transition:
+    "Se 3 ou mais soam familiares, o problema não está no seu anúncio. Está no que acontece depois que o lead chega.",
+  cards: [
+    {
+      icon: MessageSquareX,
+      title: "Leads chegam, mas ninguém converte.",
+      description:
+        "O anúncio funciona, as mensagens chegam — mas no fim do mês o faturamento não mudou.",
+    },
+    {
+      icon: BadgeDollarSign,
+      title: "Alto investimento com baixo retorno.",
+      description:
+        "Você investe em anúncios, paga agência, e o custo por cliente fechado continua alto demais.",
+    },
+    {
+      icon: CalendarX2,
+      title: "Imprevisibilidade nas vendas mês a mês.",
+      description:
+        "Um mês bom, dois ruins. Sem padrão, sem previsibilidade, sem como planejar crescimento.",
+    },
+    {
+      icon: UsersRound,
+      title: "Agências anteriores que não entregaram.",
+      description:
+        "Vieram relatórios bonitos, mas o faturamento ficou no mesmo lugar de sempre.",
+    },
+    {
+      icon: Clock,
+      title: "Follow-up que não existe.",
+      description:
+        "Lead chega, equipe responde uma vez, some. Ninguém tem cadência para converter quem não fechou na hora.",
+    },
+    {
+      icon: MousePointerClick,
+      title: "Vendas dependendo de sorte ou indicação.",
+      description:
+        "Sem indicação, a receita cai. Sem processo, o time não sabe o que fazer diferente.",
+    },
+  ],
+};
+
 export default function PainPoints() {
+  const variant = useBodyVariant();
+  const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
   return (
     <section className="relative py-14 lg:py-28 overflow-hidden" style={{ background: "linear-gradient(135deg, #EDE9FE 0%, #F5F1EA 100%)" }}>
-      {/* Reflexo de porcelana — faceta estética, canto superior direito */}
-      <PorcelainReflection
-        className="absolute right-[2%] top-[4%] w-28 h-auto text-[#6A48F4] pointer-events-none"
-        opacity={0.09}
-      />
-      {/* Vista oclusal — canto inferior esquerdo */}
-      <OcclusalGrid
-        className="absolute left-[-2%] bottom-[4%] w-48 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block"
-        opacity={0.055}
-      />
-      {/* Curva DSD — canto inferior direito, sutil */}
-      <SmileDesignArc
-        className="absolute right-[-1%] bottom-[10%] w-64 h-auto text-[#6A48F4] pointer-events-none hidden lg:block"
-        opacity={0.05}
-      />
+      {variant === "general" ? (
+        <>
+          <ClickCursor className="absolute right-[2%] top-[4%] w-28 h-auto text-[#6A48F4] pointer-events-none" opacity={0.09} />
+          <FunnelLines className="absolute left-[-2%] bottom-[4%] w-36 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.055} />
+          <TrendChart className="absolute right-[-1%] bottom-[10%] w-64 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.05} />
+        </>
+      ) : (
+        <>
+          <PorcelainReflection className="absolute right-[2%] top-[4%] w-28 h-auto text-[#6A48F4] pointer-events-none" opacity={0.09} />
+          <OcclusalGrid className="absolute left-[-2%] bottom-[4%] w-48 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.055} />
+          <SmileDesignArc className="absolute right-[-1%] bottom-[10%] w-64 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.05} />
+        </>
+      )}
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho editorial */}
@@ -117,28 +165,12 @@ export default function PainPoints() {
             return (
               <FadeInSection key={i}>
                 <div className="group bg-white p-7 h-full flex flex-col gap-4 hover:bg-brand-soft transition-colors duration-200 relative">
-                  {/* Número decorativo */}
-                  <span
-                    aria-hidden="true"
-                    className="absolute top-5 right-5 font-headline font-bold text-5xl leading-none select-none transition-opacity duration-200"
-                    style={{
-                      background: "linear-gradient(135deg, #6A48F4 0%, #143E66 100%)",
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      color: "transparent",
-                      opacity: 0.12,
-                    }}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-
                   {/* Ícone */}
                   <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{ background: "rgba(106,72,244,0.10)" }}
+                    className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: "rgba(106,72,244,0.12)" }}
                   >
-                    <Icon className="w-5 h-5 text-brand-primary" aria-hidden="true" />
+                    <Icon className="w-6 h-6 text-brand-primary" aria-hidden="true" />
                   </div>
 
                   <div>
