@@ -29,9 +29,12 @@ export const metadata: Metadata = {
 
 export default function AgenciaMarketingOdontologicoPage() {
   return (
-    <main>
-      <Hero content={config.hero} />
-      <LandingPageBody />
-    </main>
+    <>
+      <link rel="preload" as="image" href="/_next/image?url=%2Fimages%2Fclinic-hero.png&w=640&q=75" fetchPriority="high" />
+      <main>
+        <Hero content={config.hero} />
+        <LandingPageBody />
+      </main>
+    </>
   );
 }
