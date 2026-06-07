@@ -29,9 +29,18 @@ export const metadata: Metadata = {
 
 export default function AssessoriaMarketingVendasPage() {
   return (
-    <main>
-      <Hero content={config.hero} />
-      <LandingPageBody variant="general" />
-    </main>
+    <>
+      {/* Preload do LCP correto para esta rota — hero-general.webp */}
+      <link
+        rel="preload"
+        as="image"
+        href="/_next/image?url=%2Fimages%2Fhero-general.webp&w=1080&q=75"
+        fetchPriority="high"
+      />
+      <main>
+        <Hero content={config.hero} />
+        <LandingPageBody variant="general" />
+      </main>
+    </>
   );
 }

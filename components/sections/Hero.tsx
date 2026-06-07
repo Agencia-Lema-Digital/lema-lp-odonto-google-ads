@@ -31,7 +31,7 @@ function AgitationWithVideo({ firstH2, agitationBody }: { firstH2: string; agita
     if (!el) return;
     const obs = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setInView(true); obs.disconnect(); } },
-      { rootMargin: "200px" }
+      { rootMargin: "0px" }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -69,12 +69,13 @@ function AgitationWithVideo({ firstH2, agitationBody }: { firstH2: string; agita
           ) : (
             /* Thumbnail estática */
             <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/images/thumb-lead-cliente.png"
                 alt="Thumbnail do vídeo"
-                className="w-full h-full object-cover"
-                draggable={false}
+                fill
+                sizes="(min-width: 1280px) 180px, (min-width: 1024px) 160px, 100vw"
+                className="object-cover"
+                quality={80}
               />
               {/* Overlay para escurecer levemente sem cobrir rostos */}
               <div

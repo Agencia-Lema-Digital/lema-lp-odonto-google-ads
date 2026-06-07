@@ -91,7 +91,7 @@ export default function HeroBackground({ imageSrc = "/images/clinic-hero.png" }:
         sizes="100vw"
         priority
         quality={75}
-        decoding="sync"
+        decoding="async"
       />
 
       {/* Mobile: cobertura vertical sólida sobre toda a tela */}
