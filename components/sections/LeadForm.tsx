@@ -110,7 +110,7 @@ export default function LeadForm() {
                     : "https://form.respondi.app/YPsomgNk"
                 }
                 data-respondi-width="100%"
-                data-respondi-height="360px"
+                data-respondi-height="600px"
               />
             ) : (
               <div
