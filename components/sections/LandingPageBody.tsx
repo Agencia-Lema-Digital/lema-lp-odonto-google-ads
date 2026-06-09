@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { BodyVariantContext, type BodyVariant } from "@/lib/body-variant-context";
+import StickyMobileCTA from "@/components/ui/StickyMobileCTA";
 
 function SectionPlaceholder({ height }: { height: string }) {
   return <div style={{ minHeight: height }} />;
@@ -26,6 +27,7 @@ interface LandingPageBodyProps {
 export default function LandingPageBody({ variant = "odonto" }: LandingPageBodyProps) {
   return (
     <BodyVariantContext.Provider value={variant}>
+      <StickyMobileCTA />
       <AudienceFilter />
       <PainPoints />
       <TrinoMethod />
