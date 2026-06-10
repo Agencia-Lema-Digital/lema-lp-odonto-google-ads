@@ -20,6 +20,34 @@ const fadeUp = (delay: number): React.CSSProperties => ({
   animation: `hero-fade-up 0.55s ease-out ${delay}s both`,
 });
 
+const VIDEO_ID = "yCIKlFCP5p0";
+
+// Tipagem mínima da YouTube IFrame API usada no tracking
+interface YTPlayerInstance {
+  getDuration: () => number;
+  getCurrentTime: () => number;
+  getPlayerState?: () => number;
+  destroy?: () => void;
+}
+
+interface YTGlobal {
+  Player: new (
+    elementId: string,
+    options: {
+      events: {
+        onReady?: () => void;
+        onStateChange?: (e: { data: number }) => void;
+      };
+    }
+  ) => YTPlayerInstance;
+  PlayerState: { PLAYING: number; ENDED: number };
+}
+
+type YTWindow = Window & {
+  YT?: YTGlobal;
+  onYouTubeIframeAPIReady?: () => void;
+};
+
 // Vídeo lazy-loaded com thumbnail, botão play central e badge — variante general
 function AgitationWithVideo({ firstH2, agitationBody }: { firstH2: string; agitationBody: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -36,6 +64,85 @@ function AgitationWithVideo({ firstH2, agitationBody }: { firstH2: string; agita
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
+
+  // O trigger nativo "YouTube Video" do GTM não detecta iframes inseridos no DOM
+  // após o load — rastreamos direto pela IFrame API e empurramos para o dataLayer.
+  useEffect(() => {
+    if (!playing) return;
+
+    let player: YTPlayerInstance;
+    let progressTimer: ReturnType<typeof setInterval> | undefined;
+    const firedMarks = new Set<number>();
+    let started = false;
+
+    const push = (event: string, percent: number) => {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event,
+        video_provider: "youtube",
+        video_title: firstH2,
+        video_url: `https://www.youtube.com/watch?v=${VIDEO_ID}`,
+        video_percent: percent,
+      });
+    };
+
+    const onPlaying = () => {
+      if (started) return;
+      started = true;
+      push("video_start", 0);
+      progressTimer = setInterval(() => {
+        const duration = player.getDuration();
+        if (!duration) return;
+        const pct = (player.getCurrentTime() / duration) * 100;
+        for (const mark of [25, 50, 75]) {
+          if (pct >= mark && !firedMarks.has(mark)) {
+            firedMarks.add(mark);
+            push("video_progress", mark);
+          }
+        }
+      }, 1000);
+    };
+
+    const createPlayer = () => {
+      const YT = (window as YTWindow).YT!;
+      player = new YT.Player("hero-video-iframe", {
+        events: {
+          // autoplay pode começar antes do listener anexar — onReady cobre esse caso
+          onReady: () => {
+            if (player.getPlayerState?.() === YT.PlayerState.PLAYING) onPlaying();
+          },
+          onStateChange: (e: { data: number }) => {
+            if (e.data === YT.PlayerState.PLAYING) onPlaying();
+            if (e.data === YT.PlayerState.ENDED) {
+              push("video_complete", 100);
+              if (progressTimer) clearInterval(progressTimer);
+            }
+          },
+        },
+      });
+    };
+
+    const w = window as YTWindow;
+    if (w.YT?.Player) {
+      createPlayer();
+    } else {
+      const prev = w.onYouTubeIframeAPIReady;
+      w.onYouTubeIframeAPIReady = () => {
+        prev?.();
+        createPlayer();
+      };
+      if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+        const s = document.createElement("script");
+        s.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(s);
+      }
+    }
+
+    return () => {
+      if (progressTimer) clearInterval(progressTimer);
+      player?.destroy?.();
+    };
+  }, [playing, firstH2]);
 
   return (
     <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-12">
@@ -59,7 +166,8 @@ function AgitationWithVideo({ firstH2, agitationBody }: { firstH2: string; agita
           ) : playing ? (
             /* Iframe com autoplay após clique no play */
             <iframe
-              src={`https://www.youtube.com/embed/yCIKlFCP5p0?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`}
+              id="hero-video-iframe"
+              src={`https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`}
               title={firstH2}
               allow="autoplay; fullscreen"
               allowFullScreen
