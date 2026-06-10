@@ -59,7 +59,7 @@ function AgitationWithVideo({ firstH2, agitationBody }: { firstH2: string; agita
           ) : playing ? (
             /* Iframe com autoplay após clique no play */
             <iframe
-              src="https://www.youtube.com/embed/yCIKlFCP5p0?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&origin=https://diagnostico.lemaagdigital.com.br"
+              src={`https://www.youtube.com/embed/yCIKlFCP5p0?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`}
               title={firstH2}
               allow="autoplay; fullscreen"
               allowFullScreen
