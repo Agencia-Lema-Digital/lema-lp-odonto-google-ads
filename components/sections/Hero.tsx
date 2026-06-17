@@ -178,7 +178,7 @@ function AgitationWithVideo({ firstH2, agitationBody }: { firstH2: string; agita
             /* Thumbnail estática */
             <>
               <Image
-                src="/images/thumb-lead-cliente.png"
+                src="/images/thumb-lead-cliente-novo.webp"
                 alt="Thumbnail do vídeo"
                 fill
                 sizes="(min-width: 1280px) 180px, (min-width: 1024px) 160px, 100vw"
