@@ -73,7 +73,7 @@ export const PAGES_CONFIG: Record<string, PageConfig> = {
       h1AccentWord: "ou só clique?",
       subheadline:
         "A Lema conecta anúncios, conteúdo e processo comercial pra cada lead virar venda — com previsibilidade, sem depender de indicação.",
-      firstH2: "Por que gerar lead não é o mesmo que gerar cliente",
+      firstH2: "Por que seu anúncio atrai curiosos e não quem compra",
       agitationBody:
         "O anúncio roda, os leads chegam, o time responde — e no final do mês o faturamento não mudou. O problema quase nunca está no anúncio. Está no que acontece entre o clique e a venda: atendimento lento, processo comercial sem padrão, follow-up que não existe. Lead sem processo vira custo.",
     },
