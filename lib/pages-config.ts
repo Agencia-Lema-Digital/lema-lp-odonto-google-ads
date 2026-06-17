@@ -69,10 +69,10 @@ export const PAGES_CONFIG: Record<string, PageConfig> = {
       topBanner: "Para empresas que faturam +R$35k/mês",
       heroImage: "/images/hero-general.webp",
       kicker: "Para empresas que faturam +R$35k/mês",
-      h1: "Seus anúncios geram muitos leads, mas poucos clientes?",
-      h1AccentWord: "poucos clientes",
+      h1: "Seu tráfego traz cliente ou só clique?",
+      h1AccentWord: "ou só clique?",
       subheadline:
-        "A Lema Digital é uma Assessoria de Marketing & Vendas que conecta suas campanhas ao resultado final: vendas reais e previsíveis.",
+        "A Lema conecta anúncios, conteúdo e processo comercial pra cada lead virar venda — com previsibilidade, sem depender de indicação.",
       firstH2: "Por que gerar lead não é o mesmo que gerar cliente",
       agitationBody:
         "O anúncio roda, os leads chegam, o time responde — e no final do mês o faturamento não mudou. O problema quase nunca está no anúncio. Está no que acontece entre o clique e a venda: atendimento lento, processo comercial sem padrão, follow-up que não existe. Lead sem processo vira custo.",
