@@ -46,7 +46,7 @@ const COPY_GENERAL = {
   forWho: {
     title: "Para quem é",
     items: [
-      "Empresas com faturamento mensal acima de R$30 mil",
+      "Empresas com faturamento mensal acima de R$35 mil",
       "Negócios que já investem em tráfego pago (Google ou Meta Ads)",
       "Pelo menos uma pessoa dedicada ao atendimento de leads",
       "WhatsApp Business ativo e CRM ou planilha de acompanhamento",

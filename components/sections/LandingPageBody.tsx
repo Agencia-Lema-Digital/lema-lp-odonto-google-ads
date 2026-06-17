@@ -38,7 +38,7 @@ export default function LandingPageBody({ variant = "odonto" }: LandingPageBodyP
       <FAQ />
       <LeadForm />
       <FinalCTA />
-      <Footer tagline={variant === "general" ? "Assessoria de Marketing e Vendas para empresas que faturam +R$30k/mês." : undefined} />
+      <Footer tagline={variant === "general" ? "Assessoria de Marketing e Vendas para empresas que faturam +R$35k/mês." : undefined} />
     </BodyVariantContext.Provider>
   );
 }

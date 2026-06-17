@@ -49,7 +49,7 @@ const COPY_GENERAL = {
     {
       question: "Vocês atendem qualquer tipo de empresa?",
       answer:
-        "Não. Trabalhamos com empresas que faturam acima de R$30k/mês, já investem em tráfego pago e têm ao menos uma pessoa dedicada ao atendimento de leads. Se você não se encaixa nesse perfil agora, o diagnóstico vai deixar claro qual é o próximo passo antes de investir em assessoria.",
+        "Não. Trabalhamos com empresas que faturam acima de R$35k/mês, já investem em tráfego pago e têm ao menos uma pessoa dedicada ao atendimento de leads. Se você não se encaixa nesse perfil agora, o diagnóstico vai deixar claro qual é o próximo passo antes de investir em assessoria.",
     },
     {
       question: "Tem garantia de resultado?",

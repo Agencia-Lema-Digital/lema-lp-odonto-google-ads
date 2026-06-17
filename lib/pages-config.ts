@@ -63,12 +63,12 @@ export const PAGES_CONFIG: Record<string, PageConfig> = {
     },
   },
 
-  // Intenção "Geral" — empresas +R$30k/mês
+  // Intenção "Geral" — empresas +R$35k/mês
   "/assessoria-marketing-vendas": {
     hero: {
-      topBanner: "Para empresas que faturam +R$30k/mês",
+      topBanner: "Para empresas que faturam +R$35k/mês",
       heroImage: "/images/hero-general.webp",
-      kicker: "Para empresas que faturam +R$30k/mês",
+      kicker: "Para empresas que faturam +R$35k/mês",
       h1: "Seus anúncios geram muitos leads, mas poucos clientes?",
       h1AccentWord: "poucos clientes",
       subheadline:
@@ -80,7 +80,7 @@ export const PAGES_CONFIG: Record<string, PageConfig> = {
     meta: {
       title: "Assessoria de Marketing e Vendas | Lema Digital",
       description:
-        "Assessoria de Marketing & Vendas para empresas que faturam +R$30k/mês. Conectamos suas campanhas ao processo comercial para gerar vendas reais e previsíveis.",
+        "Assessoria de Marketing & Vendas para empresas que faturam +R$35k/mês. Conectamos suas campanhas ao processo comercial para gerar vendas reais e previsíveis.",
       canonical: `${BASE_URL}/assessoria-marketing-vendas`,
     },
   },

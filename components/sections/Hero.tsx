@@ -12,8 +12,8 @@ const STAT_ODONTO = {
 };
 
 const STAT_GENERAL = {
-  number: "20x",
-  label: "de retorno em vendas sobre o que foi investido em anúncios",
+  number: "R$85 mil em vendas",
+  label: "com R$4,2 mil investidos em anúncios — cliente real (móveis planejados)",
 };
 
 const fadeUp = (delay: number): React.CSSProperties => ({
@@ -379,6 +379,43 @@ export default function Hero({ content }: HeroProps) {
               {content.subheadline}
             </p>
 
+            {/* Prova social compacta — apenas mobile (no desktop usa o card lateral) */}
+            {isGeneral && (
+              <div
+                style={{
+                  ...fadeUp(0.25),
+                  background: "rgba(6,5,14,0.55)",
+                  border: "1px solid rgba(106,72,244,0.20)",
+                }}
+                className="lg:hidden flex items-center gap-3 rounded-2xl px-4 py-3"
+                aria-label="Resultado real de cliente"
+              >
+                <div
+                  className="flex-shrink-0 w-1 self-stretch rounded-full"
+                  style={{ background: "linear-gradient(180deg, #6A48F4, #143E66)" }}
+                  aria-hidden="true"
+                />
+                <div className="min-w-0">
+                  <p
+                    className="font-headline italic leading-tight text-lg sm:text-xl"
+                    style={{
+                      fontWeight: 200,
+                      background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
+                      WebkitBackgroundClip: "text",
+                      backgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      color: "transparent",
+                    }}
+                  >
+                    {STAT_GENERAL.number}
+                  </p>
+                  <p className="font-body text-gray-300 text-xs leading-snug mt-0.5">
+                    {STAT_GENERAL.label}
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div style={fadeUp(0.3)}>
               <CTAButton size="lg" />
               <p className="mt-3 text-gray-400 text-xs font-body">
@@ -406,9 +443,9 @@ export default function Hero({ content }: HeroProps) {
             } as React.CSSProperties}
           >
             <span
-              className="font-headline leading-none italic"
+              className="font-headline leading-tight italic text-center"
               style={{
-                fontSize: "clamp(3rem, 5vw, 4.5rem)",
+                fontSize: isGeneral ? "clamp(1.8rem, 2.4vw, 2.4rem)" : "clamp(3rem, 5vw, 4.5rem)",
                 fontWeight: 200,
                 background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
                 WebkitBackgroundClip: "text",
@@ -419,7 +456,7 @@ export default function Hero({ content }: HeroProps) {
             >
               {STAT.number}
             </span>
-            <p className={`font-body text-sm text-center leading-snug max-w-[160px] ${isGeneral ? "text-gray-300" : "text-gray-400"}`}>
+            <p className={`font-body text-sm text-center leading-snug ${isGeneral ? "text-gray-300 max-w-[200px]" : "text-gray-400 max-w-[160px]"}`}>
               {STAT.label}
             </p>
             <div
@@ -428,7 +465,7 @@ export default function Hero({ content }: HeroProps) {
               aria-hidden="true"
             />
             <p className="font-sub text-brand-primary text-sm tracking-wide text-center">
-              {isGeneral ? "cliente real" : "resultado real"}
+              resultado real
             </p>
           </div>
         </div>
