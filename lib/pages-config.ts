@@ -75,7 +75,7 @@ export const PAGES_CONFIG: Record<string, PageConfig> = {
         "A Lema conecta anúncios, conteúdo e processo comercial pra cada lead virar venda — com previsibilidade, sem depender de indicação.",
       firstH2: "Por que seu anúncio atrai curiosos e não quem compra",
       agitationBody:
-        "Você paga pelo clique, atende dezenas de pessoas por semana e fecha um punhado. O resto pede orçamento e some. Cansa: é muita conversa pra pouca venda. O anúncio até traz gente — mas traz curioso, e curioso não paga boleto. O que falta não é mais lead. É atrair menos gente e fechar mais.",
+        "Chega gente, o WhatsApp apita, o time responde — e no fim do mês o faturamento não mudou. A maioria só estava perguntando preço. O problema não é o anúncio: é que ninguém separa o curioso de quem está pronto pra comprar. Sem processo, lead vira custo.",
     },
     meta: {
       title: "Assessoria de Marketing e Vendas | Lema Digital",
