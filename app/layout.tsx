@@ -51,7 +51,6 @@ export default function RootLayout({
     >
       <head>
         <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://embed.respondi.app" />
       </head>
       <body className="font-body antialiased bg-white text-brand-text">
         {/* Google Tag Manager (noscript) */}
@@ -98,16 +97,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 }
               });
             })();
-
-            window.addEventListener('message', function(e) {
-              if (!e.data || typeof e.data !== 'object') return;
-              if (e.data.type === 'respondi:start') {
-                window.dataLayer.push({ event: 'form_start' });
-              }
-              if (e.data.type === 'respondi:submit' || e.data.type === 'respondi:complete') {
-                window.dataLayer.push({ event: 'form_submit' });
-              }
-            });
           `}
         </Script>
       </body>

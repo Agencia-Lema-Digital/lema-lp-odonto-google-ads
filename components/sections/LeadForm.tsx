@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import FadeInSection from "@/components/ui/FadeInSection";
+import NativeLeadForm from "@/components/ui/NativeLeadForm";
 import { SmileDesignArc, OcclusalGrid } from "@/components/ui/DentalAccents";
 import { AdSignal, DataGrid } from "@/components/ui/GeneralistAccents";
 import { useBodyVariant } from "@/lib/body-variant-context";
@@ -17,35 +18,6 @@ const COPY = {
 export default function LeadForm() {
   const variant = useBodyVariant();
   const sectionRef = useRef<HTMLElement>(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldLoad(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "300px" }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!shouldLoad) return;
-    if (document.querySelector("#respondi_src")) return;
-    const script = document.createElement("script");
-    script.id = "respondi_src";
-    script.src = "https://embed.respondi.app/embed.js";
-    script.async = true;
-    document.body.appendChild(script);
-  }, [shouldLoad]);
 
   return (
     <section
@@ -97,30 +69,10 @@ export default function LeadForm() {
 
         <FadeInSection delay={0.15}>
           <div
-            className="overflow-hidden rounded-2xl"
+            className="overflow-hidden rounded-2xl bg-white"
             style={{ boxShadow: "0 4px 32px rgba(106,72,244,0.10)" }}
           >
-            {shouldLoad ? (
-              <div
-                data-respondi-container=""
-                data-respondi-mode="regular"
-                data-respondi-src={
-                  variant === "general"
-                    ? "https://form.respondi.app/qIbm0D6r"
-                    : "https://form.respondi.app/YPsomgNk"
-                }
-                data-respondi-width="100%"
-                data-respondi-height="600px"
-              />
-            ) : (
-              <div
-                className="flex items-center justify-center bg-white/60"
-                style={{ minHeight: "480px" }}
-                aria-label="Carregando formulário"
-              >
-                <div className="w-8 h-8 rounded-full border-2 border-brand-primary border-t-transparent animate-spin" />
-              </div>
-            )}
+            <NativeLeadForm />
           </div>
         </FadeInSection>
 
