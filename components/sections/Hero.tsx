@@ -13,8 +13,8 @@ const STAT_ODONTO = {
 
 const STAT_GENERAL = {
   number: "R$85 mil em vendas",
-  label: "com R$4,2 mil investidos em anúncios (móveis planejados)",
-  tag: "cliente real",
+  label: "com R$4,2 mil investidos em anúncios",
+  tag: "cliente real (móveis planejados)",
 };
 
 const fadeUp = (delay: number): React.CSSProperties => ({
