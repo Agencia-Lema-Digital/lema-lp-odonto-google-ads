@@ -13,7 +13,8 @@ const STAT_ODONTO = {
 
 const STAT_GENERAL = {
   number: "R$85 mil em vendas",
-  label: "com R$4,2 mil investidos em anúncios — cliente real (móveis planejados)",
+  label: "com R$4,2 mil investidos em anúncios (móveis planejados)",
+  tag: "cliente real",
 };
 
 const fadeUp = (delay: number): React.CSSProperties => ({
@@ -410,7 +411,8 @@ export default function Hero({ content }: HeroProps) {
                     {STAT_GENERAL.number}
                   </p>
                   <p className="font-body text-gray-300 text-xs leading-snug mt-0.5">
-                    {STAT_GENERAL.label}
+                    {STAT_GENERAL.label}{" "}
+                    <span className="font-sub text-brand-primary">— {STAT_GENERAL.tag}</span>
                   </p>
                 </div>
               </div>
@@ -465,7 +467,7 @@ export default function Hero({ content }: HeroProps) {
               aria-hidden="true"
             />
             <p className="font-sub text-brand-primary text-sm tracking-wide text-center">
-              resultado real
+              {isGeneral ? STAT_GENERAL.tag : "resultado real"}
             </p>
           </div>
         </div>
