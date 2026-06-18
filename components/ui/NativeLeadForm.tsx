@@ -119,15 +119,15 @@ const QUESTION_TYPE_OUT: Record<string, string> = {
   sobre: "textarea",
 };
 
-// Monta o payload no formato Respondi (array com form/respondent)
+// Monta o payload no formato Respondi (array com form/respondent).
+// Enviado apenas na conclusão do formulário (status sempre "completed").
 function buildPayload(opts: {
   answers: Answers;
   utms: Utms;
   respondentId: string;
-  status: "completed" | "abandoned";
   phoneCountryCode: string;
 }) {
-  const { answers, utms, respondentId, status, phoneCountryCode } = opts;
+  const { answers, utms, respondentId, phoneCountryCode } = opts;
 
   const answersMap: Record<string, string> = {};
   const rawAnswers: unknown[] = [];
@@ -156,7 +156,7 @@ function buildPayload(opts: {
     {
       form: { form_name: FORM_NAME, form_id: FORM_ID },
       respondent: {
-        status,
+        status: "completed",
         date: nowStamp(),
         respondent_id: respondentId,
         answers: answersMap,
@@ -229,8 +229,6 @@ export default function NativeLeadForm() {
   const answeredRef = useRef<Set<string>>(new Set());
   // Espelho de answers para uso dentro de callbacks sem stale closure
   const answersRef = useRef<Answers>(EMPTY);
-  // Marca conclusão para o handler de abandono não enviar parcial após o submit
-  const submittedRef = useRef(false);
 
   const current = QUESTIONS[step];
   const isLast = step === QUESTIONS.length - 1;
@@ -302,16 +300,6 @@ export default function NativeLeadForm() {
     }
     // Evento por pergunta (nome próprio por etapa) — funil da jornada do lead
     emitStep(q);
-    // Salva parcial: o Make cuida da regra de 1h de inatividade (webhook de abandono)
-    sendToWebhook(
-      buildPayload({
-        answers: { ...answersRef.current },
-        utms: utmsRef.current,
-        respondentId: respondentIdRef.current,
-        status: "abandoned",
-        phoneCountryCode: phoneCountryRef.current.code,
-      })
-    );
   }, []);
 
   useEffect(() => { answersRef.current = answers; }, [answers]);
@@ -334,32 +322,6 @@ export default function NativeLeadForm() {
     document.addEventListener("mousedown", onDocClick);
     return () => document.removeEventListener("mousedown", onDocClick);
   }, [countryOpen]);
-
-  // Captura abandono ao fechar/ocultar a aba: envia o estado atual como parcial.
-  // Só dispara se algo já foi preenchido e o form não foi concluído.
-  useEffect(() => {
-    const flush = () => {
-      if (submittedRef.current) return;
-      const a = answersRef.current;
-      if (!a.nome && !a.telefone && !a.empresa && !a.sobre) return;
-      sendToWebhook(
-        buildPayload({
-          answers: a,
-          utms: utmsRef.current,
-          respondentId: respondentIdRef.current,
-          status: "abandoned",
-          phoneCountryCode: phoneCountryRef.current.code,
-        })
-      );
-    };
-    const onHide = () => { if (document.visibilityState === "hidden") flush(); };
-    window.addEventListener("pagehide", flush);
-    document.addEventListener("visibilitychange", onHide);
-    return () => {
-      window.removeEventListener("pagehide", flush);
-      document.removeEventListener("visibilitychange", onHide);
-    };
-  }, []);
 
   function handleNext() {
     if (!validate()) return;
@@ -397,13 +359,11 @@ export default function NativeLeadForm() {
 
   async function handleSubmit() {
     setStatus("submitting");
-    submittedRef.current = true;
 
     const payload = buildPayload({
       answers: answersRef.current,
       utms: utmsRef.current,
       respondentId: respondentIdRef.current,
-      status: "completed",
       phoneCountryCode: phoneCountryRef.current.code,
     });
 
