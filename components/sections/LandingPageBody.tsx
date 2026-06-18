@@ -1,8 +1,46 @@
 "use client";
 
+import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { BodyVariantContext, type BodyVariant } from "@/lib/body-variant-context";
 import StickyMobileCTA from "@/components/ui/StickyMobileCTA";
+
+// As seções carregam via dynamic(ssr:false), então a âncora (#secao) na URL pode
+// chegar antes do elemento existir no DOM. Este hook tenta rolar até a âncora,
+// repetindo por alguns segundos enquanto as seções montam, e re-tenta a cada
+// mudança de hash (clique em sitelink sem recarregar a página).
+function useHashScroll() {
+  useEffect(() => {
+    let raf = 0;
+    let timer: ReturnType<typeof setInterval> | undefined;
+
+    const scrollToHash = () => {
+      const id = window.location.hash.replace(/^#/, "");
+      if (!id) return;
+      let attempts = 0;
+      if (timer) clearInterval(timer);
+      timer = setInterval(() => {
+        const el = document.getElementById(id);
+        attempts++;
+        if (el) {
+          raf = requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" }));
+          clearInterval(timer);
+        } else if (attempts > 40) {
+          // ~6s de tentativas (40 × 150ms); desiste se a seção nunca montar
+          clearInterval(timer);
+        }
+      }, 150);
+    };
+
+    scrollToHash();
+    window.addEventListener("hashchange", scrollToHash);
+    return () => {
+      window.removeEventListener("hashchange", scrollToHash);
+      if (timer) clearInterval(timer);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+}
 
 function SectionPlaceholder({ height }: { height: string }) {
   return <div style={{ minHeight: height }} />;
@@ -25,6 +63,7 @@ interface LandingPageBodyProps {
 }
 
 export default function LandingPageBody({ variant = "odonto" }: LandingPageBodyProps) {
+  useHashScroll();
   return (
     <BodyVariantContext.Provider value={variant}>
       <StickyMobileCTA />

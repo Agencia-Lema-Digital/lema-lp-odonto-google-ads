@@ -397,7 +397,8 @@ function SideCard({ c, index }: { c: typeof OTHERS[0]; index: number }) {
 export default function CaseStudies() {
   return (
     <section
-      className="relative py-14 lg:py-28 overflow-hidden"
+      id="cases-de-sucesso"
+      className="relative py-14 lg:py-28 overflow-hidden scroll-mt-20"
       style={{ background: "linear-gradient(160deg, #080B14 0%, #0C0F1A 40%, #0F1E33 100%)" }}
     >
       {/* Linha de topo */}

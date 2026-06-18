@@ -23,7 +23,7 @@ export default function LeadForm() {
     <section
       id="lead-form"
       ref={sectionRef}
-      className="relative py-10 lg:py-16 scroll-mt-8 overflow-hidden"
+      className="relative py-10 lg:py-16 scroll-mt-20 overflow-hidden"
       aria-labelledby="lead-form-heading"
       style={{ background: "linear-gradient(135deg, #EDE9FE 0%, #F5F1EA 100%)" }}
     >

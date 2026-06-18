@@ -506,7 +506,8 @@ export default function TrinoMethod() {
 
   return (
     <section
-      className="relative py-14 lg:py-28 text-white overflow-hidden"
+      id="nosso-metodo"
+      className="relative py-14 lg:py-28 text-white overflow-hidden scroll-mt-20"
       style={{ background: "linear-gradient(135deg, #0C0F1A 0%, #0F1E33 60%, #0C0F1A 100%)" }}
     >
       {/* Linha de topo degradê */}

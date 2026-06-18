@@ -87,7 +87,8 @@ export default function HowItWorks() {
   const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
   return (
     <section
-      className="relative py-14 lg:py-28 overflow-hidden"
+      id="como-trabalhamos"
+      className="relative py-14 lg:py-28 overflow-hidden scroll-mt-20"
       style={{ background: "linear-gradient(135deg, #EDE9FE 0%, #F5F1EA 100%)" }}
     >
       {variant === "general" ? (

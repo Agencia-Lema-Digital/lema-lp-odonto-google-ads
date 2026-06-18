@@ -72,7 +72,7 @@ export default function AudienceFilter() {
   const variant = useBodyVariant();
   const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
   return (
-    <section className="relative py-14 lg:py-28 bg-white overflow-hidden">
+    <section id="para-quem-e" className="relative py-14 lg:py-28 bg-white overflow-hidden scroll-mt-20">
       {/* Linha de acento diagonal no topo — degradê primário */}
       <div
         aria-hidden="true"
