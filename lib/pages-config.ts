@@ -59,7 +59,7 @@ export const PAGES_CONFIG: Record<string, PageConfig> = {
     meta: {
       title: "Agência de Marketing Odontológico | Método TRINO — Lema Digital",
       description:
-        "Cansou de agência que só entrega relatório? A Lema é assessoria de marketing e vendas para clínicas odontológicas. Diagnóstico gratuito de 30 min.",
+        "Cansou de agência que só entrega relatório? A Lema Digital é assessoria de marketing e vendas para clínicas odontológicas. Diagnóstico gratuito de 30 min.",
       canonical: `${BASE_URL}/agencia-marketing-odontologico`,
     },
   },

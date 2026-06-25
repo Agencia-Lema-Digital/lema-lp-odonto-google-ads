@@ -119,10 +119,10 @@ export default function Hero({ content }: HeroProps) {
         />
       </div>
 
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-14 sm:pt-12 sm:pb-16 lg:pt-14 lg:pb-14 flex-1 flex flex-col lg:justify-center">
-        <div className={isGeneral ? "flex-1 flex flex-col lg:block" : "grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center"}>
-          {/* Coluna principal — na general (mobile) distribui na altura toda */}
-          <div className={`flex flex-col max-w-2xl ${isGeneral ? "flex-1 justify-between gap-7 sm:gap-5 sm:justify-start lg:gap-5 lg:flex-none" : "gap-4 sm:gap-5 lg:gap-5"}`}>
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-14 sm:pt-12 sm:pb-16 lg:pt-14 lg:pb-14 flex-1 flex flex-col justify-center">
+        <div className={isGeneral ? "" : "grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center"}>
+          {/* Coluna principal */}
+          <div className={`flex flex-col max-w-2xl ${isGeneral ? "gap-6 sm:gap-5 lg:gap-5" : "gap-4 sm:gap-5 lg:gap-5"}`}>
             {isGeneral ? (
               <div style={fadeUp(0)}>
                 <Image
@@ -149,9 +149,9 @@ export default function Hero({ content }: HeroProps) {
               </p>
             )}
 
-            {/* Grupo principal — no mobile general fica centrado no espaço entre
-                logo (topo) e base, dando corpo à hero sem agrupar tudo no meio */}
-            <div className={`flex flex-col ${isGeneral ? "flex-1 justify-center gap-6 sm:flex-none sm:justify-start sm:gap-5" : "contents"}`}>
+            {/* h1 + sub + CTA — display:contents faz herdarem o gap da coluna,
+                ficando logo + headline coesos e centralizados na hero */}
+            <div className="contents">
               <h1
                 style={fadeUp(0.1)}
                 className="font-headline font-bold text-white text-3xl sm:text-4xl lg:text-[3.6rem] leading-[1.12] sm:leading-[1.1] lg:leading-[1.05] tracking-tight text-balance"

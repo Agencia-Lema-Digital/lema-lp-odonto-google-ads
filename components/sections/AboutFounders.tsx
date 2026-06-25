@@ -18,7 +18,7 @@ const COPY_ODONTO = {
     {
       name: "Maurílio Moreira",
       role: "Sócio — Estratégia, Marketing & Vendas",
-      bio: "Estrategista de marketing, vendas e tráfego. Conduz a estratégia comercial das clínicas atendidas pela Lema. É quem vai conversar com você no diagnóstico.",
+      bio: "Estrategista de marketing, vendas e tráfego. Conduz a estratégia comercial das clínicas atendidas pela Lema Digital. É quem vai conversar com você no diagnóstico.",
       photo: "/images/maurilio.jpg",
       initial: "M",
     },
@@ -44,7 +44,7 @@ const COPY_GENERAL = {
     {
       name: "Maurílio Moreira",
       role: "Sócio — Estratégia, Marketing & Vendas",
-      bio: "Estrategista de marketing, vendas e tráfego. Conduz a estratégia comercial dos clientes da Lema. É quem vai conversar com você no diagnóstico.",
+      bio: "Estrategista de marketing, vendas e tráfego. Conduz a estratégia comercial dos clientes da Lema Digital. É quem vai conversar com você no diagnóstico.",
       photo: "/images/maurilio.jpg",
       initial: "M",
     },

@@ -44,7 +44,7 @@ const COPY_GENERAL = {
     {
       question: "Já tive experiência ruim com agência. Por que vocês são diferentes?",
       answer:
-        "Provavelmente sua agência anterior só rodava anúncio e entregava relatório. A Lema atua nos 3 pilares: anúncio, atendimento e processo comercial. O gap entre o lead chegar e a venda acontecer é onde a maioria das agências falha — e é exatamente onde o Método TRINO atua.",
+        "Provavelmente sua agência anterior só rodava anúncio e entregava relatório. A Lema Digital atua nos 3 pilares: anúncio, atendimento e processo comercial. O gap entre o lead chegar e a venda acontecer é onde a maioria das agências falha — e é exatamente onde o Método TRINO atua.",
     },
     {
       question: "O que está incluído na assessoria? É só tráfego?",

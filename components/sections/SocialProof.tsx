@@ -533,9 +533,9 @@ const COPY_ODONTO = {
 };
 
 const COPY_GENERAL = {
-  eyebrow: "Por que escolher a Lema?",
+  eyebrow: "Por que escolher a Lema Digital?",
   headingMain: "Números que provam",
-  headingAccent: "o que a Lema entrega.",
+  headingAccent: "o que entregamos.",
   subheading: "Métricas reais de clientes que aplicam o Método TRINO.",
   stats: [
     {
@@ -818,7 +818,7 @@ export default function SocialProof() {
               aria-hidden="true"
             />
             <p className="font-body text-gray-300 text-sm">
-              O que clientes dizem sobre a Lema
+              O que clientes dizem sobre a Lema Digital
             </p>
           </div>
         </FadeInSection>

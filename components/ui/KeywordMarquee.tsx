@@ -1,7 +1,7 @@
 "use client";
 
 // Faixa de palavras-chave deslizante (marquee) — resumo escaneável do que a Lema
-// entrega, alinhado ao Método TRINO (demanda/comercial/expansão) e ao MCI.
+// Digital entrega, alinhado ao Método TRINO (demanda/comercial/expansão) e ao MCI.
 // Animação CSS pura em loop; respeita prefers-reduced-motion (para de mover).
 
 const KEYWORDS = [
@@ -47,7 +47,7 @@ export default function KeywordMarquee() {
         background: "#0C0F1A",
         borderColor: "rgba(106,72,244,0.15)",
       }}
-      aria-label="O que a Lema entrega"
+      aria-label="O que a Lema Digital entrega"
     >
       {/* Esmaecimento nas bordas para o loop parecer infinito */}
       <div
