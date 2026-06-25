@@ -70,18 +70,19 @@ export default function LandingPageBody({ variant = "odonto" }: LandingPageBodyP
     <BodyVariantContext.Provider value={variant}>
       <StickyMobileCTA />
       {variant === "general" ? (
-        /* Ordem general: dor → qualifica → prova → método → diagnóstico → form */
+        /* Ordem general: dor → qualifica → prova → transição → como funciona →
+           autoridade → form → FAQ. TrinoMethod oculto nesta página (decidir depois
+           se volta ou fica só em outras rotas). FAQ movido para o final, antes do footer. */
         <>
           <PainStrip />
           <AudienceFilter />
           {/* SocialProof agora inclui os cases (seção unificada) */}
           <SocialProof />
           <TransitionStrip />
-          <TrinoMethod />
           <HowItWorks />
           <AboutFounders />
-          <FAQ />
           <LeadForm />
+          <FAQ />
         </>
       ) : (
         /* Ordem odonto (original) */

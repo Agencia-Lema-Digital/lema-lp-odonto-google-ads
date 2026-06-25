@@ -29,7 +29,7 @@ const OTHERS = [
     segment: "Marcenaria & Móveis Sob Medida",
     name: "LK Móveis Sob Medida",
     location: "Porto Alegre/RS",
-    accentColor: "#7C3AED",
+    accentColor: "#A78BFA",
     stats: [
       { value: "20×", label: "ROAS — retorno sobre anúncios" },
       { value: "R$85k", label: "em vendas geradas" },
@@ -40,7 +40,7 @@ const OTHERS = [
     segment: "Clínica Veterinária",
     name: "CENUV",
     location: "Vila Velha/ES",
-    accentColor: "#0EA5E9",
+    accentColor: "#7C5CFB",
     stats: [
       { value: "+R$6k", label: "faturados em 15 dias" },
       { value: "87%", label: "presença no topo do Google" },
@@ -51,7 +51,7 @@ const OTHERS = [
     segment: "Marca Pessoal",
     name: "Cleston Santino",
     location: "Orlando/FL",
-    accentColor: "#F59E0B",
+    accentColor: "#6A48F4",
     stats: [
       { value: "+100k", label: "inscritos no YouTube" },
       { value: "+2Mi", label: "views no YouTube" },
@@ -88,13 +88,33 @@ function VideoLightbox({ videoId, onClose }: { videoId: string; onClose: () => v
         style={{ background: "rgba(0,0,0,0.92)" }}
         onClick={onClose}
       >
+        {/* Botão fechar fixo no canto da viewport — sempre visível e clicável,
+            independentemente do tamanho do vídeo */}
+        <button
+          onClick={onClose}
+          aria-label="Fechar vídeo"
+          className="fixed top-4 right-4 z-10 flex items-center gap-1.5 rounded-full px-4 py-2 text-white text-sm font-body font-medium transition-colors"
+          style={{ background: "rgba(255,255,255,0.12)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
+        >
+          <svg width="12" height="12" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+            <path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+          Fechar
+        </button>
+
         <motion.div
           initial={{ scale: 0.92, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.92, opacity: 0 }}
           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-[360px]"
-          style={{ aspectRatio: "9/16", maxHeight: "88vh" }}
+          className="relative"
+          style={{
+            // Vídeo vertical (9/16): a altura limita o tamanho, deixando margem
+            // no topo p/ o botão fechar; a largura acompanha a proporção.
+            height: "min(78vh, 640px)",
+            width: "min(calc(78vh * 9 / 16), 360px, calc(100vw - 2rem))",
+            maxHeight: "78vh",
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           <iframe
@@ -105,16 +125,6 @@ function VideoLightbox({ videoId, onClose }: { videoId: string; onClose: () => v
             className="w-full h-full rounded-2xl"
             style={{ border: "none" }}
           />
-          <button
-            onClick={onClose}
-            aria-label="Fechar vídeo"
-            className="absolute -top-9 right-0 text-white/60 hover:text-white transition-colors text-xs font-body flex items-center gap-1.5"
-          >
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
-              <path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-            Fechar
-          </button>
         </motion.div>
       </motion.div>
     </AnimatePresence>
@@ -183,7 +193,7 @@ function BigNumber({ value }: { value: string }) {
       className="font-headline italic leading-none select-none"
       style={{
         fontSize: "clamp(3rem, 7.5vw, 5.5rem)",
-        fontWeight: 200,
+        fontWeight: 400,
         background: "linear-gradient(135deg, #EDE9FE 0%, #C4B5FD 55%, #A78BFA 100%)",
         WebkitBackgroundClip: "text",
         backgroundClip: "text",
@@ -240,7 +250,7 @@ function FeaturedCard() {
               <p
                 className="font-headline italic text-2xl leading-none mb-1"
                 style={{
-                  fontWeight: 200,
+                  fontWeight: 400,
                   background: "linear-gradient(135deg, #EDE9FE, #C4B5FD)",
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
@@ -266,7 +276,7 @@ function FeaturedCard() {
           className="rounded-2xl px-5 py-3 mt-auto"
           style={{ background: "linear-gradient(135deg, rgba(106,72,244,0.20), rgba(20,62,102,0.20))", border: "1px solid rgba(106,72,244,0.25)" }}
         >
-          <p className="font-headline font-bold italic text-white text-sm lg:text-base text-center">&ldquo;{FEATURED.tagline}&rdquo;</p>
+          <p className="font-headline font-normal italic text-gray-200 text-sm lg:text-base text-center">&ldquo;{FEATURED.tagline}&rdquo;</p>
         </div>
       </div>
     </div>
@@ -734,7 +744,7 @@ export default function SocialProof() {
                     <p
                       className={`font-headline font-bold leading-none ${stat.value !== null ? "text-3xl lg:text-4xl" : "text-2xl lg:text-3xl"}`}
                       style={{
-                        background: "linear-gradient(135deg, #EDE9FE 0%, #D6CBFF 50%, #A78BFA 100%)",
+                        background: "linear-gradient(135deg, #FFFFFF 0%, #F5F3FF 55%, #E6DEFF 100%)",
                         WebkitBackgroundClip: "text",
                         backgroundClip: "text",
                         WebkitTextFillColor: "transparent",

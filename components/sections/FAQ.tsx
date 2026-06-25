@@ -47,9 +47,9 @@ const COPY_GENERAL = {
         "Provavelmente sua agência anterior só rodava anúncio e entregava relatório. A Lema atua nos 3 pilares: anúncio, atendimento e processo comercial. O gap entre o lead chegar e a venda acontecer é onde a maioria das agências falha — e é exatamente onde o Método TRINO atua.",
     },
     {
-      question: "Vocês atendem qualquer tipo de empresa?",
+      question: "O que está incluído na assessoria? É só tráfego?",
       answer:
-        "Não. Trabalhamos com empresas que faturam acima de R$35k/mês, já investem em tráfego pago e têm ao menos uma pessoa dedicada ao atendimento de leads. Se você não se encaixa nesse perfil agora, o diagnóstico vai deixar claro qual é o próximo passo antes de investir em assessoria.",
+        "Não é só tráfego. O Método TRINO conecta três frentes num sistema só: (1) Demanda Qualificada — tráfego pago (Google e Meta) somado à atração orgânica e conteúdo, para atrair o cliente certo; (2) Estrutura Comercial — CRM, scripts, follow-up e treinamento para converter o lead em cliente sem perder ninguém pelo caminho; e (3) Expansão Inteligente — leitura de dados do funil para reduzir custo de aquisição, aumentar o ticket e crescer com previsibilidade. O escopo de cada pilar varia conforme o plano, e a gente define isso junto no diagnóstico.",
     },
     {
       question: "Tem garantia de resultado?",

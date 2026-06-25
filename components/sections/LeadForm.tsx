@@ -8,11 +8,12 @@ import { AdSignal, DataGrid } from "@/components/ui/GeneralistAccents";
 import { useBodyVariant } from "@/lib/body-variant-context";
 
 const COPY = {
-  eyebrow: "Últimas vagas disponíveis",
+  eyebrow: "Poucas vagas por semana",
   headingMain: "Pronto para o",
   headingAccent: "diagnóstico gratuito?",
-  subheading:
-    "Preencha em 2 minutos. A gente te liga em até 1 dia útil para confirmar a reunião.",
+  // Duas frases — quebradas em linhas separadas apenas no desktop (ver render)
+  subLine1: "Preencha em 2 minutos.",
+  subLine2: "A gente te liga em até 1 dia útil para confirmar a reunião.",
 };
 
 export default function LeadForm() {
@@ -63,7 +64,9 @@ export default function LeadForm() {
             <span className="gradient-text">{COPY.headingAccent}</span>
           </h2>
           <p className="font-body text-gray-600 text-base lg:text-lg">
-            {COPY.subheading}
+            {COPY.subLine1}{" "}
+            <br className="hidden lg:block" />
+            {COPY.subLine2}
           </p>
         </FadeInSection>
 

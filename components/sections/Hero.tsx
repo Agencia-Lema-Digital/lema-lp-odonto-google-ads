@@ -40,6 +40,30 @@ function H1WithAccent({ text, accentWord }: { text: string; accentWord?: string 
   );
 }
 
+// Destaca um trecho do banner superior com o gradient da marca (ex.: "+R$35k/mês")
+function BannerWithAccent({ text, accent }: { text: string; accent: string }) {
+  if (!text.includes(accent)) return <>{text}</>;
+  const [before, after] = text.split(accent);
+  return (
+    <>
+      {before}
+      <span
+        className="font-semibold"
+        style={{
+          background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
+          WebkitBackgroundClip: "text",
+          backgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          color: "transparent",
+        }}
+      >
+        {accent}
+      </span>
+      {after}
+    </>
+  );
+}
+
 interface HeroProps {
   content: PageHeroContent;
 }
@@ -66,7 +90,10 @@ export default function Hero({ content }: HeroProps) {
           className="relative z-10 text-black text-center py-2.5 px-4 text-xs font-body font-normal tracking-widest uppercase"
           style={{ background: "#e5e5e5" }}
         >
-          {content.topBanner ?? "Exclusivo para clínicas odontológicas"}
+          <BannerWithAccent
+            text={content.topBanner ?? "Exclusivo para clínicas odontológicas"}
+            accent="+R$35k/mês"
+          />
         </div>
       ) : (
         <div
@@ -92,10 +119,10 @@ export default function Hero({ content }: HeroProps) {
         />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pt-12 sm:pb-16 lg:pt-14 lg:pb-14 flex-1 flex flex-col justify-center">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-14 sm:pt-12 sm:pb-16 lg:pt-14 lg:pb-14 flex-1 flex flex-col justify-center">
+        <div className={isGeneral ? "" : "grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center"}>
           {/* Coluna principal */}
-          <div className="flex flex-col gap-4 sm:gap-5 lg:gap-5 max-w-2xl">
+          <div className={`flex flex-col max-w-2xl ${isGeneral ? "gap-6 sm:gap-5 lg:gap-5" : "gap-4 sm:gap-5 lg:gap-5"}`}>
             {isGeneral ? (
               <div style={fadeUp(0)}>
                 <Image
@@ -103,7 +130,7 @@ export default function Hero({ content }: HeroProps) {
                   alt="Lema Agência Digital"
                   width={160}
                   height={72}
-                  className="h-10 sm:h-12 w-auto object-contain"
+                  className="h-7 sm:h-9 w-auto object-contain"
                   style={{ mixBlendMode: "screen" }}
                   priority
                 />
@@ -124,7 +151,7 @@ export default function Hero({ content }: HeroProps) {
 
             <h1
               style={fadeUp(0.1)}
-              className="font-headline font-bold text-white text-3xl sm:text-4xl lg:text-[3.6rem] leading-[1.12] sm:leading-[1.1] lg:leading-[1.05] tracking-tight"
+              className="font-headline font-bold text-white text-3xl sm:text-4xl lg:text-[3.6rem] leading-[1.12] sm:leading-[1.1] lg:leading-[1.05] tracking-tight text-balance"
             >
               <H1WithAccent text={content.h1} accentWord={content.h1AccentWord} />
             </h1>
@@ -186,45 +213,8 @@ export default function Hero({ content }: HeroProps) {
             </div>
           )}
 
-          {/* Foto do fundador — general. Desktop: coluna direita. Mobile: abaixo da copy.
-              Esfumado nas bordas (mask) para suavizar o corte dos braços e fundir com o BG. */}
-          {isGeneral && (
-            <div
-              style={fadeUp(0.35)}
-              className="relative mx-auto lg:mx-0 w-56 sm:w-64 lg:w-72 xl:w-80 aspect-[3/4]"
-            >
-              <Image
-                src="/images/maurilio.jpg"
-                alt="Maurílio — sócio da Lema Digital"
-                fill
-                sizes="(min-width: 1280px) 320px, (min-width: 1024px) 288px, 256px"
-                className="object-cover object-top"
-                style={{
-                  // Máscara: esfuma topo e laterais; a base é dissolvida pela camada abaixo
-                  WebkitMaskImage:
-                    "radial-gradient(130% 115% at 50% 36%, #000 50%, transparent 86%)",
-                  maskImage:
-                    "radial-gradient(130% 115% at 50% 36%, #000 50%, transparent 86%)",
-                }}
-                quality={82}
-              />
-              {/* Dissolve forte na base (corte dos braços) fundindo com a cor do BG */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-x-0 bottom-0 h-2/5"
-                style={{ background: "linear-gradient(to top, #0C0F1A 0%, rgba(12,15,26,0.7) 35%, transparent 100%)" }}
-              />
-              {/* Overlay roxo da paleta para integrar a foto à marca */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-0"
-                style={{
-                  background: "linear-gradient(150deg, rgba(106,72,244,0.30) 0%, rgba(76,47,196,0.15) 45%, rgba(20,62,102,0.25) 100%)",
-                  mixBlendMode: "overlay",
-                }}
-              />
-            </div>
-          )}
+          {/* Foto do fundador removida por ora — será refinada depois.
+              Mantém apenas o BG de ondas (HeroBackground). */}
         </div>
       </div>
     </header>

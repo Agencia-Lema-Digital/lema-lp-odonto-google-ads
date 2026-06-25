@@ -28,6 +28,7 @@ export default function CTAButton({
   return (
     <button
       onClick={handleClick}
+      data-cta="true"
       style={{ touchAction: "manipulation" }}
       className={`
         inline-flex items-center justify-center

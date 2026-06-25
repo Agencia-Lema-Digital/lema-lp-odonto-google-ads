@@ -35,7 +35,7 @@ const COPY_ODONTO = {
 };
 
 const COPY_GENERAL = {
-  eyebrow: "Você vai conversar com gente que entende de marketing e vendas.",
+  eyebrow: "Você vai conversar com quem entende de marketing e vendas.",
   headingMain: "Você fala com sócio.",
   headingAccent: "Não com atendente de agência.",
   subheading:
@@ -63,11 +63,11 @@ const COPY_GENERAL = {
     nameAccent: "quem conduz seu diagnóstico",
     role: "Sócio — Estratégia, Marketing & Vendas",
     photo: "/images/maurilio.jpg",
-    lead: "Estrategista de marketing, vendas e tráfego. É ele — e não um atendente — quem entra com você na reunião e analisa seu funil na prática.",
+    lead: "Estrategista de marketing, vendas e tráfego. É ele quem entra com você na reunião e analisa seu funil na prática.",
     credentials: [
-      "+R$5 mi gerenciados em tráfego",
-      "+50 funis de vendas estruturados",
-      "4 anos entregando resultado real",
+      { main: "+R$5 mi gerenciados em tráfego" },
+      { main: "+50 funis de vendas estruturados" },
+      { main: "Mais de 10 anos de experiência", sub: "entregando resultado para empresas como a sua" },
     ],
   },
   closing:
@@ -106,7 +106,7 @@ export default function AboutFounders() {
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho — na general é compacto (sem subheading, que repete o H2) */}
         <FadeInSection className={variant === "general" ? "mb-6 lg:mb-8" : "mb-8 lg:mb-14"}>
-          <p className="font-sub text-brand-primary text-base tracking-wide mb-3 inline-flex items-center gap-2">
+          <p className={`font-sub text-base tracking-wide mb-3 inline-flex items-center gap-2 ${variant === "general" ? "text-white" : "text-brand-primary"}`}>
             <span
               className="inline-block w-6 h-px"
               style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4)" }}
@@ -115,7 +115,8 @@ export default function AboutFounders() {
             {COPY.eyebrow}
           </p>
           <h2 className="font-headline font-bold text-white text-3xl sm:text-4xl lg:text-[3rem] leading-tight">
-            {COPY.headingMain}{" "}
+            {COPY.headingMain}
+            {variant === "general" ? <br /> : " "}
             <span className="gradient-text">{COPY.headingAccent}</span>
           </h2>
           {variant !== "general" && (
@@ -155,10 +156,19 @@ export default function AboutFounders() {
                 <h3 className="font-headline font-bold text-white text-3xl lg:text-[2.6rem] leading-[1.05] mb-1">
                   {COPY_GENERAL.highlight.name}
                 </h3>
-                <p className="gradient-text font-headline font-bold text-lg lg:text-xl mb-1">
+                <p
+                  className="font-headline font-bold text-lg lg:text-xl mb-1"
+                  style={{
+                    background: "linear-gradient(135deg, #C4B5FD 0%, #A78BFA 50%, #8B6EF8 100%)",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    color: "transparent",
+                  }}
+                >
                   {COPY_GENERAL.highlight.nameAccent}
                 </p>
-                <p className="font-body font-semibold text-brand-primary text-sm mb-5">
+                <p className="font-body font-semibold text-[#A78BFA] text-sm mb-5">
                   {COPY_GENERAL.highlight.role}
                 </p>
 
@@ -177,7 +187,12 @@ export default function AboutFounders() {
                       >
                         <Check className="w-3 h-3 text-brand-primary" aria-hidden="true" />
                       </span>
-                      <span className="font-body text-white text-sm font-medium">{c}</span>
+                      <span className="font-body text-white text-sm font-medium leading-snug">
+                        {c.main}
+                        {c.sub && (
+                          <span className="block font-normal text-gray-400 text-xs mt-0.5">{c.sub}</span>
+                        )}
+                      </span>
                     </li>
                   ))}
                 </ul>

@@ -40,8 +40,8 @@ const COPY_ODONTO = {
 
 const COPY_GENERAL = {
   eyebrow: "Talvez você se reconheça aqui",
-  headingMain: "Esse diagnóstico é",
-  headingAccent: "pra você se…",
+  headingMain: "Esse diagnóstico",
+  headingAccent: "é pra você se…",
   forWho: {
     title: "",
     items: [
@@ -64,7 +64,7 @@ const COPY_GENERAL = {
     ],
   },
   closing:
-    "Se você se reconheceu em alguma dessas situações, o diagnóstico vai te mostrar exatamente onde está travado o seu crescimento.",
+    "Se você se reconheceu em alguma dessas situações, o diagnóstico vai te mostrar exatamente onde está travado o seu crescimento.",
 };
 
 export default function AudienceFilter() {
@@ -93,7 +93,7 @@ export default function AudienceFilter() {
         {variant === "general" ? (
           /* Cabeçalho dentro de faixa com mesh animado (eyebrow + heading) */
           <FadeInSection className="mb-8 lg:mb-12">
-            <MeshBanner>
+            <MeshBanner bgImage="/images/diagnostico-bg-audience.webp">
               <div className="px-5 py-7 sm:px-8 sm:py-9 lg:px-12 lg:py-14">
                 <p className="font-sub text-white/75 text-sm sm:text-base tracking-wide mb-3 sm:mb-4 inline-flex items-center gap-2">
                   <span className="inline-block w-6 h-px bg-white/40" aria-hidden="true" />
@@ -143,11 +143,11 @@ export default function AudienceFilter() {
         {variant === "general" ? (
           <>
             {/* Coluna A protagonista — afirmações numeradas em 2 colunas (compacto) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 lg:gap-x-10 gap-y-1 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 lg:gap-x-10 gap-y-0 md:gap-y-1 mb-6">
               {COPY.forWho.items.map((item, i) => (
                 <FadeInSection key={i} delay={0.06 * i}>
                   <div
-                    className="group flex items-baseline gap-4 lg:gap-5 py-3.5 px-3 -mx-3 rounded-xl border-b cursor-default transition-all duration-300 hover:bg-[rgba(106,72,244,0.04)] hover:translate-x-1"
+                    className="group flex items-center gap-4 lg:gap-5 py-2.5 sm:py-3.5 px-3 -mx-3 rounded-xl border-b cursor-default transition-all duration-300 hover:bg-[rgba(106,72,244,0.04)] hover:translate-x-1"
                     style={{ borderColor: "rgba(17,17,26,0.08)" }}
                   >
                     {/* Número em Fraunces — âncora visual. Tom já presente no mobile
@@ -155,7 +155,7 @@ export default function AudienceFilter() {
                     <span
                       className="font-headline italic leading-none flex-shrink-0 transition-all duration-300 text-[rgba(106,72,244,0.55)] lg:text-[rgba(106,72,244,0.35)] group-hover:text-brand-primary group-hover:scale-110"
                       style={{
-                        fontSize: "clamp(1.9rem, 6vw, 2.2rem)",
+                        fontSize: "clamp(1.6rem, 5vw, 2.2rem)",
                         fontWeight: 200,
                         minWidth: "1.4ch",
                         transformOrigin: "left center",
@@ -164,7 +164,7 @@ export default function AudienceFilter() {
                     >
                       {i + 1}
                     </span>
-                    <p className="font-body text-brand-text text-[0.95rem] sm:text-base lg:text-lg leading-snug font-normal">
+                    <p className="font-body text-brand-text text-[0.8125rem] sm:text-base lg:text-lg leading-snug font-normal">
                       {item}
                     </p>
                   </div>
@@ -289,8 +289,9 @@ export default function AudienceFilter() {
                 borderImage: "linear-gradient(180deg, #6A48F4, #143E66) 1",
               }}
             >
-              <p className="font-headline font-bold italic text-brand-dark text-base lg:text-lg">
-                {COPY.closing}
+              <p className="font-body font-medium text-brand-text text-[0.9375rem] sm:text-lg lg:text-xl leading-relaxed text-pretty">
+                {/* NBSP entre as 2 últimas palavras evita palavra órfã no mobile */}
+                {COPY.closing.replace(/ ([^ ]+)$/, " $1")}
               </p>
             </div>
             {variant === "general" && <CTAButton size="lg" className="flex-shrink-0" />}
