@@ -73,7 +73,15 @@ export default function Hero({ content }: HeroProps) {
   const STAT = STAT_ODONTO;
   return (
     <>
-    <header className="relative overflow-hidden min-h-[100dvh] flex flex-col" style={{ background: "#0C0F1A" }}>
+    <header
+      className={`relative overflow-hidden flex flex-col ${
+        // General no mobile: altura flexível ao conteúdo (sem espaço vazio;
+        // cresce sozinha quando a foto do fundador voltar). Desktop e odonto:
+        // mantêm a tela cheia (100dvh).
+        isGeneral ? "min-h-0 lg:min-h-[100dvh]" : "min-h-[100dvh]"
+      }`}
+      style={{ background: "#0C0F1A" }}
+    >
       <style>{`
         @keyframes hero-fade-up {
           from { opacity: 0; transform: translateY(20px); }
@@ -122,7 +130,7 @@ export default function Hero({ content }: HeroProps) {
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-14 sm:pt-12 sm:pb-16 lg:pt-14 lg:pb-14 flex-1 flex flex-col justify-center">
         <div className={isGeneral ? "" : "grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center"}>
           {/* Coluna principal */}
-          <div className={`flex flex-col max-w-2xl ${isGeneral ? "gap-6 sm:gap-5 lg:gap-5" : "gap-4 sm:gap-5 lg:gap-5"}`}>
+          <div className={`flex flex-col max-w-2xl ${isGeneral ? "gap-7 sm:gap-5 lg:gap-5" : "gap-4 sm:gap-5 lg:gap-5"}`}>
             {isGeneral ? (
               <div style={fadeUp(0)}>
                 <Image
