@@ -3,6 +3,20 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft, ChevronDown, Check } from "lucide-react";
+import {
+  COUNTRIES,
+  DEFAULT_COUNTRY,
+  type Country,
+  type Utms,
+  applyPhoneMask,
+  maxDigitsOf,
+  collectUtms,
+  utmQueryString,
+  genId,
+  buildLeadPayload,
+  sendLeadToWebhook,
+  dl,
+} from "@/lib/lead-form";
 
 // ── Configuração ──────────────────────────────────────────────────────────────
 
@@ -27,153 +41,11 @@ const QUESTIONS: Question[] = [
   { id: "sobre",   title: "Opcional: Se quiser, nos conte mais sobre seu negócio!", type: "textarea", required: false, placeholder: "Conte um pouco sobre seu negócio…" },
 ];
 
-const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "fbclid"] as const;
-type UtmKey = (typeof UTM_KEYS)[number];
-type Utms = Record<UtmKey, string>;
-
-// ── Países (código + bandeira + máscara) ──────────────────────────────────────
-
-interface Country {
-  code: string;      // DDI sem "+"
-  iso: string;       // ISO 3166-1 alpha-2 (para a bandeira emoji)
-  name: string;
-  flag: string;      // emoji
-  mask: string;      // "#" = dígito; usado para formatar o número local
-  minDigits: number; // mínimo de dígitos do número local p/ validar
-}
-
-const COUNTRIES: Country[] = [
-  { code: "55", iso: "BR", name: "Brasil",          flag: "🇧🇷", mask: "(##) #####-####", minDigits: 11 },
-  { code: "1",  iso: "US", name: "Estados Unidos",  flag: "🇺🇸", mask: "(###) ###-####",  minDigits: 10 },
-  { code: "351", iso: "PT", name: "Portugal",       flag: "🇵🇹", mask: "### ### ###",     minDigits: 9 },
-  { code: "44", iso: "GB", name: "Reino Unido",     flag: "🇬🇧", mask: "##### ######",    minDigits: 10 },
-  { code: "34", iso: "ES", name: "Espanha",         flag: "🇪🇸", mask: "### ## ## ##",    minDigits: 9 },
-  { code: "54", iso: "AR", name: "Argentina",       flag: "🇦🇷", mask: "## ####-####",    minDigits: 10 },
-  { code: "52", iso: "MX", name: "México",          flag: "🇲🇽", mask: "## #### ####",    minDigits: 10 },
-  { code: "351", iso: "AO", name: "Angola",         flag: "🇦🇴", mask: "### ### ###",     minDigits: 9 },
-];
-
-const DEFAULT_COUNTRY = COUNTRIES[0]; // Brasil
-
-// Aplica a máscara do país sobre os dígitos crus
-function applyPhoneMask(digits: string, mask: string): string {
-  let out = "";
-  let di = 0;
-  for (const ch of mask) {
-    if (di >= digits.length) break;
-    if (ch === "#") { out += digits[di]; di++; }
-    else out += ch;
-  }
-  return out;
-}
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-function collectUtms(): Utms {
-  const out = Object.fromEntries(UTM_KEYS.map((k) => [k, ""])) as Utms;
-  if (typeof window === "undefined") return out;
-  const p = new URLSearchParams(window.location.search);
-  for (const k of UTM_KEYS) out[k] = p.get(k) || "";
-  return out;
-}
-
-// Monta a query string apenas com as UTMs presentes, para anexar ao /obrigado
-function utmQueryString(utms: Utms): string {
-  const p = new URLSearchParams();
-  for (const k of UTM_KEYS) if (utms[k]) p.set(k, utms[k]);
-  const s = p.toString();
-  return s ? `?${s}` : "";
-}
-
-// Telefone: monta o objeto país/número no formato do exemplo Respondi
-function splitPhone(rawDigits: string, countryCode: string): { country: string; phone: string } {
-  return { country: countryCode, phone: rawDigits.replace(/\D/g, "") };
-}
-
-function genId(): string {
-  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
-
-function nowStamp(): string {
-  const d = new Date();
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-}
-
 interface Answers {
   nome: string;
   telefone: string;
   empresa: string;
   sobre: string;
-}
-
-const QUESTION_TYPE_OUT: Record<string, string> = {
-  nome: "name",
-  telefone: "phone",
-  empresa: "text",
-  sobre: "textarea",
-};
-
-// Monta o payload no formato Respondi (array com form/respondent).
-// Enviado apenas na conclusão do formulário (status sempre "completed").
-function buildPayload(opts: {
-  answers: Answers;
-  utms: Utms;
-  respondentId: string;
-  phoneCountryCode: string;
-}) {
-  const { answers, utms, respondentId, phoneCountryCode } = opts;
-
-  const answersMap: Record<string, string> = {};
-  const rawAnswers: unknown[] = [];
-
-  for (const q of QUESTIONS) {
-    const value = answers[q.id as keyof Answers] || "";
-
-    if (q.type === "phone") {
-      const digits = value.replace(/\D/g, "");
-      // answers (mapa legível): "+55 85996308442"
-      if (digits) answersMap[q.title] = `+${phoneCountryCode} ${digits}`;
-      rawAnswers.push({
-        question: { question_title: q.title, question_id: q.id, question_type: "phone" },
-        answer: splitPhone(digits, phoneCountryCode),
-      });
-    } else {
-      if (value) answersMap[q.title] = value;
-      rawAnswers.push({
-        question: { question_title: q.title, question_id: q.id, question_type: QUESTION_TYPE_OUT[q.id] },
-        answer: value,
-      });
-    }
-  }
-
-  return [
-    {
-      form: { form_name: FORM_NAME, form_id: FORM_ID },
-      respondent: {
-        status: "completed",
-        date: nowStamp(),
-        respondent_id: respondentId,
-        answers: answersMap,
-        raw_answers: rawAnswers,
-        respondent_utms: utms,
-      },
-    },
-  ];
-}
-
-// Empurra evento pro dataLayer. As tags GA4 e Meta Pixel são acionadas no GTM
-// por triggers "Evento personalizado" com estes nomes. Mantém tudo centralizado
-// no GTM e visível nos Hits do Tag Assistant.
-function dl(event: string, params: Record<string, unknown> = {}) {
-  if (typeof window === "undefined") return;
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ event, ...params });
 }
 
 // Evento de etapa com NOME por campo (form_step_nome, form_step_telefone, ...).
@@ -187,20 +59,6 @@ function emitStep(q: Question) {
     step_field: q.id,
     step_title: q.title,
   });
-}
-
-// Envia ao nosso proxy /api/lead (que reenvia ao Make). keepalive p/ sobreviver ao unload.
-async function sendToWebhook(payload: unknown) {
-  try {
-    await fetch("/api/lead", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      keepalive: true,
-    });
-  } catch {
-    // silencioso: não bloquear a UX por falha de rede
-  }
 }
 
 // ── Componente ────────────────────────────────────────────────────────────────
@@ -287,7 +145,7 @@ export default function NativeLeadForm() {
     setError("");
     // Para telefone, guarda só os dígitos (até o máximo da máscara do país)
     if (current.type === "phone") {
-      const maxDigits = (phoneCountry.mask.match(/#/g) || []).length;
+      const maxDigits = maxDigitsOf(phoneCountry.mask);
       const digits = val.replace(/\D/g, "").slice(0, maxDigits);
       setAnswers((prev) => ({ ...prev, telefone: digits }));
       return;
@@ -312,7 +170,7 @@ export default function NativeLeadForm() {
   useEffect(() => {
     phoneCountryRef.current = phoneCountry;
     // Ao trocar de país, trunca o número ao máximo da nova máscara
-    const maxDigits = (phoneCountry.mask.match(/#/g) || []).length;
+    const maxDigits = maxDigitsOf(phoneCountry.mask);
     setAnswers((prev) => {
       const digits = prev.telefone.replace(/\D/g, "").slice(0, maxDigits);
       return digits === prev.telefone ? prev : { ...prev, telefone: digits };
@@ -366,14 +224,17 @@ export default function NativeLeadForm() {
   async function handleSubmit() {
     setStatus("submitting");
 
-    const payload = buildPayload({
-      answers: answersRef.current,
+    const payload = buildLeadPayload({
+      formName: FORM_NAME,
+      formId: FORM_ID,
+      questions: QUESTIONS,
+      answers: { ...answersRef.current } as Record<string, string>,
       utms: utmsRef.current,
       respondentId: respondentIdRef.current,
       phoneCountryCode: phoneCountryRef.current.code,
     });
 
-    await sendToWebhook(payload);
+    await sendLeadToWebhook(payload);
 
     // Conversão: dispara só na conclusão (GA4 + Meta acionados via GTM)
     dl("form_submit", { form_id: FORM_ID, form_name: FORM_NAME });

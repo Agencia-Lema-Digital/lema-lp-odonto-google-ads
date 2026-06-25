@@ -5,6 +5,9 @@ import dynamic from "next/dynamic";
 import { BodyVariantContext, type BodyVariant } from "@/lib/body-variant-context";
 import StickyMobileCTA from "@/components/ui/StickyMobileCTA";
 
+// Widget de WhatsApp (FAB + mini-form) — client-only, carrega após a hidratação
+const WhatsAppWidget = dynamic(() => import("@/components/ui/WhatsAppWidget"), { ssr: false });
+
 // As seções carregam via dynamic(ssr:false), então a âncora (#secao) na URL pode
 // chegar antes do elemento existir no DOM. Este hook tenta rolar até a âncora,
 // repetindo por alguns segundos enquanto as seções montam, e re-tenta a cada
@@ -69,6 +72,7 @@ export default function LandingPageBody({ variant = "odonto" }: LandingPageBodyP
   return (
     <BodyVariantContext.Provider value={variant}>
       <StickyMobileCTA />
+      {variant === "general" && <WhatsAppWidget />}
       {variant === "general" ? (
         /* Ordem general: dor → qualifica → prova → transição → como funciona →
            autoridade → form → FAQ. TrinoMethod oculto nesta página (decidir depois
