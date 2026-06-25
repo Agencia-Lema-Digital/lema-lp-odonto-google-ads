@@ -50,6 +50,12 @@ export default function WhatsAppWidget() {
   const [phoneCountry, setPhoneCountry] = useState<Country>(DEFAULT_COUNTRY);
   const [countryOpen, setCountryOpen] = useState(false);
 
+  // Visibilidade do FAB: só aparece depois de rolar e quando nenhum botão CTA
+  // está no viewport (mesma lógica do StickyMobileCTA) — o WhatsApp é secundário
+  // e não deve competir com a hero nem com os CTAs primários.
+  const [scrolledPast, setScrolledPast] = useState(false);
+  const [ctaInView, setCtaInView] = useState(false);
+
   const utmsRef = useRef<Utms>(collectUtms());
   const respondentIdRef = useRef<string>(genId());
   const nomeRef = useRef<HTMLInputElement | null>(null);
@@ -58,6 +64,51 @@ export default function WhatsAppWidget() {
   useEffect(() => {
     utmsRef.current = collectUtms();
   }, []);
+
+  // Scroll: libera o FAB após passar o threshold
+  useEffect(() => {
+    const SCROLL_THRESHOLD = 800;
+    const onScroll = () => setScrolledPast(window.scrollY > SCROLL_THRESHOLD);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Observa os botões CTA ([data-cta]): enquanto algum estiver visível, o FAB
+  // some. MutationObserver re-observa CTAs de seções carregadas dinamicamente.
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const visible = new Set<Element>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) visible.add(e.target);
+          else visible.delete(e.target);
+        }
+        setCtaInView(visible.size > 0);
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -10% 0px" }
+    );
+    const observed = new WeakSet<Element>();
+    const observeAll = () => {
+      document.querySelectorAll("[data-cta]").forEach((el) => {
+        if (!observed.has(el)) {
+          observed.add(el);
+          io.observe(el);
+        }
+      });
+    };
+    observeAll();
+    const mo = new MutationObserver(observeAll);
+    mo.observe(document.body, { childList: true, subtree: true });
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+    };
+  }, []);
+
+  // FAB visível: passou do threshold E nenhum CTA no viewport
+  const fabVisible = scrolledPast && !ctaInView;
 
   // Foco no primeiro campo ao abrir; trava o scroll do body enquanto aberto
   useEffect(() => {
@@ -138,9 +189,10 @@ export default function WhatsAppWidget() {
   return (
     <>
       {/* Botão flutuante (FAB) — canto inferior direito.
-          No mobile fica acima da área do sticky CTA (bottom maior). */}
+          No mobile fica acima da área do sticky CTA (bottom maior).
+          Só aparece após rolar e quando nenhum CTA está visível. */}
       <AnimatePresence>
-        {!open && (
+        {!open && fabVisible && (
           <motion.button
             type="button"
             onClick={openWidget}
