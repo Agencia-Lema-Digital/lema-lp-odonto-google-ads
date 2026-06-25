@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { Check } from "lucide-react";
 import FadeInSection from "@/components/ui/FadeInSection";
+import CTAButton from "@/components/ui/CTAButton";
 import { CephalometricLines, XRayFragment, ProbeGrid } from "@/components/ui/DentalAccents";
 import { TrendChart, FunnelLines, ROASArrow } from "@/components/ui/GeneralistAccents";
 import { useBodyVariant } from "@/lib/body-variant-context";
@@ -54,6 +56,20 @@ const COPY_GENERAL = {
       initial: "L",
     },
   ],
+  // Destaque editorial (variante general): foco no sócio que conduz o diagnóstico.
+  // Texto enxuto + credenciais como âncoras visuais — autoridade rápida, não leitura longa.
+  highlight: {
+    name: "Maurílio Moreira",
+    nameAccent: "quem conduz seu diagnóstico",
+    role: "Sócio — Estratégia, Marketing & Vendas",
+    photo: "/images/maurilio.jpg",
+    lead: "Estrategista de marketing, vendas e tráfego. É ele — e não um atendente — quem entra com você na reunião e analisa seu funil na prática.",
+    credentials: [
+      "+R$5 mi gerenciados em tráfego",
+      "+50 funis de vendas estruturados",
+      "4 anos entregando resultado real",
+    ],
+  },
   closing:
     "Time especializado. Você fala com sócio e não com atendente de agência.",
 };
@@ -63,7 +79,7 @@ export default function AboutFounders() {
   const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
   return (
     <section
-      className="relative py-14 lg:py-28 overflow-hidden"
+      className={`relative overflow-hidden ${variant === "general" ? "py-12 lg:py-16" : "py-14 lg:py-28"}`}
       style={{ background: "linear-gradient(135deg, #0C0F1A 0%, #0F1E33 100%)" }}
     >
       {/* Linha de topo com degradê */}
@@ -88,9 +104,9 @@ export default function AboutFounders() {
       )}
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Cabeçalho */}
-        <FadeInSection className="mb-8 lg:mb-14">
-          <p className="font-sub text-brand-primary text-base tracking-wide mb-4 inline-flex items-center gap-2">
+        {/* Cabeçalho — na general é compacto (sem subheading, que repete o H2) */}
+        <FadeInSection className={variant === "general" ? "mb-6 lg:mb-8" : "mb-8 lg:mb-14"}>
+          <p className="font-sub text-brand-primary text-base tracking-wide mb-3 inline-flex items-center gap-2">
             <span
               className="inline-block w-6 h-px"
               style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4)" }}
@@ -98,73 +114,140 @@ export default function AboutFounders() {
             />
             {COPY.eyebrow}
           </p>
-          <h2 className="font-headline font-bold text-white text-3xl sm:text-4xl lg:text-[3.4rem] leading-tight mb-4">
-            {COPY.headingMain}
-            <br />
+          <h2 className="font-headline font-bold text-white text-3xl sm:text-4xl lg:text-[3rem] leading-tight">
+            {COPY.headingMain}{" "}
             <span className="gradient-text">{COPY.headingAccent}</span>
           </h2>
-          <p className="font-body text-gray-400 text-base lg:text-lg max-w-2xl leading-relaxed">
-            {COPY.subheading}
-          </p>
+          {variant !== "general" && (
+            <p className="font-body text-gray-400 text-base lg:text-lg max-w-2xl leading-relaxed mt-4">
+              {COPY.subheading}
+            </p>
+          )}
         </FadeInSection>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto">
-          {COPY.founders.map((founder, i) => (
-            <FadeInSection key={i} delay={i * 0.15}>
+        {variant === "general" ? (
+          /* Destaque editorial — foto grande do sócio + bio (estilo retrato) */
+          <FadeInSection>
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,440px)_1fr] gap-8 lg:gap-12 items-center">
+              {/* Foto retangular com cantos arredondados */}
               <div
-                className="flex flex-col items-center text-center rounded-2xl p-6 lg:p-8"
+                className="relative aspect-[4/5] rounded-3xl overflow-hidden mx-auto w-full max-w-[380px] lg:max-w-none"
+                style={{ border: "1px solid rgba(106,72,244,0.25)", boxShadow: "0 24px 70px rgba(0,0,0,0.45)" }}
+              >
+                <Image
+                  src={COPY_GENERAL.highlight.photo}
+                  alt={`Foto de ${COPY_GENERAL.highlight.name} — sócio da Lema Digital`}
+                  fill
+                  sizes="(min-width: 1024px) 440px, 380px"
+                  className="object-cover object-top"
+                  quality={85}
+                />
+                {/* Gradiente inferior para assentar a imagem no fundo escuro */}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 bottom-0 h-1/3"
+                  style={{ background: "linear-gradient(to top, rgba(12,15,26,0.55), transparent)" }}
+                />
+              </div>
+
+              {/* Texto */}
+              <div>
+                <h3 className="font-headline font-bold text-white text-3xl lg:text-[2.6rem] leading-[1.05] mb-1">
+                  {COPY_GENERAL.highlight.name}
+                </h3>
+                <p className="gradient-text font-headline font-bold text-lg lg:text-xl mb-1">
+                  {COPY_GENERAL.highlight.nameAccent}
+                </p>
+                <p className="font-body font-semibold text-brand-primary text-sm mb-5">
+                  {COPY_GENERAL.highlight.role}
+                </p>
+
+                {/* Lead enxuto — uma frase */}
+                <p className="font-body text-gray-300 text-base leading-relaxed mb-6 max-w-xl">
+                  {COPY_GENERAL.highlight.lead}
+                </p>
+
+                {/* Credenciais como âncoras visuais escaneáveis */}
+                <ul className="flex flex-col gap-2.5 mb-7">
+                  {COPY_GENERAL.highlight.credentials.map((c, i) => (
+                    <li key={i} className="flex items-center gap-2.5">
+                      <span
+                        className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center"
+                        style={{ background: "rgba(106,72,244,0.18)" }}
+                      >
+                        <Check className="w-3 h-3 text-brand-primary" aria-hidden="true" />
+                      </span>
+                      <span className="font-body text-white text-sm font-medium">{c}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA — leva ao formulário */}
+                <CTAButton size="lg" label="Quero meu diagnóstico gratuito" />
+              </div>
+            </div>
+          </FadeInSection>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto">
+              {COPY.founders.map((founder, i) => (
+                <FadeInSection key={i} delay={i * 0.15}>
+                  <div
+                    className="flex flex-col items-center text-center rounded-2xl p-6 lg:p-8"
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(106,72,244,0.20)",
+                    }}
+                  >
+                    {/* Avatar com anel degradê */}
+                    <div
+                      className="relative w-28 h-28 rounded-full mb-5 flex items-center justify-center"
+                      style={{
+                        background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
+                        padding: "3px",
+                      }}
+                    >
+                      <div className="relative w-full h-full rounded-full overflow-hidden">
+                        <Image
+                          src={founder.photo}
+                          alt={`Foto de ${founder.name} — sócio(a) da Lema Digital`}
+                          fill
+                          className="object-cover object-top"
+                          sizes="112px"
+                        />
+                      </div>
+                    </div>
+
+                    <h3 className="font-headline font-semibold text-white text-xl mb-1">
+                      {founder.name}
+                    </h3>
+                    <p className="font-body font-semibold text-brand-primary text-sm mb-4">
+                      {founder.role}
+                    </p>
+                    <p className="font-body text-gray-400 text-sm leading-relaxed">
+                      {founder.bio}
+                    </p>
+                  </div>
+                </FadeInSection>
+              ))}
+            </div>
+
+            {/* Linha de fechamento */}
+            <FadeInSection delay={0.3} className="mt-12">
+              <div
+                className="pl-6 py-1 max-w-2xl mx-auto text-center lg:text-left"
                 style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(106,72,244,0.20)",
+                  borderLeft: "4px solid",
+                  borderImage: "linear-gradient(180deg, #6A48F4, #143E66) 1",
                 }}
               >
-                {/* Avatar com anel degradê */}
-                <div
-                  className="relative w-28 h-28 rounded-full mb-5 flex items-center justify-center"
-                  style={{
-                    background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
-                    padding: "3px",
-                  }}
-                >
-                  <div className="relative w-full h-full rounded-full overflow-hidden">
-                    <Image
-                      src={founder.photo}
-                      alt={`Foto de ${founder.name} — sócio(a) da Lema Digital`}
-                      fill
-                      className="object-cover object-top"
-                      sizes="112px"
-                    />
-                  </div>
-                </div>
-
-                <h3 className="font-headline font-semibold text-white text-xl mb-1">
-                  {founder.name}
-                </h3>
-                <p className="font-body font-semibold text-brand-primary text-sm mb-4">
-                  {founder.role}
-                </p>
-                <p className="font-body text-gray-400 text-sm leading-relaxed">
-                  {founder.bio}
+                <p className="font-headline font-semibold text-white text-base lg:text-lg">
+                  {COPY.closing}
                 </p>
               </div>
             </FadeInSection>
-          ))}
-        </div>
-
-        {/* Linha de fechamento */}
-        <FadeInSection delay={0.3} className="mt-12">
-          <div
-            className="pl-6 py-1 max-w-2xl mx-auto text-center lg:text-left"
-            style={{
-              borderLeft: "4px solid",
-              borderImage: "linear-gradient(180deg, #6A48F4, #143E66) 1",
-            }}
-          >
-            <p className="font-headline font-semibold text-white text-base lg:text-lg">
-              {COPY.closing}
-            </p>
-          </div>
-        </FadeInSection>
+          </>
+        )}
       </div>
     </section>
   );

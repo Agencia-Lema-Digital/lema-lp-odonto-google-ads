@@ -45,11 +45,11 @@ const COPY_ODONTO = {
 };
 
 const COPY_GENERAL = {
-  eyebrow: "30 minutos. Análise honesta.",
-  headingMain: "Como funciona",
-  headingAccent: "o diagnóstico.",
+  eyebrow: "30 minutos · gratuito · sem compromisso",
+  headingMain: "Pare de adivinhar.",
+  headingAccent: "Veja o que trava seu crescimento.",
   subheading:
-    "Não é reunião de vendas. É análise consultiva do seu funil.",
+    "Chega de investir e torcer pra dar certo. O Maurílio olha seu negócio ao vivo e te mostra, com dados, o que está perdendo venda — e o que atacar primeiro.",
   steps: [
     {
       icon: ClipboardList,
@@ -61,7 +61,6 @@ const COPY_GENERAL = {
       icon: Phone,
       number: "02",
       title: "Conversa rápida de qualificação",
-      time: "10 min",
       description:
         "Vamos te ligar para alinhar expectativa e confirmar se faz sentido seguir.",
     },
@@ -130,11 +129,12 @@ export default function HowItWorks() {
 
         {/* Steps — cards horizontais empilhados */}
         <div className="relative mb-16">
-          {/* Linha conectora vertical — desktop */}
+          {/* Linha conectora vertical ligando o centro dos ícones (passo 1 → 2 → 3).
+              Centro do ícone = padding do card (1.75rem) + metade do ícone (1.75rem) = 3.5rem. */}
           <div
             aria-hidden="true"
-            className="hidden lg:block absolute left-[2.75rem] top-8 bottom-8 w-px"
-            style={{ background: "linear-gradient(180deg, #6A48F4 0%, #143E66 100%)", opacity: 0.2 }}
+            className="hidden lg:block absolute left-[3.5rem] -translate-x-1/2 top-16 bottom-16 w-[2px] rounded-full"
+            style={{ background: "linear-gradient(180deg, #6A48F4 0%, #4C2FC4 50%, #143E66 100%)", opacity: 0.35 }}
           />
 
           <div className="flex flex-col gap-4">
@@ -143,19 +143,10 @@ export default function HowItWorks() {
               return (
                 <FadeInSection key={i} delay={i * 0.12}>
                   <div
-                    className="group flex gap-4 lg:gap-8 items-start p-5 lg:p-7 bg-white rounded-2xl transition-all duration-200"
-                    style={{ border: "1px solid rgba(106,72,244,0.12)" }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(106,72,244,0.35)";
-                      (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 20px rgba(106,72,244,0.10)";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(106,72,244,0.12)";
-                      (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
-                    }}
+                    className="group relative flex gap-4 lg:gap-8 items-start p-5 lg:p-7 bg-white rounded-2xl border border-[rgba(106,72,244,0.12)] transition-all duration-200 hover:border-[rgba(106,72,244,0.35)] hover:shadow-[0_4px_20px_rgba(106,72,244,0.10)]"
                   >
-                    {/* Ícone com fundo degradê */}
-                    <div className="flex-shrink-0 relative">
+                    {/* Ícone com fundo degradê + número do passo (badge) */}
+                    <div className="flex-shrink-0 relative z-10">
                       <div
                         className="w-[3.5rem] h-[3.5rem] rounded-2xl flex items-center justify-center"
                         style={{
@@ -188,26 +179,10 @@ export default function HowItWorks() {
                           </span>
                         )}
                       </div>
-                      <p className="font-body text-gray-500 text-sm leading-relaxed">
+                      <p className="font-body text-gray-600 text-sm leading-relaxed">
                         {step.description}
                       </p>
                     </div>
-
-                    {/* Número decorativo com degradê — desktop */}
-                    <span
-                      aria-hidden="true"
-                      className="hidden lg:block flex-shrink-0 font-headline font-bold text-5xl leading-none select-none self-center"
-                      style={{
-                        background: "linear-gradient(135deg, #6A48F4, #143E66)",
-                        WebkitBackgroundClip: "text",
-                        backgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        color: "transparent",
-                        opacity: 0.15,
-                      }}
-                    >
-                      {step.number}
-                    </span>
                   </div>
                 </FadeInSection>
               );

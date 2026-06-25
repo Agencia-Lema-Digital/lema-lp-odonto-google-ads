@@ -7,6 +7,7 @@ export interface PageHeroContent {
   agitationBody: string;
   topBanner?: string; // texto da barra superior; omitir usa o padrão odonto
   heroImage?: string; // caminho em /public; omitir usa clinic-hero.webp
+  isGeneral?: boolean; // variante generalista (assessoria) — muda layout/stat do Hero
 }
 
 export interface PageMeta {
@@ -67,15 +68,16 @@ export const PAGES_CONFIG: Record<string, PageConfig> = {
   "/assessoria-marketing-vendas": {
     hero: {
       topBanner: "Para empresas que faturam +R$35k/mês",
-      heroImage: "/images/hero-general.webp",
+      heroImage: "/images/nova-hero.webp",
+      isGeneral: true,
       kicker: "Para empresas que faturam +R$35k/mês",
-      h1: "Seu tráfego traz cliente ou só clique?",
-      h1AccentWord: "ou só clique?",
+      h1: "O marketing que atrai clientes e gera vendas previsíveis pro seu negócio.",
+      h1AccentWord: "vendas previsíveis",
       subheadline:
-        "A Lema conecta anúncios, conteúdo e processo comercial pra cada lead virar venda — com previsibilidade, sem depender de indicação.",
-      firstH2: "Por que seu anúncio atrai curiosos e não quem compra",
+        "Conectamos anúncios, conteúdo e vendas num sistema só. Sem depender de indicação ou sorte.",
+      firstH2: "O que separa quem investe em anúncio de quem cresce de verdade",
       agitationBody:
-        "Chega gente, o WhatsApp apita, o time responde — e no fim do mês o faturamento não mudou. A maioria só estava perguntando preço. O problema não é o anúncio: é que ninguém separa o curioso de quem está pronto pra comprar. Sem processo, lead vira custo.",
+        "A diferença não está em gastar mais com anúncio — está em ter um sistema. Tráfego que traz o cliente certo, um processo comercial que transforma conversa em venda, e dados que mostram exatamente onde crescer. É assim que o faturamento sobe com previsibilidade, mês após mês: sem depender de indicação, sem depender de sorte.",
     },
     meta: {
       title: "Assessoria de Marketing e Vendas | Lema Digital",

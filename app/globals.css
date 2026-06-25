@@ -93,6 +93,24 @@
   /* Exceção: elementos com font-headline ou font-sub mantêm sua fonte */
   .font-headline, .font-headline * { font-family: var(--font-fraunces), Georgia, serif; }
   .font-sub, .font-sub *         { font-family: var(--font-caveat), cursive; }
+  /* Variante general: as assinaturas/eyebrows (font-sub) usam Poppins leve
+     em vez da cursiva Caveat, e em tamanho reduzido — devem ser um detalhe,
+     não competir com a heading. Aplicado via classe no <main> da rota
+     assessoria, num único ponto, sem afetar as rotas odonto. */
+  .page-general .font-sub, .page-general .font-sub * {
+    font-family: var(--font-poppins), "Poppins", system-ui, sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+  }
+  .page-general .font-sub {
+    font-size: 0.6875rem;  /* 11px no mobile — detalhe discreto */
+    line-height: 1.3;
+  }
+  @media (min-width: 640px) {
+    .page-general .font-sub {
+      font-size: 0.8125rem; /* 13px no desktop */
+    }
+  }
 
   /* Respeita prefers-reduced-motion — desativa todas as animações Framer Motion e CSS */
   @media (prefers-reduced-motion: reduce) {
@@ -111,4 +129,52 @@
     outline: 2px solid #6A48F4;
     outline-offset: 2px;
   }
+}
+
+/* Marquee de palavras-chave (faixa abaixo da hero) — loop contínuo.
+   Duas trilhas idênticas: translada -50% para o ponto onde a 2ª trilha
+   coincide com a posição inicial da 1ª, criando o loop sem salto.
+   A regra global de prefers-reduced-motion acima desativa o movimento. */
+@keyframes keyword-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-keyword-marquee {
+  animation: keyword-marquee 38s linear infinite;
+}
+
+/* Mesh banner — blobs de cor que flutuam em loop (faixa do AudienceFilter) */
+.mesh-blob {
+  position: absolute;
+  height: 0;          /* altura via padding-bottom = mantém círculo */
+  border-radius: 9999px;
+  filter: blur(48px);
+  will-change: transform;
+}
+@keyframes mesh-float-a {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(40%, 30%) scale(1.3); }
+  66%  { transform: translate(20%, 55%) scale(0.9); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes mesh-float-b {
+  0%   { transform: translate(0, 0) scale(1.1); }
+  33%  { transform: translate(-35%, 25%) scale(0.85); }
+  66%  { transform: translate(-50%, -10%) scale(1.25); }
+  100% { transform: translate(0, 0) scale(1.1); }
+}
+@keyframes mesh-float-c {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(30%, -35%) scale(1.35); }
+  66%  { transform: translate(-25%, -20%) scale(1); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+/* Seta da transição — quique suave para baixo */
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
+}
+.animate-bounce-soft {
+  animation: bounce-soft 1.8s ease-in-out infinite;
 }

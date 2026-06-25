@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Hero from "@/components/sections/Hero";
 import LandingPageBody from "@/components/sections/LandingPageBody";
+import KeywordMarquee from "@/components/ui/KeywordMarquee";
 import { PAGES_CONFIG } from "@/lib/pages-config";
 
 const config = PAGES_CONFIG["/assessoria-marketing-vendas"];
@@ -29,8 +30,9 @@ export const metadata: Metadata = {
 
 export default function AssessoriaMarketingVendasPage() {
   return (
-    <main>
+    <main className="page-general">
       <Hero content={config.hero} />
+      <KeywordMarquee />
       <LandingPageBody variant="general" />
     </main>
   );

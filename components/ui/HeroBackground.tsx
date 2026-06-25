@@ -3,22 +3,18 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-// Núcleo de luz da imagem: ~67% x, 33% y (em viewBox 1040×600)
+// Núcleo de luz da imagem antiga (clinic/hero-general): ~67% x, 33% y (viewBox 1040×600)
 const CORE = { cx: 697, cy: 198 };
 
-// Raios que partem do núcleo seguindo as diagonais da imagem
+// Raios que partem do núcleo seguindo as diagonais da imagem (imagem antiga)
 const RAYS = [
-  // raio superior-esquerdo
   { x1: CORE.cx, y1: CORE.cy, x2: 120,  y2: 20,  dur: 2.2, delay: 0.3 },
-  // raio inferior-esquerdo principal
   { x1: CORE.cx, y1: CORE.cy, x2: 60,   y2: 580, dur: 2.8, delay: 0.6 },
-  // raio inferior-direito
   { x1: CORE.cx, y1: CORE.cy, x2: 1020, y2: 560, dur: 2.5, delay: 0.9 },
-  // raio superior-direito
   { x1: CORE.cx, y1: CORE.cy, x2: 1020, y2: 80,  dur: 2.0, delay: 0.2 },
 ];
 
-// Partículas viajando pelos raios (do núcleo para fora)
+// Partículas viajando pelos raios (do núcleo para fora) — imagem antiga
 const PARTICLES = [
   { ray: 0, dur: 5.0, delay: 1.2, r: 2.5, color: "#C4B5FD" },
   { ray: 1, dur: 6.5, delay: 2.4, r: 2,   color: "#A78BFA" },
@@ -35,6 +31,10 @@ interface HeroBackgroundProps {
 export default function HeroBackground({ imageSrc = "/images/clinic-hero.webp" }: HeroBackgroundProps) {
   const [isMobile, setIsMobile] = useState(true);
   const [reduced, setReduced] = useState(false);
+
+  // A nova hero é uma textura abstrata de ondas (sem ponto de luz pontual),
+  // então usa uma animação sutil (shimmer + glow no fluxo) em vez de raios.
+  const isNovaHero = imageSrc.includes("nova-hero");
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 1023px)");
@@ -79,6 +79,11 @@ export default function HeroBackground({ imageSrc = "/images/clinic-hero.webp" }
             0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0.5; }
             100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
           }
+          /* Glow suave pulsante para a nova hero (região de luz no canto sup-esquerdo) */
+          @keyframes soft-glow {
+            0%, 100% { opacity: 0.35; transform: scale(1); }
+            50%       { opacity: 0.6;  transform: scale(1.08); }
+          }
         `}</style>
       )}
 
@@ -122,7 +127,36 @@ export default function HeroBackground({ imageSrc = "/images/clinic-hero.webp" }
         style={{ background: "linear-gradient(to top, #0C0F1A 0%, transparent 100%)" }}
       />
 
-      {!reduced && (
+      {/* ── Animação: nova hero (textura) → sutil; imagem antiga → raios/partículas ── */}
+      {!reduced && isNovaHero && !isMobile && (
+        <>
+          {/* Glow suave pulsante na região de luz roxa (canto superior-esquerdo) */}
+          <div
+            className="absolute rounded-full"
+            style={{
+              left: "22%",
+              top: "26%",
+              width: 420,
+              height: 420,
+              transform: "translate(-50%, -50%)",
+              background: "radial-gradient(circle, rgba(190,140,255,0.22) 0%, rgba(140,90,240,0.10) 45%, transparent 70%)",
+              filter: "blur(40px)",
+              animation: "soft-glow 7s ease-in-out infinite",
+            }}
+          />
+          {/* Shimmer diagonal acompanhando o fluxo roxo→azul da textura */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(115deg, transparent 30%, rgba(200,170,255,0.05) 50%, transparent 70%)",
+              backgroundSize: "220% 100%",
+              animation: "shimmer-slide 12s linear infinite",
+            }}
+          />
+        </>
+      )}
+
+      {!reduced && !isNovaHero && (
         <>
           {/* Pulso no núcleo de luz — apenas desktop */}
           {!isMobile && (

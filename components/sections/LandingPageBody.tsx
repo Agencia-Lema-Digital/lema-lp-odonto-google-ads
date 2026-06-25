@@ -47,6 +47,8 @@ function SectionPlaceholder({ height }: { height: string }) {
 }
 
 const AudienceFilter = dynamic(() => import("@/components/sections/AudienceFilter"), { ssr: false, loading: () => <SectionPlaceholder height="300px" /> });
+const PainStrip      = dynamic(() => import("@/components/sections/PainStrip"),      { ssr: false, loading: () => <SectionPlaceholder height="200px" /> });
+const TransitionStrip = dynamic(() => import("@/components/sections/TransitionStrip"), { ssr: false, loading: () => <SectionPlaceholder height="160px" /> });
 const PainPoints     = dynamic(() => import("@/components/sections/PainPoints"),     { ssr: false, loading: () => <SectionPlaceholder height="400px" /> });
 const TrinoMethod    = dynamic(() => import("@/components/sections/TrinoMethod"),    { ssr: false, loading: () => <SectionPlaceholder height="600px" /> });
 const SocialProof    = dynamic(() => import("@/components/sections/SocialProof"),    { ssr: false, loading: () => <SectionPlaceholder height="400px" /> });
@@ -67,16 +69,35 @@ export default function LandingPageBody({ variant = "odonto" }: LandingPageBodyP
   return (
     <BodyVariantContext.Provider value={variant}>
       <StickyMobileCTA />
-      <AudienceFilter />
-      <PainPoints />
-      <TrinoMethod />
-      <SocialProof />
-      <CaseStudies />
-      <HowItWorks />
-      <AboutFounders />
-      <FAQ />
-      <LeadForm />
-      <FinalCTA />
+      {variant === "general" ? (
+        /* Ordem general: dor → qualifica → prova → método → diagnóstico → form */
+        <>
+          <PainStrip />
+          <AudienceFilter />
+          {/* SocialProof agora inclui os cases (seção unificada) */}
+          <SocialProof />
+          <TransitionStrip />
+          <TrinoMethod />
+          <HowItWorks />
+          <AboutFounders />
+          <FAQ />
+          <LeadForm />
+        </>
+      ) : (
+        /* Ordem odonto (original) */
+        <>
+          <AudienceFilter />
+          <PainPoints />
+          <TrinoMethod />
+          <SocialProof />
+          <CaseStudies />
+          <HowItWorks />
+          <AboutFounders />
+          <FAQ />
+          <LeadForm />
+          <FinalCTA />
+        </>
+      )}
       <Footer tagline={variant === "general" ? "Assessoria de Marketing e Vendas para empresas que faturam +R$35k/mês." : undefined} />
     </BodyVariantContext.Provider>
   );

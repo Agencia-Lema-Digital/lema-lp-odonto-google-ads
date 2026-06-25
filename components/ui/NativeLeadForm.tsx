@@ -247,9 +247,15 @@ export default function NativeLeadForm() {
     dl("form_view", { form_id: FORM_ID, form_name: FORM_NAME });
   }, []);
 
-  // Foco automático ao trocar de passo (apenas inputs de texto)
+  // Foco automático ao AVANÇAR de passo. Pula o passo inicial: dar focus() num
+  // input no primeiro render faz o navegador rolar a página até o formulário,
+  // tirando o usuário da hero ao abrir a página.
   useEffect(() => {
-    const t = setTimeout(() => inputRef.current?.focus(), 280);
+    if (step === 0) return;
+    const t = setTimeout(() => {
+      // preventScroll evita que o foco arraste a viewport (suporte amplo em browsers atuais)
+      inputRef.current?.focus({ preventScroll: true });
+    }, 280);
     return () => clearTimeout(t);
   }, [step]);
 

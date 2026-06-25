@@ -1,11 +1,323 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import { motion, useInView, useMotionValue, useTransform, animate, useReducedMotion } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
+import Image from "next/image";
+import { Zap } from "lucide-react";
+import { motion, useInView, useMotionValue, useTransform, animate, useReducedMotion, AnimatePresence } from "framer-motion";
 import FadeInSection from "@/components/ui/FadeInSection";
+import CTAButton from "@/components/ui/CTAButton";
 import { SmileDesignArc, XRayFragment, GoldenRatioSpiral } from "@/components/ui/DentalAccents";
-import { TrendChart, AdSignal, ROASArrow } from "@/components/ui/GeneralistAccents";
+import { AdSignal, ROASArrow } from "@/components/ui/GeneralistAccents";
 import { useBodyVariant } from "@/lib/body-variant-context";
+
+// ─── Dados dos cases (mesclados do antigo CaseStudies) ──────────────────────────
+
+const FEATURED = {
+  segment: "Venda de Produto Premium",
+  name: "Roboclean Brasil",
+  location: "São Paulo/SP",
+  tagline: "De R$416 a R$105k em 15 dias",
+  stats: [
+    { value: "252×", label: "retorno sobre anúncios" },
+    { value: "R$416", label: "investidos em anúncios" },
+    { value: "R$105k", label: "em vendas em 15 dias" },
+  ],
+};
+
+const OTHERS = [
+  {
+    segment: "Marcenaria & Móveis Sob Medida",
+    name: "LK Móveis Sob Medida",
+    location: "Porto Alegre/RS",
+    accentColor: "#7C3AED",
+    stats: [
+      { value: "20×", label: "ROAS — retorno sobre anúncios" },
+      { value: "R$85k", label: "em vendas geradas" },
+      { value: "R$4,2k", label: "investidos em anúncios" },
+    ],
+  },
+  {
+    segment: "Clínica Veterinária",
+    name: "CENUV",
+    location: "Vila Velha/ES",
+    accentColor: "#0EA5E9",
+    stats: [
+      { value: "+R$6k", label: "faturados em 15 dias" },
+      { value: "87%", label: "presença no topo do Google" },
+      { value: "98%", label: "métricas em evolução" },
+    ],
+  },
+  {
+    segment: "Marca Pessoal",
+    name: "Cleston Santino",
+    location: "Orlando/FL",
+    accentColor: "#F59E0B",
+    stats: [
+      { value: "+100k", label: "inscritos no YouTube" },
+      { value: "+2Mi", label: "views no YouTube" },
+      { value: "+35k", label: "seguidores no Instagram" },
+    ],
+  },
+];
+
+const TESTIMONIAL_VIDEOS = [
+  {
+    id: "Nb7Ofl1Pedo",
+    name: "Luciano Bezerra",
+    role: "Sócio-fundador",
+    thumb: `https://i.ytimg.com/vi/Nb7Ofl1Pedo/hqdefault.jpg`,
+  },
+  {
+    id: "G1ZcB1HeC80",
+    name: "Liliane Bezerra",
+    role: "Sócia-fundadora",
+    thumb: `https://i.ytimg.com/vi/G1ZcB1HeC80/hqdefault.jpg`,
+  },
+];
+
+// ─── Componentes dos cases (mesclados do antigo CaseStudies) ────────────────────
+
+function VideoLightbox({ videoId, onClose }: { videoId: string; onClose: () => void }) {
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style={{ background: "rgba(0,0,0,0.92)" }}
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.92, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.92, opacity: 0 }}
+          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          className="relative w-full max-w-[360px]"
+          style={{ aspectRatio: "9/16", maxHeight: "88vh" }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <iframe
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
+            title="Depoimento em vídeo"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+            className="w-full h-full rounded-2xl"
+            style={{ border: "none" }}
+          />
+          <button
+            onClick={onClose}
+            aria-label="Fechar vídeo"
+            className="absolute -top-9 right-0 text-white/60 hover:text-white transition-colors text-xs font-body flex items-center gap-1.5"
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+              <path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+            Fechar
+          </button>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+function VideoChip({ v }: { v: typeof TESTIMONIAL_VIDEOS[0] }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        aria-label={`Assistir depoimento de ${v.name}`}
+        className="group flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#6A48F4] rounded-xl transition-all duration-200"
+        style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", padding: "8px" }}
+      >
+        <div className="relative flex-shrink-0 rounded-lg overflow-hidden" style={{ width: 56, height: 72 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={v.thumb}
+            alt=""
+            aria-hidden="true"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+            loading="lazy"
+          />
+          <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.30)" }} aria-hidden="true" />
+          <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
+              style={{ background: "rgba(106,72,244,0.90)", boxShadow: "0 0 0 3px rgba(106,72,244,0.25)" }}
+            >
+              <svg width="8" height="8" viewBox="0 0 8 8" fill="white" aria-hidden="true">
+                <path d="M2 1.2L7 4 2 6.8V1.2z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div className="min-w-0">
+          <p className="font-body font-semibold text-white text-xs leading-snug truncate">{v.name}</p>
+          <p className="font-body text-gray-500 text-[10px] mt-0.5">{v.role}</p>
+          <p
+            className="font-body text-[10px] mt-1.5 inline-flex items-center gap-1 transition-colors duration-200 group-hover:text-[#A78BFA]"
+            style={{ color: "#6A48F4" }}
+          >
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor" aria-hidden="true">
+              <path d="M2 1.2L7 4 2 6.8V1.2z" />
+            </svg>
+            Ver depoimento
+          </p>
+        </div>
+      </button>
+      {open && <VideoLightbox videoId={v.id} onClose={() => setOpen(false)} />}
+    </>
+  );
+}
+
+function BigNumber({ value }: { value: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, scale: 0.85 }}
+      animate={inView ? { opacity: 1, scale: 1 } : {}}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="font-headline italic leading-none select-none"
+      style={{
+        fontSize: "clamp(3rem, 7.5vw, 5.5rem)",
+        fontWeight: 200,
+        background: "linear-gradient(135deg, #EDE9FE 0%, #C4B5FD 55%, #A78BFA 100%)",
+        WebkitBackgroundClip: "text",
+        backgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        color: "transparent",
+        letterSpacing: "-0.03em",
+      }}
+    >
+      {value}
+    </motion.div>
+  );
+}
+
+function FeaturedCard() {
+  return (
+    <div
+      className="relative rounded-3xl overflow-hidden flex flex-col justify-between min-h-[420px] lg:min-h-[480px] group"
+      style={{ background: "linear-gradient(145deg, #1A0F3A 0%, #0F1E33 50%, #0C0F1A 100%)", border: "1px solid rgba(106,72,244,0.35)" }}
+    >
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 80% 60% at 50% 80%, rgba(106,72,244,0.18) 0%, transparent 70%)" }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute top-0 left-0 right-0 h-[2px]"
+        style={{ background: "linear-gradient(90deg, #6A48F4, #C4B5FD, #143E66)" }}
+        aria-hidden="true"
+      />
+      <div className="relative z-10 p-6 lg:p-7 flex flex-col h-full gap-4 lg:gap-5">
+        <div>
+          <div className="mb-3">
+            <span
+              className="font-body font-semibold text-white text-[11px] px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 tracking-wide"
+              style={{ background: "linear-gradient(135deg, #6A48F4, #4C2FC4)" }}
+            >
+              <Zap className="w-3 h-3" fill="currentColor" aria-hidden="true" /> Case em destaque
+            </span>
+          </div>
+          <p className="font-body font-semibold text-[11px] uppercase tracking-[0.2em] mb-2" style={{ color: "#A78BFA" }}>
+            {FEATURED.segment}
+          </p>
+          <h3 className="font-headline font-bold text-white text-2xl lg:text-3xl leading-tight mb-1">{FEATURED.name}</h3>
+          <p className="font-body text-gray-400 text-xs">{FEATURED.location}</p>
+        </div>
+        <div className="-mb-2">
+          <BigNumber value="252×" />
+          <p className="font-body text-gray-400 text-sm mt-1">retorno sobre anúncios</p>
+        </div>
+        <div className="h-px w-full" style={{ background: "linear-gradient(90deg, rgba(106,72,244,0.4), transparent)" }} aria-hidden="true" />
+        <div className="grid grid-cols-2 gap-3">
+          {FEATURED.stats.slice(1).map((s, i) => (
+            <div key={i} className="rounded-2xl px-4 py-3" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              <p
+                className="font-headline italic text-2xl leading-none mb-1"
+                style={{
+                  fontWeight: 200,
+                  background: "linear-gradient(135deg, #EDE9FE, #C4B5FD)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  color: "transparent",
+                }}
+              >
+                {s.value}
+              </p>
+              <p className="font-body text-gray-400 text-[11px] leading-snug">{s.label}</p>
+            </div>
+          ))}
+        </div>
+        <div>
+          <p className="font-body text-gray-400 text-[10px] uppercase tracking-[0.18em] mb-2.5">Ouça os fundadores</p>
+          <div className="flex gap-2.5">
+            {TESTIMONIAL_VIDEOS.map((v) => (
+              <VideoChip key={v.id} v={v} />
+            ))}
+          </div>
+        </div>
+        <div
+          className="rounded-2xl px-5 py-3 mt-auto"
+          style={{ background: "linear-gradient(135deg, rgba(106,72,244,0.20), rgba(20,62,102,0.20))", border: "1px solid rgba(106,72,244,0.25)" }}
+        >
+          <p className="font-headline font-bold italic text-white text-sm lg:text-base text-center">&ldquo;{FEATURED.tagline}&rdquo;</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SideCard({ c, index }: { c: typeof OTHERS[0]; index: number }) {
+  const [hero, ...rest] = c.stats;
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 24 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className="group relative px-6 py-5 transition-colors duration-300"
+      style={{ background: "rgba(255,255,255,0.04)", borderRadius: 18, border: "1px solid rgba(255,255,255,0.08)" }}
+    >
+      <div className="flex items-start justify-between gap-3 mb-4">
+        <div className="min-w-0">
+          <p className="font-body font-semibold text-[10px] uppercase tracking-[0.22em] mb-1" style={{ color: c.accentColor }}>
+            {c.segment}
+          </p>
+          <h3 className="font-headline font-bold text-white text-lg leading-tight truncate">{c.name}</h3>
+          <p className="font-body font-normal text-gray-400 text-xs mt-0.5">{c.location}</p>
+        </div>
+        <span
+          className="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1 transition-transform duration-300 group-hover:scale-125"
+          style={{ background: c.accentColor }}
+          aria-hidden="true"
+        />
+      </div>
+      <div className="flex items-end gap-3 mb-3">
+        <span
+          className="font-headline italic leading-[0.85] tracking-tight"
+          style={{ fontSize: "clamp(2.6rem, 7vw, 3.4rem)", fontWeight: 200, color: c.accentColor }}
+        >
+          {hero.value}
+        </span>
+        <span className="font-body text-gray-400 text-xs leading-snug pb-1.5 max-w-[150px]">{hero.label}</span>
+      </div>
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+        {rest.map((s, j) => (
+          <span key={j} className="font-body text-[13px] text-gray-400">
+            <span className="font-headline font-bold text-white">{s.value}</span>{" "}
+            <span className="text-gray-400">{s.label}</span>
+          </span>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
 
 const TESTIMONIALS = [
   {
@@ -224,9 +536,9 @@ const COPY_GENERAL = {
     },
     {
       prefix: "",
-      value: 7,
-      suffix: "%",
-      label: "de CTR médio no Google Ads",
+      value: +5,
+      suffix: "milhões",
+      label: "gerenciados em tráfego pago",
     },
     {
       prefix: "",
@@ -238,8 +550,8 @@ const COPY_GENERAL = {
       prefix: "",
       value: null,
       suffix: "",
-      text: "R$10/lead",
-      label: "custo por lead abaixo do mercado",
+      text: "+50",
+      label: "funis de vendas estruturados",
     },
   ],
 };
@@ -272,11 +584,22 @@ function AnimatedCounter({
     return controls.stop;
   }, [inView, motionValue, value, reduced]);
 
+  // Suffix de uma só letra/símbolo (ex.: "%") fica junto, no tamanho do número.
+  // Suffix com palavra (ex.: "milhões", "+ anos") vai menor, para não estourar a célula.
+  const suffixIsWord = /[a-zA-ZÀ-ÿ]/.test(suffix);
+
   return (
-    <span ref={ref} className="tabular-nums">
-      {prefix}
-      <motion.span>{rounded}</motion.span>
-      {suffix}
+    <span ref={ref} className="tabular-nums inline-flex items-baseline gap-1">
+      <span>
+        {prefix}
+        <motion.span>{rounded}</motion.span>
+        {!suffixIsWord && suffix}
+      </span>
+      {suffixIsWord && (
+        <span className="text-[0.42em] font-semibold whitespace-nowrap self-baseline">
+          {suffix.trim()}
+        </span>
+      )}
     </span>
   );
 }
@@ -285,10 +608,34 @@ export default function SocialProof() {
   const variant = useBodyVariant();
   const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
   return (
-    <section className="relative pt-14 lg:pt-28 pb-0 bg-white overflow-hidden">
+    <section
+      id={variant === "general" ? "cases-de-sucesso" : undefined}
+      className={`relative pt-14 lg:pt-28 pb-0 overflow-hidden scroll-mt-20 ${variant === "general" ? "" : "bg-white"}`}
+      style={variant === "general" ? { background: "linear-gradient(160deg, #080B14 0%, #0C0F1A 45%, #0F1E33 100%)" } : undefined}
+    >
+      {/* ROI gigante de fundo + sub posicionada sobre ele (mesclado do CaseStudies) — general */}
+      {variant === "general" && (
+        <>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute right-[2%] top-[3%] font-headline font-bold italic select-none hidden lg:block"
+            style={{
+              fontSize: "clamp(10rem, 20vw, 22rem)",
+              lineHeight: 1,
+              background: "linear-gradient(135deg, rgba(196,181,253,0.12) 0%, rgba(106,72,244,0.07) 100%)",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              color: "transparent",
+              letterSpacing: "-0.05em",
+            }}
+          >
+            ROI
+          </div>
+        </>
+      )}
       {variant === "general" ? (
         <>
-          <TrendChart className="absolute right-[-2%] top-[6%] w-[380px] h-auto text-[#6A48F4] pointer-events-none" opacity={0.06} />
           <ROASArrow className="absolute left-[-1%] bottom-[6%] w-32 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.055} />
           <AdSignal className="absolute left-[45%] top-[2%] w-28 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.04} />
         </>
@@ -301,62 +648,156 @@ export default function SocialProof() {
       )}
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Cabeçalho alinhado à esquerda — estilo editorial */}
+        {/* Cabeçalho — general: heading à esquerda + sub à direita (alinhada ao ROI) */}
         <FadeInSection className="mb-10 lg:mb-16">
-          <p className="font-sub text-brand-primary text-base tracking-wide mb-4 inline-flex items-center gap-2">
-            <span
-              className="inline-block w-6 h-px"
-              style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4)" }}
-              aria-hidden="true"
-            />
-            {COPY.eyebrow}
-          </p>
-          <h2 className="font-headline font-bold text-brand-text text-3xl sm:text-4xl lg:text-[3.4rem] leading-tight mb-4">
-            {COPY.headingMain}
-            <br />
-            <span className="gradient-text">{COPY.headingAccent}</span>
-          </h2>
-          <p className="font-body text-gray-500 text-base lg:text-lg max-w-2xl leading-relaxed">
-            {COPY.subheading}
-          </p>
+          <div className={variant === "general" ? "flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 lg:gap-8" : ""}>
+            <div>
+              <p className={`font-sub text-base tracking-wide mb-4 inline-flex items-center gap-2 ${variant === "general" ? "text-[#C4B5FD]" : "text-brand-primary"}`}>
+                <span
+                  className="inline-block w-6 h-px"
+                  style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4)" }}
+                  aria-hidden="true"
+                />
+                {COPY.eyebrow}
+              </p>
+              <h2 className={`font-headline font-bold text-3xl sm:text-4xl lg:text-[3.4rem] leading-tight ${variant === "general" ? "text-white" : "text-brand-text"}`}>
+                {COPY.headingMain}
+                <br />
+                {variant === "general" ? (
+                  <span
+                    style={{
+                      background: "linear-gradient(135deg, #C4B5FD 0%, #A78BFA 45%, #6A48F4 100%)",
+                      WebkitBackgroundClip: "text",
+                      backgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      color: "transparent",
+                    }}
+                  >
+                    {COPY.headingAccent}
+                  </span>
+                ) : (
+                  <span className="gradient-text">{COPY.headingAccent}</span>
+                )}
+              </h2>
+            </div>
+            {variant === "general" ? (
+              <p className="relative z-10 font-body text-gray-300 text-base leading-relaxed max-w-sm lg:text-right lg:pb-2">
+                Negócios de segmentos diferentes, com um ponto em comum:{" "}
+                <span className="text-white font-semibold">previsibilidade nas vendas.</span>
+              </p>
+            ) : (
+              <p className="font-body text-gray-500 text-base lg:text-lg max-w-2xl leading-relaxed mt-4">
+                {COPY.subheading}
+              </p>
+            )}
+          </div>
         </FadeInSection>
 
-        {/* Stats — grid com separadores, números com degradê */}
-        <div
-          className="grid grid-cols-2 lg:grid-cols-4 gap-px rounded-2xl overflow-hidden mb-14"
-          style={{ background: "rgba(106,72,244,0.10)", border: "1px solid rgba(106,72,244,0.12)" }}
-        >
-          {COPY.stats.map((stat, i) => (
-            <FadeInSection key={i} delay={i * 0.08}>
-              <div className="bg-white p-4 lg:p-8 flex flex-col gap-2 lg:gap-3 h-full hover:bg-brand-soft transition-colors duration-200">
-                {/* Número com degradê primário */}
-                <p
-                  className={`font-headline font-bold leading-none break-words ${stat.value !== null ? "text-3xl lg:text-5xl" : "text-2xl lg:text-4xl"}`}
-                  style={{
-                    background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
-                    WebkitBackgroundClip: "text",
-                    backgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    color: "transparent",
-                  }}
-                >
-                  {stat.value !== null ? (
-                    <AnimatedCounter
-                      prefix={stat.prefix}
-                      value={stat.value}
-                      suffix={stat.suffix}
-                    />
-                  ) : (
-                    stat.text
-                  )}
-                </p>
-                <p className="font-body text-gray-500 text-sm leading-snug">
-                  {stat.label}
-                </p>
+        {variant === "general" ? (
+          /* Composição editorial: imagem de autoridade + números (fluida no desktop) */
+          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-6 lg:gap-0 lg:items-center mb-14">
+            {/* Imagem de autoridade — no desktop sobrepõe levemente a coluna de números */}
+            <FadeInSection className="relative lg:z-10">
+              <div
+                className="relative aspect-[16/10] lg:aspect-[2/1] rounded-3xl overflow-hidden lg:mr-[-3rem]"
+                style={{ boxShadow: "0 20px 60px rgba(12,15,26,0.25)" }}
+              >
+                <Image
+                  src="/images/autoridade.webp"
+                  alt="Equipe da Lema Digital em evento ao vivo"
+                  fill
+                  sizes="(min-width: 1024px) 640px, 100vw"
+                  className="object-cover object-center"
+                  quality={92}
+                />
+                {/* Leve overlay roxo para integrar à paleta */}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(135deg, rgba(106,72,244,0.12) 0%, transparent 55%, rgba(20,62,102,0.18) 100%)" }}
+                />
               </div>
             </FadeInSection>
-          ))}
-        </div>
+
+            {/* Números — grid 2×2; no desktop recebe a sobreposição da imagem (padding à esquerda) */}
+            <FadeInSection delay={0.1}>
+              <div
+                className="grid grid-cols-2 gap-px rounded-3xl overflow-hidden lg:pl-12"
+                style={{ background: "rgba(106,72,244,0.25)", border: "1px solid rgba(106,72,244,0.30)" }}
+              >
+                {COPY.stats.map((stat, i) => (
+                  <div
+                    key={i}
+                    className="p-5 lg:p-7 flex flex-col gap-2 transition-colors duration-200"
+                    style={{ background: "#0F1424" }}
+                  >
+                    <p
+                      className={`font-headline font-bold leading-none ${stat.value !== null ? "text-3xl lg:text-4xl" : "text-2xl lg:text-3xl"}`}
+                      style={{
+                        background: "linear-gradient(135deg, #EDE9FE 0%, #D6CBFF 50%, #A78BFA 100%)",
+                        WebkitBackgroundClip: "text",
+                        backgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        color: "transparent",
+                      }}
+                    >
+                      {stat.value !== null ? (
+                        <AnimatedCounter prefix={stat.prefix} value={stat.value} suffix={stat.suffix} />
+                      ) : (
+                        stat.text
+                      )}
+                    </p>
+                    <p className="font-body text-gray-400 text-sm leading-snug">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            </FadeInSection>
+          </div>
+        ) : (
+          /* Odonto: grid clássico de 4 colunas */
+          <div
+            className="grid grid-cols-2 lg:grid-cols-4 gap-px rounded-2xl overflow-hidden mb-14"
+            style={{ background: "rgba(106,72,244,0.10)", border: "1px solid rgba(106,72,244,0.12)" }}
+          >
+            {COPY.stats.map((stat, i) => (
+              <FadeInSection key={i} delay={i * 0.08}>
+                <div className="bg-white p-4 lg:p-8 flex flex-col gap-2 lg:gap-3 h-full hover:bg-brand-soft transition-colors duration-200">
+                  <p
+                    className={`font-headline font-bold leading-none ${stat.value !== null ? "text-3xl lg:text-5xl" : "text-2xl lg:text-4xl"}`}
+                    style={{
+                      background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
+                      WebkitBackgroundClip: "text",
+                      backgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      color: "transparent",
+                    }}
+                  >
+                    {stat.value !== null ? (
+                      <AnimatedCounter prefix={stat.prefix} value={stat.value} suffix={stat.suffix} />
+                    ) : (
+                      stat.text
+                    )}
+                  </p>
+                  <p className="font-body text-gray-500 text-sm leading-snug">{stat.label}</p>
+                </div>
+              </FadeInSection>
+            ))}
+          </div>
+        )}
+
+        {/* Cases (mesclados do antigo CaseStudies) — largura total, após os números */}
+        {variant === "general" && (
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-5 lg:gap-6 mb-14">
+            <FadeInSection className="flex flex-col gap-4 order-2 lg:order-1">
+              {OTHERS.map((c, i) => (
+                <SideCard key={i} c={c} index={i} />
+              ))}
+            </FadeInSection>
+            <FadeInSection delay={0.1} className="order-1 lg:order-2">
+              <FeaturedCard />
+            </FadeInSection>
+          </div>
+        )}
 
         {/* Título da seção de depoimentos */}
         <FadeInSection delay={0.15} className="mb-8">
@@ -366,7 +807,7 @@ export default function SocialProof() {
               style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4)" }}
               aria-hidden="true"
             />
-            <p className="font-body text-gray-500 text-sm">
+            <p className="font-body text-gray-300 text-sm">
               O que clientes dizem sobre a Lema
             </p>
           </div>
@@ -404,6 +845,23 @@ export default function SocialProof() {
           </div>
         </div>
       </FadeInSection>
+
+      {/* Fecho: "O próximo case pode ser o seu" + CTA (mesclado do CaseStudies) — general */}
+      {variant === "general" && (
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+          <FadeInSection>
+            <div
+              className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-8"
+              style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}
+            >
+              <p className="font-headline font-bold italic text-white text-xl lg:text-2xl text-center sm:text-left">
+                O próximo case pode ser o seu.
+              </p>
+              <CTAButton size="lg" className="flex-shrink-0" />
+            </div>
+          </FadeInSection>
+        </div>
+      )}
     </section>
   );
 }

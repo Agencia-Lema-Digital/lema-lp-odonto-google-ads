@@ -69,10 +69,10 @@ const COPY_ODONTO = {
 const PILLARS_GENERAL = [
   {
     ...PILLARS[0],
-    anchor: "Atrair as pessoas certas, não as mais baratas.",
+    anchor: "Atrair o cliente certo, não qualquer lead.",
     description:
-      "Fluxo previsível de leads via Google Ads, Meta Ads e atração orgânica — focado em perfis prontos para comprar, não volume vazio.",
-    includes: ["Google Ads", "Meta Ads", "Posicionamento orgânico", "Qualificação automatizada no funil"],
+      "Tráfego pago no Google e Meta somado a conteúdo orgânico que atrai o cliente certo e constrói autoridade ao longo do tempo. Demanda com qualidade, não volume vazio.",
+    includes: ["Google Ads", "Meta Ads", "Gestão de conteúdo e redes", "Criativos em vídeo", "Segmentação por perfil"],
   },
   {
     ...PILLARS[1],
@@ -83,36 +83,46 @@ const PILLARS_GENERAL = [
   },
   {
     ...PILLARS[2],
-    anchor: "Crescer com dados, não com achismo.",
+    anchor: "Crescer com dados e com a base que você já tem.",
     description:
-      "Analisamos o funil completo a cada ciclo para identificar gargalos, aumentar conversão e expandir ticket médio com previsibilidade.",
-    includes: ["Relatórios semanais de performance", "Análise de gargalos e oportunidades", "Aumento de ticket médio e retenção"],
+      "Otimização do funil com dados para reduzir custo e aumentar conversão, somada à expansão pela base: esteira de serviços, indicações e reputação online que retroalimentam todo o sistema.",
+    includes: ["Análise de gargalos e CAC", "Esteira de serviços (upsell)", "Programa de indicação", "Gestão de avaliações online"],
   },
 ];
 
 const COPY_GENERAL = {
-  eyebrow: "Não somos agência de anúncio. Somos um sistema de vendas.",
+  eyebrow: "Não rodamos só anúncio. Montamos o sistema inteiro.",
   headingMain: "Três pilares interdependentes",
   headingAccent: "do clique ao cliente fechado.",
   intro:
-    "O Método TRINO conecta anúncio, atendimento e processo comercial num sistema cíclico — porque gerar lead sem processo comercial é jogar dinheiro fora. Cada pilar alimenta o próximo.",
-  anchorFinal: "Três pilares. Um sistema. Vendas previsíveis.",
+    "O Método TRINO conecta demanda, conversão e expansão num sistema cíclico: atrai o cliente certo com anúncios e conteúdo, estrutura o comercial para converter, e cresce com dados e relacionamento. Cada pilar alimenta o próximo.",
+  anchorFinal: "Três pilares. Um sistema. Crescimento integrado.",
   ctaLabel: "Quero meu diagnóstico gratuito",
 };
 
 // ─── SVG Diagram interativo ─────────────────────────────────────────────────
 
-const NODE_R = 62;
-const NODES = [
-  { id: 0, cx: 150, cy: 110 },
-  { id: 1, cx: 450, cy: 110 },
-  { id: 2, cx: 300, cy: 340 },
+// Geometria de cada camada do funil 3D isométrico (empilhadas, afunilando)
+const EY = 26; // raio vertical da elipse (perspectiva)
+const FUNNEL_LAYERS = [
+  { id: 0, cy: 96,  topR: 168, botR: 134, h: 64 },
+  { id: 1, cy: 226, topR: 126, botR: 96,  h: 58 },
+  { id: 2, cy: 344, topR: 88,  botR: 62,  h: 52 },
 ];
-const EDGES = [
-  { from: 0, to: 1, len: 300 },
-  { from: 1, to: 2, len: 283 },
-  { from: 2, to: 0, len: 283 },
-];
+const CX = 232; // centro horizontal do funil
+
+// Caminho da face frontal (corpo) de um cilindro isométrico que afunila
+function layerBodyPath(cy: number, topR: number, botR: number, h: number) {
+  const topY = cy;
+  const botY = cy + h;
+  return [
+    `M ${CX - topR} ${topY}`,
+    `A ${topR} ${EY} 0 0 0 ${CX + topR} ${topY}`,        // borda inferior da elipse de topo (frente)
+    `L ${CX + botR} ${botY}`,                              // lado direito descendo
+    `A ${botR} ${EY} 0 0 1 ${CX - botR} ${botY}`,         // elipse de base (frente)
+    `Z`,
+  ].join(" ");
+}
 
 function TrinoSVG({
   active,
@@ -125,215 +135,86 @@ function TrinoSVG({
 
   return (
     <svg
-      viewBox="0 0 600 460"
-      aria-label="Diagrama interativo do Método TRINO — clique em cada pilar para explorar"
+      viewBox="32 60 400 360"
+      aria-label="Funil do Método TRINO — clique em cada camada para explorar o pilar"
       role="img"
-      className="w-full"
+      className="w-full mx-auto max-w-[300px] lg:max-w-[360px]"
       style={{ overflow: "visible" }}
     >
       <defs>
-        <filter id="tm-glow-soft" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="6" result="b" />
-          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
         <filter id="tm-glow-strong" x="-70%" y="-70%" width="240%" height="240%">
-          <feGaussianBlur stdDeviation="14" result="b" />
+          <feGaussianBlur stdDeviation="10" result="b" />
           <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
         {PILLARS.map((p) => (
-          <radialGradient key={p.id} id={`tm-fill-${p.id}`} cx="40%" cy="35%" r="70%">
-            <stop offset="0%" stopColor={p.color} stopOpacity="0.35" />
-            <stop offset="100%" stopColor={p.color} stopOpacity="0.08" />
-          </radialGradient>
-        ))}
-        {PILLARS.map((p) => (
-          <radialGradient key={p.id} id={`tm-halo-${p.id}`} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor={p.color} stopOpacity="0.25" />
-            <stop offset="100%" stopColor={p.color} stopOpacity="0" />
-          </radialGradient>
+          // gradiente vertical do corpo: claro em cima, escuro embaixo (volume 3D)
+          <linearGradient key={p.id} id={`tm-body-${p.id}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={p.color} stopOpacity="0.95" />
+            <stop offset="100%" stopColor={p.color} stopOpacity="0.62" />
+          </linearGradient>
         ))}
       </defs>
 
-      {/* ── Arestas ── */}
-      {EDGES.map((edge, i) => {
-        const f = NODES[edge.from];
-        const t = NODES[edge.to];
-        const pf = PILLARS[edge.from];
-        const pt = PILLARS[edge.to];
-        const isActive = active === edge.from || active === edge.to;
-
-        return (
-          <g key={i}>
-            {/* Linha base */}
-            <motion.line
-              x1={f.cx} y1={f.cy} x2={t.cx} y2={t.cy}
-              stroke={isActive ? pf.color : "rgba(106,72,244,0.20)"}
-              strokeWidth={isActive ? 2.5 : 1.2}
-              strokeLinecap="round"
-              strokeDasharray={edge.len}
-              initial={{ strokeDashoffset: edge.len }}
-              animate={{ strokeDashoffset: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 + i * 0.2, ease: "easeOut" }}
-            />
-
-            {/* Partícula de fluxo */}
-            <motion.circle
-              r={isActive ? 4.5 : 2.5}
-              fill={isActive ? pf.color : "#6A48F4"}
-              fillOpacity={isActive ? 0.95 : 0.4}
-              filter={isActive ? "url(#tm-glow-soft)" : undefined}
-              animate={{ offsetDistance: ["0%", "100%"], opacity: [0, 1, 1, 0] }}
-              transition={{
-                duration: isActive ? 1.6 : 2.8,
-                delay: 1.0 + i * 0.7,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              style={{
-                offsetPath: `path("M ${f.cx} ${f.cy} L ${t.cx} ${t.cy}")`,
-              } as React.CSSProperties}
-            />
-
-            {/* Segunda partícula defasada nos ativos */}
-            {isActive && (
-              <motion.circle
-                r={3}
-                fill={pt.color}
-                fillOpacity={0.7}
-                filter="url(#tm-glow-soft)"
-                animate={{ offsetDistance: ["0%", "100%"], opacity: [0, 0.8, 0.8, 0] }}
-                transition={{
-                  duration: 1.6,
-                  delay: 1.0 + i * 0.7 + 0.8,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-                style={{
-                  offsetPath: `path("M ${f.cx} ${f.cy} L ${t.cx} ${t.cy}")`,
-                } as React.CSSProperties}
-              />
-            )}
-          </g>
-        );
-      })}
-
-      {/* ── Nós ── */}
-      {NODES.map((n) => {
-        const p = PILLARS[n.id];
-        const isActive = active === n.id;
-        const isHov = hovered === n.id;
+      {FUNNEL_LAYERS.map((layer, idx) => {
+        const p = PILLARS[layer.id];
+        const isActive = active === layer.id;
+        const isHov = hovered === layer.id;
         const highlighted = isActive || isHov;
+        const topY = layer.cy;
+        const botY = layer.cy + layer.h;
 
         return (
-          <g
-            key={n.id}
-            style={{ cursor: "pointer" }}
-            onClick={() => onSelect(n.id)}
-            onMouseEnter={() => setHovered(n.id)}
+          <motion.g
+            key={layer.id}
+            style={{ cursor: "pointer", transformOrigin: `${CX}px ${(topY + botY) / 2}px` }}
+            onClick={() => onSelect(layer.id)}
+            onMouseEnter={() => setHovered(layer.id)}
             onMouseLeave={() => setHovered(null)}
             role="button"
             tabIndex={0}
             aria-label={`Selecionar pilar ${p.number}: ${p.name}`}
             aria-pressed={isActive}
-            onKeyDown={(e) => e.key === "Enter" && onSelect(n.id)}
+            onKeyDown={(e) => e.key === "Enter" && onSelect(layer.id)}
+            initial={{ opacity: 0, y: -16 }}
+            animate={{
+              opacity: highlighted ? 1 : 0.82,
+              y: 0,
+              scale: isActive ? 1.04 : isHov ? 1.02 : 1,
+            }}
+            transition={{ opacity: { duration: 0.5, delay: 0.15 + idx * 0.15 }, y: { duration: 0.5, delay: 0.15 + idx * 0.15 }, scale: { duration: 0.3 } }}
+            filter={isActive ? "url(#tm-glow-strong)" : undefined}
           >
-            {/* Halo grande */}
-            <motion.circle
-              cx={n.cx} cy={n.cy}
-              fill={`url(#tm-halo-${n.id})`}
-              initial={{ r: NODE_R + 32, opacity: 0 }}
-              animate={{ opacity: highlighted ? 1 : 0, r: highlighted ? NODE_R + 40 : NODE_R + 24 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
+            {/* Sombra projetada da elipse de base */}
+            <ellipse
+              cx={CX} cy={botY + 6} rx={layer.botR * 0.9} ry={EY * 0.5}
+              fill="#000" opacity={0.18}
             />
-
-            {/* Anel pulsante — apenas no ativo */}
-            {isActive && (
-              <motion.circle
-                cx={n.cx} cy={n.cy}
-                fill="none"
-                stroke={p.color}
-                strokeWidth="1.5"
-                initial={{ r: NODE_R, opacity: 0.7 }}
-                animate={{ r: [NODE_R, NODE_R + 22], opacity: [0.7, 0] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
-              />
-            )}
-
-            {/* Corpo do nó */}
-            <motion.circle
-              cx={n.cx} cy={n.cy} r={NODE_R}
-              fill={`url(#tm-fill-${n.id})`}
+            {/* Corpo (face frontal) */}
+            <path
+              d={layerBodyPath(topY, layer.topR, layer.botR, layer.h)}
+              fill={`url(#tm-body-${layer.id})`}
               stroke={p.color}
-              strokeWidth={highlighted ? 2.2 : 1}
-              strokeOpacity={highlighted ? 1 : 0.35}
-              filter={isActive ? "url(#tm-glow-strong)" : undefined}
-              animate={{
-                scale: isActive ? 1.1 : isHov ? 1.05 : 1,
-              }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              style={{ transformOrigin: `${n.cx}px ${n.cy}px` }}
+              strokeOpacity={highlighted ? 0.9 : 0.35}
+              strokeWidth={highlighted ? 1.5 : 1}
             />
-
-            {/* Número */}
-            <text
-              x={n.cx} y={n.cy - 22}
-              textAnchor="middle" dominantBaseline="middle"
-              fontSize="11" fontWeight="700"
+            {/* Elipse de topo (tampa) — mais clara, dá o volume 3D */}
+            <ellipse
+              cx={CX} cy={topY} rx={layer.topR} ry={EY}
               fill={p.color}
-              opacity={highlighted ? 1 : 0.6}
-              fontFamily="var(--font-poppins), sans-serif"
-            >
-              {p.number}
-            </text>
-
-            {/* Ícone SVG inline */}
-            {n.id === 0 && (
-              <g transform={`translate(${n.cx - 11}, ${n.cy - 10})`} opacity={highlighted ? 1 : 0.65}>
-                <circle cx="11" cy="11" r="9" stroke={p.color} strokeWidth={highlighted ? 2 : 1.4} fill="none" />
-                <circle cx="11" cy="11" r="5" stroke={p.color} strokeWidth={highlighted ? 2 : 1.4} fill="none" />
-                <circle cx="11" cy="11" r="1.8" fill={p.color} />
-              </g>
-            )}
-            {n.id === 1 && (
-              <g transform={`translate(${n.cx - 11}, ${n.cy - 10})`} opacity={highlighted ? 1 : 0.65}>
-                <circle cx="11" cy="11" r="3" stroke={p.color} strokeWidth={highlighted ? 2 : 1.4} fill="none" />
-                <path d="M12.2 3.5a1.4 1.4 0 0 0-2.4 0l-.4.8a6.5 6.5 0 0 0-1.5.62l-.8-.46a1.4 1.4 0 0 0-1.9 1.9l.46.8A6.5 6.5 0 0 0 5 8.76l-.8.4a1.4 1.4 0 0 0 0 2.4l.8.4c.12.55.32 1.08.62 1.55l-.46.8a1.4 1.4 0 0 0 1.9 1.9l.8-.46c.47.3 1 .5 1.55.62l.4.8a1.4 1.4 0 0 0 2.4 0l.4-.8c.55-.12 1.08-.32 1.55-.62l.8.46a1.4 1.4 0 0 0 1.9-1.9l-.46-.8c.3-.47.5-1 .62-1.55l.8-.4a1.4 1.4 0 0 0 0-2.4l-.8-.4a6.5 6.5 0 0 0-.62-1.55l.46-.8a1.4 1.4 0 0 0-1.9-1.9l-.8.46A6.5 6.5 0 0 0 12.6 4.3z"
-                  stroke={p.color} strokeWidth={highlighted ? 1.2 : 0.9} fill="none" />
-              </g>
-            )}
-            {n.id === 2 && (
-              <g transform={`translate(${n.cx - 11}, ${n.cy - 10})`} opacity={highlighted ? 1 : 0.65}>
-                <polyline points="21,5 12,13.5 7.5,9 1,16.5" stroke={p.color} strokeWidth={highlighted ? 2 : 1.4} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                <polyline points="15,5 21,5 21,11" stroke={p.color} strokeWidth={highlighted ? 2 : 1.4} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-              </g>
-            )}
-
-            {/* Label — duas linhas */}
-            {p.name.split(" ").reduce<string[][]>((acc, word, wi) => {
-              // quebra em duas linhas: "Demanda / Qualificada", "Estrutura / Comercial", "Expansão / Inteligente"
-              if (wi === 1) acc.push([]);
-              acc[acc.length - 1].push(word);
-              return acc;
-            }, [[]])
-              .map((words, li) => (
-                <text
-                  key={li}
-                  x={n.cx}
-                  y={n.cy + 20 + li * 13}
-                  textAnchor="middle" dominantBaseline="middle"
-                  fontSize={highlighted ? "10.5" : "9.5"}
-                  fontWeight={highlighted ? "600" : "400"}
-                  fill={highlighted ? "#FFFFFF" : "#C4B5FD"}
-                  opacity={highlighted ? 1 : 0.7}
-                  fontFamily="var(--font-poppins), sans-serif"
-                >
-                  {words.join(" ")}
-                </text>
-              ))}
-          </g>
+              fillOpacity={highlighted ? 1 : 0.92}
+            />
+            {/* Brilho interno da tampa (cavidade) */}
+            <ellipse
+              cx={CX} cy={topY} rx={layer.topR * 0.74} ry={EY * 0.72}
+              fill="#0C0F1A" fillOpacity={0.55}
+            />
+            <ellipse
+              cx={CX - layer.topR * 0.18} cy={topY - EY * 0.18} rx={layer.topR * 0.5} ry={EY * 0.42}
+              fill="#FFFFFF" fillOpacity={highlighted ? 0.14 : 0.08}
+            />
+          </motion.g>
         );
       })}
-
     </svg>
   );
 }
@@ -363,17 +244,6 @@ function PillarContent({ pillar }: { pillar: typeof PILLARS[0] }) {
           </h3>
         </div>
       </div>
-
-      <p
-        className="font-headline text-sm italic leading-relaxed px-4 py-3 rounded-xl"
-        style={{
-          color: "#C4B5FD",
-          background: `${pillar.color}12`,
-          borderLeft: `3px solid ${pillar.color}80`,
-        }}
-      >
-        &ldquo;{pillar.anchor}&rdquo;
-      </p>
 
       <p className="font-body text-gray-300 text-sm leading-relaxed">
         {pillar.description}
