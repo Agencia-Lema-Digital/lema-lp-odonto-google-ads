@@ -105,7 +105,7 @@ export default function HeroBackground({ imageSrc = "/images/clinic-hero.webp" }
       {isNovaHero && !reduced && (
         <div className="absolute inset-0 overflow-hidden">
           <iframe
-            src="https://player.vimeo.com/video/937838325?background=1&autoplay=1&loop=1&muted=1&controls=0&dnt=1"
+            src="https://player.vimeo.com/video/937838325?background=1&autoplay=1&loop=1&muted=1&controls=0&playsinline=1&autopause=0&dnt=1"
             title=""
             aria-hidden="true"
             tabIndex={-1}
