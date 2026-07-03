@@ -64,6 +64,63 @@ function BannerWithAccent({ text, accent }: { text: string; accent: string }) {
   );
 }
 
+// Prova social da hero (general): círculos sobrepostos (estilo referência) +
+// copy curta. Como o público é B2B, cada círculo recebe a logo-símbolo do
+// cliente quando os arquivos chegarem; por ora usa monograma (iniciais) em
+// círculo com gradiente da marca. `ring` na cor do container separa os círculos.
+// src = símbolo do cliente (PNG transparente); bg = cor do círculo por trás da
+// logo (branco para símbolos escuros; cor da marca para símbolos claros).
+// Sem src, cai no monograma com gradiente da marca.
+const CLIENT_LOGOS: { name: string; monogram: string; gradient: string; src?: string; bg?: string }[] = [
+  { name: "Roboclean Brasil", monogram: "RB", gradient: "linear-gradient(135deg, #A78BFA, #6A48F4)", src: "/images/logos/roboclean.webp", bg: "#fff" },
+  { name: "LK Móveis", monogram: "LK", gradient: "linear-gradient(135deg, #7C5CFB, #4C2FC4)", src: "/images/logos/lk.webp", bg: "#000" },
+  { name: "CENUV", monogram: "CV", gradient: "linear-gradient(135deg, #6A48F4, #143E66)", src: "/images/logos/cenuv.webp", bg: "#fff" },
+  { name: "ES Engenharia", monogram: "ES", gradient: "linear-gradient(135deg, #8B6EF8, #4C2FC4)", src: "/images/logos/es.webp", bg: "#1E47B0" },
+];
+
+function HeroSocialProof() {
+  return (
+    <div
+      className="inline-flex items-center gap-3 rounded-full py-1.5 pl-2 pr-4"
+      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}
+    >
+      {/* Círculos sobrepostos */}
+      <div className="flex items-center">
+        {CLIENT_LOGOS.map((l, i) => (
+          <span
+            key={l.name}
+            title={l.name}
+            className="relative flex items-center justify-center w-8 h-8 rounded-full overflow-hidden font-body font-semibold text-[10px] text-white select-none"
+            style={{
+              background: l.src ? l.bg || "#fff" : l.gradient,
+              marginLeft: i === 0 ? 0 : "-0.5rem",
+              boxShadow: "0 0 0 2px #12141d",
+              zIndex: CLIENT_LOGOS.length - i,
+            }}
+          >
+            {l.src ? (
+              <Image
+                src={l.src}
+                alt={`Logo ${l.name}`}
+                width={32}
+                height={32}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              l.monogram
+            )}
+          </span>
+        ))}
+      </div>
+      {/* Copy */}
+      <p className="font-body text-gray-300 text-xs sm:text-sm leading-tight">
+        <span className="text-white font-semibold">+R$5 milhões</span> gerenciados
+        <br className="hidden sm:block" /> para empresas que crescem
+      </p>
+    </div>
+  );
+}
+
 interface HeroProps {
   content: PageHeroContent;
 }
@@ -170,10 +227,17 @@ export default function Hero({ content }: HeroProps) {
                 <CTAButton size="lg" />
                 <p className="mt-3 text-gray-400 text-xs font-body">
                   {isGeneral
-                    ? "30 min com o sócio. Poucas vagas por semana."
+                    ? "30 min com o sócio."
                     : "Poucas vagas por semana — 30 min com o sócio"}
                 </p>
               </div>
+
+              {/* Prova social — faixa de logos de clientes (general) */}
+              {isGeneral && (
+                <div style={fadeUp(0.42)}>
+                  <HeroSocialProof />
+                </div>
+              )}
             </div>
           </div>
 

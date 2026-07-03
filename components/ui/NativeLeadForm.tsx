@@ -83,6 +83,8 @@ export default function NativeLeadForm() {
   const utmsRef = useRef<Utms>(collectUtms());
   const respondentIdRef = useRef<string>(genId());
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
+  // Raiz do formulário — observada para disparar form_view só quando entra na tela
+  const rootRef = useRef<HTMLDivElement>(null);
   // Marca de campos já reportados ao GA4 (evita duplicar ao voltar/avançar)
   const answeredRef = useRef<Set<string>>(new Set());
   // Espelho de answers para uso dentro de callbacks sem stale closure
@@ -93,16 +95,36 @@ export default function NativeLeadForm() {
   const progress = (step / QUESTIONS.length) * 100;
   const currentValue = answers[current.id as keyof Answers];
 
-  // Captura UTMs e marca VISUALIZAÇÃO do formulário (não é início de preenchimento).
-  // O guard (variável de módulo) sobrevive à remontagem do Strict Mode em dev,
-  // evitando o form_view duplicado.
+  // Captura UTMs ao montar (a URL pode ter mudado após a hidratação).
   useEffect(() => {
     utmsRef.current = collectUtms();
+  }, []);
+
+  // form_view = VISUALIZAÇÃO do formulário: dispara só quando ele entra no
+  // viewport (e não no carregamento da página, já que fica abaixo da dobra).
+  // O guard (variável de módulo) garante disparo único por página e sobrevive
+  // à remontagem do Strict Mode em dev.
+  useEffect(() => {
     if (formViewFired) return;
-    formViewFired = true;
-    // form_view = chegou ao formulário (não é início de preenchimento).
-    // No GTM, acione aqui o Meta ViewContent, se desejado.
-    dl("form_view", { form_id: FORM_ID, form_name: FORM_NAME });
+    const el = rootRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          if (!formViewFired) {
+            formViewFired = true;
+            // No GTM, acione aqui o Meta ViewContent, se desejado.
+            dl("form_view", { form_id: FORM_ID, form_name: FORM_NAME });
+          }
+          io.disconnect();
+        }
+      },
+      // Conta como visto quando ~30% do formulário aparece na tela
+      { threshold: 0.3 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   // Foco automático ao AVANÇAR de passo. Pula o passo inicial: dar focus() num
@@ -274,7 +296,7 @@ export default function NativeLeadForm() {
   }
 
   return (
-    <div className="bg-white px-6 py-8 sm:px-10 sm:py-10">
+    <div ref={rootRef} className="bg-white px-6 py-8 sm:px-10 sm:py-10">
       {/* Barra de progresso */}
       <div className="w-full h-1.5 rounded-full overflow-hidden mb-2" style={{ background: "rgba(106,72,244,0.12)" }}>
         <motion.div
