@@ -87,7 +87,7 @@ export default function HeroBackground({ imageSrc = "/images/clinic-hero.webp" }
         `}</style>
       )}
 
-      {/* ── Foto ── */}
+      {/* ── Foto (fallback/poster; fica sob o vídeo) ── */}
       <Image
         src={imageSrc}
         alt=""
@@ -98,6 +98,43 @@ export default function HeroBackground({ imageSrc = "/images/clinic-hero.webp" }
         quality={75}
         decoding="async"
       />
+
+      {/* ── Vídeo de fundo (teste) — Vimeo em modo background: autoplay, loop,
+          mudo, sem controles. Cobre a hero (técnica full-bleed). Só na nova hero
+          e com movimento permitido; senão fica só a imagem acima. ── */}
+      {isNovaHero && !reduced && (
+        <div className="absolute inset-0 overflow-hidden">
+          <iframe
+            src="https://player.vimeo.com/video/937838325?background=1&autoplay=1&loop=1&muted=1&controls=0&dnt=1"
+            title=""
+            aria-hidden="true"
+            tabIndex={-1}
+            allow="autoplay; fullscreen"
+            className="pointer-events-none border-0"
+            style={{
+              // Vídeo QUADRADO (1:1) em modo cover: iframe quadrado com lado =
+              // maior entre largura/altura da viewport (via min-*), centralizado.
+              // blur suave disfarça o pixelado do upscale (fonte 240px); o scale
+              // extra evita que a borda desfocada revele fresta nas laterais.
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%) scale(1.08)",
+              width: "100vw",
+              height: "100vw",
+              minWidth: "100vh",
+              minHeight: "100vh",
+              filter: "blur(3px)",
+            }}
+          />
+          {/* Overlay escuro leve sobre o vídeo — suaviza o pixelado do upscale */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{ background: "rgba(8,11,22,0.28)" }}
+          />
+        </div>
+      )}
 
       {/* Mobile: cobertura vertical sólida sobre toda a tela */}
       <div
