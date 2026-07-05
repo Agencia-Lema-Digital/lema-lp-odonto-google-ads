@@ -3,6 +3,7 @@
 import Image from "next/image";
 import CTAButton from "@/components/ui/CTAButton";
 import HeroBackground from "@/components/ui/HeroBackground";
+import HeroFounderScene from "@/components/ui/HeroFounderScene";
 import type { PageHeroContent } from "@/lib/pages-config";
 
 // Stat do card lateral — usado apenas nas rotas odonto (a general não tem card)
@@ -130,7 +131,7 @@ export default function Hero({ content }: HeroProps) {
   const STAT = STAT_ODONTO;
   return (
     <>
-    <header className="relative overflow-hidden min-h-[100dvh] flex flex-col" style={{ background: "#0C0F1A" }}>
+    <header className={`relative overflow-hidden flex flex-col ${isGeneral ? "lg:min-h-[100dvh]" : "min-h-[100dvh]"}`} style={{ background: "#0C0F1A" }}>
       <style>{`
         @keyframes hero-fade-up {
           from { opacity: 0; transform: translateY(20px); }
@@ -176,7 +177,7 @@ export default function Hero({ content }: HeroProps) {
         />
       </div>
 
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-14 sm:pt-12 sm:pb-16 lg:pt-14 lg:pb-14 flex-1 flex flex-col justify-center">
+      <div className={`relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8 sm:pt-12 sm:pb-16 lg:pt-14 lg:pb-14 flex flex-col ${isGeneral ? "justify-start lg:flex-1 lg:justify-center" : "flex-1 justify-center"}`}>
         <div className={isGeneral ? "" : "grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center"}>
           {/* Coluna principal */}
           <div className={`flex flex-col max-w-2xl ${isGeneral ? "gap-6 sm:gap-5 lg:gap-5" : "gap-4 sm:gap-5 lg:gap-5"}`}>
@@ -281,10 +282,18 @@ export default function Hero({ content }: HeroProps) {
             </div>
           )}
 
-          {/* Foto do fundador removida por ora — será refinada depois.
-              Mantém apenas o BG de ondas (HeroBackground). */}
         </div>
       </div>
+
+      {/* Cena do sócio (general) — desktop: colada na base à direita (absolute);
+          mobile: preenche o resto da hero em fluxo, colada na base. */}
+      {isGeneral && (
+        <div
+          className="relative z-[4] w-full aspect-[1.1] mt-1 lg:mt-0 lg:aspect-auto lg:absolute lg:inset-y-0 lg:right-0 lg:w-[46%]"
+        >
+          <HeroFounderScene />
+        </div>
+      )}
     </header>
 
       {/* firstH2 — ponte SSR entre Hero e corpo. Na variante general foi removida
