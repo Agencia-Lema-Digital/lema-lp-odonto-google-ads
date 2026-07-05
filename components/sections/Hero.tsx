@@ -212,7 +212,7 @@ export default function Hero({ content }: HeroProps) {
             <div className="contents">
               <h1
                 style={fadeUp(0.1)}
-                className="font-headline font-bold text-white text-3xl sm:text-4xl lg:text-[3.6rem] leading-[1.12] sm:leading-[1.1] lg:leading-[1.05] tracking-tight text-balance"
+                className="font-headline font-bold text-white text-[2.15rem] sm:text-4xl lg:text-[3.6rem] leading-[1.1] sm:leading-[1.1] lg:leading-[1.05] tracking-tight text-balance"
               >
                 <H1WithAccent text={content.h1} accentWord={content.h1AccentWord} />
               </h1>

@@ -109,7 +109,8 @@ export default function HeroFounderScene() {
         className="hfs-anim absolute left-0 bottom-[3%] w-[52%] z-10"
         style={{ animation: "hfs-slideL 0.8s ease-out 0.35s both" }}
       >
-        <div style={{ animation: "hfs-floatA 7s ease-in-out infinite 1s" }}>
+        {/* Leve desfoque — faz o painel recuar e não disputar atenção */}
+        <div style={{ animation: "hfs-floatA 7s ease-in-out infinite 1s", filter: "blur(1px)" }}>
           <CrmPanel />
         </div>
       </div>
