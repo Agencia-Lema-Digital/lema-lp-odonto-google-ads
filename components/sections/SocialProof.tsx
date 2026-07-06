@@ -851,7 +851,10 @@ export default function SocialProof() {
 
           <div className="flex flex-col gap-5">
             <TestimonialTrack items={ROW_1} direction="left" duration={45} />
-            <TestimonialTrack items={ROW_2} direction="right" duration={50} />
+            {/* 2ª linha só no desktop — mobile mostra apenas uma linha */}
+            <div className="hidden lg:block">
+              <TestimonialTrack items={ROW_2} direction="right" duration={50} />
+            </div>
           </div>
         </div>
       </FadeInSection>
