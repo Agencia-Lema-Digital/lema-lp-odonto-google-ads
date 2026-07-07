@@ -44,26 +44,6 @@ export const PAGES_CONFIG: Record<string, PageConfig> = {
     },
   },
 
-  // Intenção "Agência" (GA1)
-  "/agencia-marketing-odontologico": {
-    hero: {
-      kicker: "Assessoria de marketing e vendas para clínicas odontológicas",
-      h1: "A agência de marketing odontológico que entrega paciente na cadeira — não relatório bonito.",
-      h1AccentWord: "paciente na cadeira",
-      subheadline:
-        "Você já contratou agência antes e não viu resultado. A Lema Digital trabalha como assessoria: o Método TRINO conecta anúncio, atendimento e processo comercial — e a gente responde pelo paciente que senta na cadeira, não só por quem mandou mensagem.",
-      firstH2: "Por que a maioria das agências de marketing odontológico não gera paciente",
-      agitationBody:
-        "Você já contratou agência antes. Veio relatório, veio alcance, veio post no feed — e a cadeira continuou com o mesmo movimento de sempre. Não porque o anúncio era ruim, mas porque ninguém cuidou do que acontece depois que o paciente manda mensagem. Relatório bonito não enche agenda.",
-    },
-    meta: {
-      title: "Agência de Marketing Odontológico | Método TRINO — Lema Digital",
-      description:
-        "Cansou de agência que só entrega relatório? A Lema Digital é assessoria de marketing e vendas para clínicas odontológicas. Diagnóstico gratuito de 30 min.",
-      canonical: `${BASE_URL}/agencia-marketing-odontologico`,
-    },
-  },
-
   // Intenção "Geral" — empresas +R$35k/mês
   "/assessoria-marketing-vendas": {
     hero: {
@@ -84,26 +64,6 @@ export const PAGES_CONFIG: Record<string, PageConfig> = {
       description:
         "Assessoria de Marketing & Vendas para empresas que faturam +R$35k/mês. Conectamos suas campanhas ao processo comercial para gerar vendas reais e previsíveis.",
       canonical: `${BASE_URL}/assessoria-marketing-vendas`,
-    },
-  },
-
-  // Intenção "Estética" (GA3)
-  "/marketing-estetica-dental": {
-    hero: {
-      kicker: "Marketing para clínicas de estética dental — lentes, facetas e clareamento",
-      h1: "Marketing para estética dental que lota a agenda de lentes, facetas e clareamento.",
-      h1AccentWord: "lota a agenda",
-      subheadline:
-        "O Método TRINO da Lema Digital conecta anúncio, atendimento e processo comercial — para clínicas de estética dental que querem encher a agenda de tratamentos de alto valor sem depender de indicação.",
-      firstH2: "Por que clínica de estética dental atrai curioso e não paciente de alto valor",
-      agitationBody:
-        "Chega muita gente perguntando o preço da faceta — e poucos fecham. A maioria some depois do orçamento, e quem fica tenta baixar o valor, até você dar desconto com medo de perder o paciente. O problema não é o tanto de gente que chega. É que ninguém separa quem está só pesquisando preço de quem está pronto pra tratar.",
-    },
-    meta: {
-      title: "Marketing para Estética Dental | Lentes, Facetas, Clareamento — Lema Digital",
-      description:
-        "Marketing e vendas para clínicas de estética dental. Mais pacientes de lentes, facetas e clareamento, com agenda previsível. Diagnóstico gratuito de 30 min.",
-      canonical: `${BASE_URL}/marketing-estetica-dental`,
     },
   },
 };
