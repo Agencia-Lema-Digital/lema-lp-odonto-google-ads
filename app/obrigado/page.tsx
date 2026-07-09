@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { SmileDesignArc, OcclusalGrid } from "@/components/ui/DentalAccents";
+import { AdSignal, DataGrid } from "@/components/ui/GeneralistAccents";
 
 export const metadata: Metadata = {
   title: "Obrigado! Diagnóstico Confirmado | Lema Digital",
@@ -23,11 +23,11 @@ export default function ObrigadoPage() {
       />
 
       {/* Decorações de fundo */}
-      <SmileDesignArc
+      <AdSignal
         className="absolute left-[-2%] top-[8%] w-80 h-auto text-[#6A48F4] pointer-events-none"
         opacity={0.055}
       />
-      <OcclusalGrid
+      <DataGrid
         className="absolute right-[-1%] bottom-[6%] w-52 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block"
         opacity={0.05}
       />

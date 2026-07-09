@@ -33,7 +33,7 @@ export default function AssessoriaMarketingVendasPage() {
     <main className="page-general">
       <Hero content={config.hero} />
       <KeywordMarquee />
-      <LandingPageBody variant="general" />
+      <LandingPageBody />
     </main>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Hero from "@/components/sections/Hero";
 import LandingPageBody from "@/components/sections/LandingPageBody";
+import KeywordMarquee from "@/components/ui/KeywordMarquee";
 import { PAGES_CONFIG } from "@/lib/pages-config";
 
 const config = PAGES_CONFIG["/"];
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     description: config.meta.description,
     url: config.meta.canonical,
     siteName: "Lema Digital",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Lema Digital — Marketing para Clínicas Odontológicas" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Lema Digital — Assessoria de Marketing e Vendas" }],
     locale: "pt_BR",
     type: "website",
   },
@@ -29,9 +30,10 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <main>
+    <main className="page-general">
       <Hero content={config.hero} />
-      <LandingPageBody />
+      <KeywordMarquee />
+      <LandingPageBody copyVariant="diagnostico" />
     </main>
   );
 }

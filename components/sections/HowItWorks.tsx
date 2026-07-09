@@ -1,50 +1,46 @@
 "use client";
 
-import { ClipboardList, Phone, Video, CheckCircle2 } from "lucide-react";
+import { ClipboardList, Phone, Video, CheckCircle2, Magnet, Handshake, TrendingUp } from "lucide-react";
 import FadeInSection from "@/components/ui/FadeInSection";
-import { GoldenRatioSpiral, ProbeGrid, CephalometricLines } from "@/components/ui/DentalAccents";
 import { AdSignal, ClickCursor, DataGrid } from "@/components/ui/GeneralistAccents";
-import { useBodyVariant } from "@/lib/body-variant-context";
+import { useCopyVariant } from "@/lib/copy-variant-context";
 
-const COPY_ODONTO = {
-  eyebrow: "30 minutos. Análise honesta.",
-  headingMain: "Como funciona",
-  headingAccent: "o diagnóstico.",
+const COPY_GENERAL = {
+  eyebrow: "O Método TRINO",
+  headingMain: "Três pilares.",
+  headingAccent: "Um crescimento integrado.",
   subheading:
-    "Não é reunião de vendas. É análise consultiva do seu funil.",
+    "O TRINO conecta o funil inteiro do seu negócio — do primeiro clique ao cliente que volta e indica.",
   steps: [
     {
-      icon: ClipboardList,
+      icon: Magnet,
       number: "01",
-      title: "Você preenche o formulário",
-      description: "Conta o cenário atual da sua clínica em 2 minutos. Sem pegadinha.",
+      title: "Demanda Qualificada",
+      description: "Tráfego pago e conteúdo pra atrair o cliente certo. Não qualquer lead.",
     },
     {
-      icon: Phone,
+      icon: Handshake,
       number: "02",
-      title: "Conversa rápida de qualificação",
-      time: "10 min",
-      description:
-        "Vamos te ligar para alinhar expectativa e confirmar se faz sentido seguir.",
+      title: "Estrutura Comercial",
+      description: "CRM, follow-up e processo pra transformar conversa em venda.",
     },
     {
-      icon: Video,
+      icon: TrendingUp,
       number: "03",
-      title: "Reunião estratégica com o sócio",
-      time: "30 min",
-      description:
-        "O Maurílio entra com você no Google Meet e mostra, na prática, onde está o gargalo do seu funil.",
+      title: "Expansão Inteligente",
+      description: "Dados pra reduzir custo, aumentar o ticket e crescer com previsibilidade.",
     },
   ],
-  outputTitle: "O que sai do diagnóstico",
+  outputTitle: "Por que vira um ciclo",
   outputs: [
-    "Análise honesta do funil atual: anúncio, atendimento e processo comercial",
-    "Identificação dos gargalos específicos da sua clínica",
-    "Plano de ação prioritário (você sai com clareza)",
+    "Cliente satisfeito indica — e traz novos clientes com baixo custo",
+    "Avaliações e depoimentos viram prova social nos próximos anúncios",
+    "Quanto mais o ciclo roda, menor o custo de aquisição e maior o faturamento",
   ],
 };
 
-const COPY_GENERAL = {
+// Versão "diagnóstico" (raiz backup / Meta Ads) — passo a passo do diagnóstico gratuito
+const COPY_GENERAL_DIAG = {
   eyebrow: "30 minutos · gratuito · sem compromisso",
   headingMain: "Pare de adivinhar.",
   headingAccent: "Veja o que trava seu crescimento.",
@@ -82,27 +78,17 @@ const COPY_GENERAL = {
 };
 
 export default function HowItWorks() {
-  const variant = useBodyVariant();
-  const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
+  const copyVariant = useCopyVariant();
+  const COPY = copyVariant === "diagnostico" ? COPY_GENERAL_DIAG : COPY_GENERAL;
   return (
     <section
       id="como-trabalhamos"
       className="relative py-14 lg:py-28 overflow-hidden scroll-mt-20"
       style={{ background: "linear-gradient(135deg, #EDE9FE 0%, #F5F1EA 100%)" }}
     >
-      {variant === "general" ? (
-        <>
-          <AdSignal className="absolute left-[2%] bottom-[6%] w-40 h-auto text-[#6A48F4] pointer-events-none" opacity={0.065} />
-          <ClickCursor className="absolute right-[5%] top-[20%] w-20 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.08} />
-          <DataGrid className="absolute right-[-1%] top-[5%] w-44 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.05} />
-        </>
-      ) : (
-        <>
-          <GoldenRatioSpiral className="absolute left-[2%] bottom-[6%] w-40 h-auto text-[#6A48F4] pointer-events-none" opacity={0.065} />
-          <ProbeGrid className="absolute right-[5%] top-[20%] w-8 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.08} />
-          <CephalometricLines className="absolute right-[-1%] top-[5%] w-36 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.05} />
-        </>
-      )}
+      <AdSignal className="absolute left-[2%] bottom-[6%] w-40 h-auto text-[#6A48F4] pointer-events-none" opacity={0.065} />
+      <ClickCursor className="absolute right-[5%] top-[20%] w-20 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.08} />
+      <DataGrid className="absolute right-[-1%] top-[5%] w-44 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.05} />
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho */}
@@ -170,12 +156,12 @@ export default function HowItWorks() {
                         <h3 className="font-headline font-bold text-brand-dark text-lg lg:text-xl">
                           {step.title}
                         </h3>
-                        {step.time && (
+                        {(step as { time?: string }).time && (
                           <span
                             className="text-brand-primary text-xs font-body font-semibold px-2.5 py-1 rounded-full"
                             style={{ background: "rgba(106,72,244,0.10)" }}
                           >
-                            {step.time}
+                            {(step as { time?: string }).time}
                           </span>
                         )}
                       </div>

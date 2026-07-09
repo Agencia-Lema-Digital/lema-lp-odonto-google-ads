@@ -8,35 +8,10 @@ import {
 } from "@/components/ui/accordion";
 import FadeInSection from "@/components/ui/FadeInSection";
 import CTAButton from "@/components/ui/CTAButton";
-import { XRayFragment, ProbeGrid } from "@/components/ui/DentalAccents";
 import { DataGrid, ClickCursor } from "@/components/ui/GeneralistAccents";
-import { useBodyVariant } from "@/lib/body-variant-context";
+import { useCopyVariant, ctaLabelFor } from "@/lib/copy-variant-context";
 
-const COPY_ODONTO = {
-  eyebrow: "Dúvidas frequentes",
-  headingMain: "As perguntas que todo dono",
-  headingAccent: "de clínica faz antes de fechar.",
-  faqs: [
-    {
-      question: "Como vocês garantem que os leads vão ser qualificados?",
-      answer:
-        "Trabalhamos com formulários de qualificação na entrada e treinamento da sua equipe para descartar leads curiosos rapidamente. Mas seja honesto com a expectativa: não existe lead 100% qualificado em volume. Existe processo que filtra rápido e equipe que sabe converter o lead bom.",
-    },
-    {
-      question: "Já tive experiência ruim com agência. Por que vocês são diferentes?",
-      answer:
-        "Provavelmente sua agência anterior só rodava anúncio. A gente atua nos 3 pilares: anúncio, atendimento e processo comercial. O gap entre o lead chegar e o paciente sentar na cadeira é onde a maioria das agências falha — e é exatamente onde o Método TRINO atua.",
-    },
-    {
-      question: "Tem garantia de fechamentos?",
-      answer:
-        "Não. Garantimos método, processo, métricas e acompanhamento próximo — não garantimos fechamentos, porque parte deles depende da sua estrutura, da sua equipe e do seu posicionamento. Agência que garante fechamento ou está mentindo, ou está cobrando alto demais para cobrir o risco.",
-    },
-  ],
-  ctaLabel: "Quero meu diagnóstico gratuito",
-};
-
-const COPY_GENERAL = {
+const COPY = {
   eyebrow: "Dúvidas frequentes",
   headingMain: "As perguntas que todo empresário",
   headingAccent: "faz antes de fechar.",
@@ -57,12 +32,12 @@ const COPY_GENERAL = {
         "Garantimos método, processo, métricas e acompanhamento próximo — não garantimos vendas, porque parte delas depende da sua estrutura, da sua equipe e do seu posicionamento de mercado. Qualquer empresa que garanta vendas ou está mentindo, ou está embutindo esse risco no preço.",
     },
   ],
-  ctaLabel: "Quero meu diagnóstico gratuito",
+  ctaLabel: "Falar com um especialista",
 };
 
 export default function FAQ() {
-  const variant = useBodyVariant();
-  const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
+  const copyVariant = useCopyVariant();
+  const ctaLabel = ctaLabelFor(copyVariant);
   return (
     <section
       className="relative py-14 lg:py-28 overflow-hidden"
@@ -74,17 +49,8 @@ export default function FAQ() {
         className="absolute top-0 left-0 right-0 h-1"
         style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4, #143E66)" }}
       />
-      {variant === "general" ? (
-        <>
-          <DataGrid className="absolute right-[-1%] top-[4%] w-56 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.065} />
-          <ClickCursor className="absolute left-[4%] bottom-[5%] w-20 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.08} />
-        </>
-      ) : (
-        <>
-          <XRayFragment className="absolute right-[-1%] top-[4%] w-64 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.065} />
-          <ProbeGrid className="absolute left-[4%] bottom-[5%] w-8 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.08} />
-        </>
-      )}
+      <DataGrid className="absolute right-[-1%] top-[4%] w-56 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.065} />
+      <ClickCursor className="absolute left-[4%] bottom-[5%] w-20 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.08} />
 
       <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho */}
@@ -128,7 +94,7 @@ export default function FAQ() {
           <p className="font-body text-gray-500 text-sm mb-5">
             Ainda tem dúvidas? Tire todas em 30 minutos com a gente.
           </p>
-          <CTAButton label={COPY.ctaLabel} size="lg" />
+          <CTAButton label={ctaLabel} size="lg" />
         </FadeInSection>
       </div>
     </section>

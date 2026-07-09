@@ -3,22 +3,24 @@
 import { useRef } from "react";
 import FadeInSection from "@/components/ui/FadeInSection";
 import NativeLeadForm from "@/components/ui/NativeLeadForm";
-import { SmileDesignArc, OcclusalGrid } from "@/components/ui/DentalAccents";
 import { AdSignal, DataGrid } from "@/components/ui/GeneralistAccents";
-import { useBodyVariant } from "@/lib/body-variant-context";
+import { useCopyVariant } from "@/lib/copy-variant-context";
 
 const COPY = {
   eyebrow: "Poucas vagas por semana",
-  headingMain: "Pronto para o",
-  headingAccent: "diagnóstico gratuito?",
+  headingMain: "Pronto para",
+  headingAccent: "estruturar suas vendas?",
   // Duas frases — quebradas em linhas separadas apenas no desktop (ver render)
   subLine1: "Preencha em 2 minutos.",
   subLine2: "A gente te liga em até 1 dia útil para confirmar a reunião.",
 };
 
 export default function LeadForm() {
-  const variant = useBodyVariant();
+  const copyVariant = useCopyVariant();
   const sectionRef = useRef<HTMLElement>(null);
+  // Ângulo "diagnóstico" (raiz backup): heading volta ao gancho do diagnóstico
+  const headingMain = copyVariant === "diagnostico" ? "Pronto para o" : COPY.headingMain;
+  const headingAccent = copyVariant === "diagnostico" ? "diagnóstico gratuito?" : COPY.headingAccent;
 
   return (
     <section
@@ -34,17 +36,8 @@ export default function LeadForm() {
         className="absolute top-0 left-0 right-0 h-1"
         style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4, #143E66)" }}
       />
-      {variant === "general" ? (
-        <>
-          <AdSignal className="absolute left-[-1%] top-[6%] w-52 h-auto text-[#6A48F4] pointer-events-none" opacity={0.065} />
-          <DataGrid className="absolute right-[-1%] bottom-[4%] w-44 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.055} />
-        </>
-      ) : (
-        <>
-          <SmileDesignArc className="absolute left-[-1%] top-[6%] w-72 h-auto text-[#6A48F4] pointer-events-none" opacity={0.065} />
-          <OcclusalGrid className="absolute right-[-1%] bottom-[4%] w-44 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.055} />
-        </>
-      )}
+      <AdSignal className="absolute left-[-1%] top-[6%] w-52 h-auto text-[#6A48F4] pointer-events-none" opacity={0.065} />
+      <DataGrid className="absolute right-[-1%] bottom-[4%] w-44 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.055} />
 
       <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <FadeInSection className="text-center mb-6">
@@ -60,8 +53,8 @@ export default function LeadForm() {
             id="lead-form-heading"
             className="font-headline font-bold text-brand-text text-3xl sm:text-4xl lg:text-5xl text-balance mb-4 leading-tight"
           >
-            {COPY.headingMain}{" "}
-            <span className="gradient-text">{COPY.headingAccent}</span>
+            {headingMain}{" "}
+            <span className="gradient-text">{headingAccent}</span>
           </h2>
           <p className="font-body text-gray-600 text-base lg:text-lg">
             {COPY.subLine1}{" "}

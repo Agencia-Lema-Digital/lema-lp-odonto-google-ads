@@ -6,9 +6,8 @@ import { Zap } from "lucide-react";
 import { motion, useInView, useMotionValue, useTransform, animate, useReducedMotion, AnimatePresence } from "framer-motion";
 import FadeInSection from "@/components/ui/FadeInSection";
 import CTAButton from "@/components/ui/CTAButton";
-import { SmileDesignArc, XRayFragment, GoldenRatioSpiral } from "@/components/ui/DentalAccents";
 import { AdSignal, ROASArrow } from "@/components/ui/GeneralistAccents";
-import { useBodyVariant } from "@/lib/body-variant-context";
+import { useCopyVariant, ctaLabelFor } from "@/lib/copy-variant-context";
 
 // ─── Dados dos cases (mesclados do antigo CaseStudies) ──────────────────────────
 
@@ -498,40 +497,6 @@ function TestimonialTrack({
   );
 }
 
-const COPY_ODONTO = {
-  eyebrow: "Métricas reais de clínicas reais",
-  headingMain: "O que muda quando",
-  headingAccent: "o funil inteiro funciona.",
-  subheading: "Métricas reais de clínicas que aplicam o Método TRINO.",
-  stats: [
-    {
-      prefix: "",
-      value: 80,
-      suffix: "%",
-      label: "Show rate de pacientes que marcam avaliação e realmente comparecem.",
-    },
-    {
-      prefix: "−",
-      value: 81,
-      suffix: "%",
-      label: "Redução no custo por conversão quando anúncio e atendimento conversam.",
-    },
-    {
-      prefix: "+",
-      value: 30,
-      suffix: "%",
-      label: "Taxa de fechamento com processo comercial padronizado.",
-    },
-    {
-      prefix: "",
-      value: null,
-      suffix: "",
-      text: "CPL",
-      label: "Saber exatamente quanto custa cada novo paciente e ajustar com clareza.",
-    },
-  ],
-};
-
 const COPY_GENERAL = {
   eyebrow: "Por que escolher a Lema Digital?",
   headingMain: "Números que provam",
@@ -615,54 +580,40 @@ function AnimatedCounter({
 }
 
 export default function SocialProof() {
-  const variant = useBodyVariant();
-  const COPY = variant === "general" ? COPY_GENERAL : COPY_ODONTO;
+  const copyVariant = useCopyVariant();
+  const COPY = COPY_GENERAL;
   return (
     <section
-      id={variant === "general" ? "cases-de-sucesso" : undefined}
-      className={`relative pt-14 lg:pt-28 pb-0 overflow-hidden scroll-mt-20 ${variant === "general" ? "" : "bg-white"}`}
-      style={variant === "general" ? { background: "linear-gradient(160deg, #080B14 0%, #0C0F1A 45%, #0F1E33 100%)" } : undefined}
+      id="cases-de-sucesso"
+      className="relative pt-14 lg:pt-28 pb-0 overflow-hidden scroll-mt-20"
+      style={{ background: "linear-gradient(160deg, #080B14 0%, #0C0F1A 45%, #0F1E33 100%)" }}
     >
-      {/* ROI gigante de fundo + sub posicionada sobre ele (mesclado do CaseStudies) — general */}
-      {variant === "general" && (
-        <>
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute right-[2%] top-[3%] font-headline font-bold italic select-none hidden lg:block"
-            style={{
-              fontSize: "clamp(10rem, 20vw, 22rem)",
-              lineHeight: 1,
-              background: "linear-gradient(135deg, rgba(196,181,253,0.12) 0%, rgba(106,72,244,0.07) 100%)",
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              color: "transparent",
-              letterSpacing: "-0.05em",
-            }}
-          >
-            ROI
-          </div>
-        </>
-      )}
-      {variant === "general" ? (
-        <>
-          <ROASArrow className="absolute left-[-1%] bottom-[6%] w-32 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.055} />
-          <AdSignal className="absolute left-[45%] top-[2%] w-28 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.04} />
-        </>
-      ) : (
-        <>
-          <SmileDesignArc className="absolute right-[-2%] top-[6%] w-[420px] h-auto text-[#6A48F4] pointer-events-none" opacity={0.06} />
-          <XRayFragment className="absolute left-[-1%] bottom-[6%] w-56 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.055} />
-          <GoldenRatioSpiral className="absolute left-[45%] top-[2%] w-28 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.045} />
-        </>
-      )}
+      {/* ROI gigante de fundo + sub posicionada sobre ele (mesclado do CaseStudies) */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-[2%] top-[3%] font-headline font-bold italic select-none hidden lg:block"
+        style={{
+          fontSize: "clamp(10rem, 20vw, 22rem)",
+          lineHeight: 1,
+          background: "linear-gradient(135deg, rgba(196,181,253,0.12) 0%, rgba(106,72,244,0.07) 100%)",
+          WebkitBackgroundClip: "text",
+          backgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          color: "transparent",
+          letterSpacing: "-0.05em",
+        }}
+      >
+        ROI
+      </div>
+      <ROASArrow className="absolute left-[-1%] bottom-[6%] w-32 h-auto text-[#6A48F4] pointer-events-none hidden lg:block" opacity={0.055} />
+      <AdSignal className="absolute left-[45%] top-[2%] w-28 h-auto text-[#4C2FC4] pointer-events-none hidden lg:block" opacity={0.04} />
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho — general: heading à esquerda + sub à direita (alinhada ao ROI) */}
         <FadeInSection className="mb-10 lg:mb-16">
-          <div className={variant === "general" ? "flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 lg:gap-8" : ""}>
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 lg:gap-8">
             <div>
-              <p className={`font-sub text-base tracking-wide mb-4 inline-flex items-center gap-2 ${variant === "general" ? "text-[#C4B5FD]" : "text-brand-primary"}`}>
+              <p className="font-sub text-base tracking-wide mb-4 inline-flex items-center gap-2 text-[#C4B5FD]">
                 <span
                   className="inline-block w-6 h-px"
                   style={{ background: "linear-gradient(90deg, #6A48F4, #4C2FC4)" }}
@@ -670,42 +621,31 @@ export default function SocialProof() {
                 />
                 {COPY.eyebrow}
               </p>
-              <h2 className={`font-headline font-bold text-3xl sm:text-4xl lg:text-[3.4rem] leading-tight ${variant === "general" ? "text-white" : "text-brand-text"}`}>
+              <h2 className="font-headline font-bold text-3xl sm:text-4xl lg:text-[3.4rem] leading-tight text-white">
                 {COPY.headingMain}
                 <br />
-                {variant === "general" ? (
-                  <span
-                    style={{
-                      background: "linear-gradient(135deg, #C4B5FD 0%, #A78BFA 45%, #6A48F4 100%)",
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      color: "transparent",
-                    }}
-                  >
-                    {COPY.headingAccent}
-                  </span>
-                ) : (
-                  <span className="gradient-text">{COPY.headingAccent}</span>
-                )}
+                <span
+                  style={{
+                    background: "linear-gradient(135deg, #C4B5FD 0%, #A78BFA 45%, #6A48F4 100%)",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    color: "transparent",
+                  }}
+                >
+                  {COPY.headingAccent}
+                </span>
               </h2>
             </div>
-            {variant === "general" ? (
-              <p className="relative z-10 font-body text-gray-300 text-base leading-relaxed max-w-sm lg:text-right lg:pb-2">
-                Negócios de segmentos diferentes, com um ponto em comum:{" "}
-                <span className="text-white font-semibold">previsibilidade nas vendas.</span>
-              </p>
-            ) : (
-              <p className="font-body text-gray-500 text-base lg:text-lg max-w-2xl leading-relaxed mt-4">
-                {COPY.subheading}
-              </p>
-            )}
+            <p className="relative z-10 font-body text-gray-300 text-base leading-relaxed max-w-sm lg:text-right lg:pb-2">
+              Negócios de segmentos diferentes, com um ponto em comum:{" "}
+              <span className="text-white font-semibold">previsibilidade nas vendas.</span>
+            </p>
           </div>
         </FadeInSection>
 
-        {variant === "general" ? (
-          /* Composição editorial: imagem de autoridade + números (fluida no desktop) */
-          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-6 lg:gap-0 lg:items-center mb-14">
+        {/* Composição editorial: imagem de autoridade + números (fluida no desktop) */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-6 lg:gap-0 lg:items-center mb-14">
             {/* Imagem de autoridade — no desktop sobrepõe levemente a coluna de números */}
             <FadeInSection className="relative lg:z-10">
               <div
@@ -763,40 +703,9 @@ export default function SocialProof() {
               </div>
             </FadeInSection>
           </div>
-        ) : (
-          /* Odonto: grid clássico de 4 colunas */
-          <div
-            className="grid grid-cols-2 lg:grid-cols-4 gap-px rounded-2xl overflow-hidden mb-14"
-            style={{ background: "rgba(106,72,244,0.10)", border: "1px solid rgba(106,72,244,0.12)" }}
-          >
-            {COPY.stats.map((stat, i) => (
-              <FadeInSection key={i} delay={i * 0.08}>
-                <div className="bg-white p-4 lg:p-8 flex flex-col gap-2 lg:gap-3 h-full hover:bg-brand-soft transition-colors duration-200">
-                  <p
-                    className={`font-headline font-bold leading-none ${stat.value !== null ? "text-3xl lg:text-5xl" : "text-2xl lg:text-4xl"}`}
-                    style={{
-                      background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      color: "transparent",
-                    }}
-                  >
-                    {stat.value !== null ? (
-                      <AnimatedCounter prefix={stat.prefix} value={stat.value} suffix={stat.suffix} />
-                    ) : (
-                      stat.text
-                    )}
-                  </p>
-                  <p className="font-body text-gray-500 text-sm leading-snug">{stat.label}</p>
-                </div>
-              </FadeInSection>
-            ))}
-          </div>
-        )}
 
         {/* Cases (mesclados do antigo CaseStudies) — largura total, após os números */}
-        {variant === "general" && (
+        {(
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-5 lg:gap-6 mb-14">
             <FadeInSection className="flex flex-col gap-4 order-2 lg:order-1">
               {OTHERS.map((c, i) => (
@@ -860,7 +769,7 @@ export default function SocialProof() {
       </FadeInSection>
 
       {/* Fecho: "O próximo case pode ser o seu" + CTA (mesclado do CaseStudies) — general */}
-      {variant === "general" && (
+      {(
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
           <FadeInSection>
             <div
@@ -870,7 +779,7 @@ export default function SocialProof() {
               <p className="font-headline font-bold italic text-white text-xl lg:text-2xl text-center sm:text-left">
                 O próximo case pode ser o seu.
               </p>
-              <CTAButton size="lg" className="flex-shrink-0" />
+              <CTAButton size="lg" label={ctaLabelFor(copyVariant)} className="flex-shrink-0" />
             </div>
           </FadeInSection>
         </div>

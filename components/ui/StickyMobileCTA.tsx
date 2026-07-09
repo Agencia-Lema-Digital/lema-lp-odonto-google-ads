@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useCopyVariant, ctaLabelFor } from "@/lib/copy-variant-context";
 
 const SCROLL_THRESHOLD = 800;
 
 export default function StickyMobileCTA() {
+  const copyVariant = useCopyVariant();
+  const ctaLabel = ctaLabelFor(copyVariant);
   const [visible, setVisible] = useState(false);
   const [nearForm, setNearForm] = useState(false);
   // Algum botão CTA "real" da página está visível no viewport?
@@ -101,7 +104,7 @@ export default function StickyMobileCTA() {
             focus-visible:ring-brand-primary focus-visible:ring-offset-2
           "
         >
-          Quero meu diagnóstico gratuito
+          {ctaLabel}
         </button>
       </div>
     </div>

@@ -225,7 +225,7 @@ export default function Hero({ content }: HeroProps) {
               </p>
 
               <div style={fadeUp(0.3)}>
-                <CTAButton size="lg" />
+                <CTAButton size="lg" label={content.ctaLabel} />
                 <p className="mt-3 text-gray-400 text-xs font-body">
                   {isGeneral
                     ? "30 min com o sócio."
