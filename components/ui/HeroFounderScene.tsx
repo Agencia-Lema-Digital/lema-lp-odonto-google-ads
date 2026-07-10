@@ -24,7 +24,7 @@ const SIDEBAR_ICONS = [MessageCircle, Phone, Clock, Users, Bookmark, Settings];
 function CrmPanel() {
   return (
     <div
-      className="flex overflow-hidden"
+      className="hfs-glass flex overflow-hidden"
       style={{
         borderRadius: "1.6cqw",
         background: "rgba(255,255,255,0.10)",
@@ -108,6 +108,13 @@ export default function HeroFounderScene() {
            re-render por frame — caro em CPU fraca e concorre com o LCP. */
         @media (max-width: 1023px) {
           .hfs-crm-fx { animation: none !important; filter: none !important; }
+          /* backdrop-filter é lentíssimo na rasterização por software (PageSpeed).
+             No mobile o painel fica atrás da foto — fundo sólido translúcido basta. */
+          .hfs-glass {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            background: rgba(34,37,54,0.88) !important;
+          }
         }
       `}</style>
 
@@ -154,7 +161,9 @@ export default function HeroFounderScene() {
             WebkitMaskImage: "linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%)",
           }}
         >
-          <div className="hfs-track" style={{ animation: "hfs-step 15s ease-in-out infinite" }}>
+          {/* delay 4s: deixa o compositor livre durante o carregamento (janela do LCP);
+              a 1ª notificação fica estática nesse meio-tempo */}
+          <div className="hfs-track" style={{ animation: "hfs-step 15s ease-in-out 4s infinite" }}>
             {[...NOTIFS, ...NOTIFS].map((n, i) => (
               <div key={i} className="mb-[7%]">
                 <Image

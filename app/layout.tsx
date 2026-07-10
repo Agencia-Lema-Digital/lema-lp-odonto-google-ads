@@ -66,7 +66,8 @@ export default function RootLayout({
 
         {children}
 
-        {/* GTM loader — afterInteractive para não bloquear o parser */}
+        {/* GTM loader — afterInteractive, carregamento imediato: página de campanha,
+            o tracking não pode ser adiado (decisão de negócio). */}
         <Script
           id="gtm-loader"
           strategy="afterInteractive"
