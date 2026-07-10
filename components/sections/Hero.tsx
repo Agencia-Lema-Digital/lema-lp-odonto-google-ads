@@ -132,10 +132,12 @@ export default function Hero({ content }: HeroProps) {
   return (
     <>
     <header className={`relative overflow-hidden flex flex-col ${isGeneral ? "lg:min-h-[100dvh]" : "min-h-[100dvh]"}`} style={{ background: "#0C0F1A" }}>
-      <style>{`
-        /* Sem fade de opacidade: elemento com opacity:0 não registra como candidato
-           a LCP no Chrome — o h1 precisa pintar visível no primeiro paint. O rise
-           escalonado mantém a sensação de entrada. */
+      {/* dangerouslySetInnerHTML: children de texto em <style> causavam mismatch de
+          hydration (React descartava o SSR inteiro e re-renderizava no cliente,
+          destruindo o candidato a LCP). Assim o React não compara o conteúdo. */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         @keyframes hero-fade-up {
           from { transform: translateY(20px); }
           to   { transform: translateY(0); }
@@ -143,7 +145,9 @@ export default function Hero({ content }: HeroProps) {
         @media (prefers-reduced-motion: reduce) {
           * { animation-duration: 0.01ms !important; animation-delay: 0ms !important; }
         }
-      `}</style>
+      `,
+        }}
+      />
 
       {/* Barra superior — general: fundo branco com texto preto; odonto: degradê primário */}
       {isGeneral ? (

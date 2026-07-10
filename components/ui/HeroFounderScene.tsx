@@ -83,7 +83,10 @@ function CrmPanel() {
 export default function HeroFounderScene() {
   return (
     <div className="relative w-full h-full" style={{ containerType: "inline-size" }}>
-      <style>{`
+      {/* dangerouslySetInnerHTML evita mismatch de hydration em <style> (ver Hero) */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         /* Sem fade de opacidade: a foto é o provável elemento LCP no mobile e
            opacity:0 inicial atrasa a métrica — só o rise já dá o movimento. */
         @keyframes hfs-rise   { from { transform: translateY(34px); } to { transform: translateY(0); } }
@@ -116,7 +119,9 @@ export default function HeroFounderScene() {
             background: rgba(34,37,54,0.88) !important;
           }
         }
-      `}</style>
+      `,
+        }}
+      />
 
       {/* Painel CRM (CSS) — ATRÁS da foto, à esquerda, mais baixo */}
       <div

@@ -53,7 +53,10 @@ export default function HeroBackground({ imageSrc = "/images/clinic-hero.webp" }
       style={{ zIndex: 0 }}
     >
       {!reduced && (
-        <style>{`
+        // dangerouslySetInnerHTML evita mismatch de hydration em <style> (ver Hero)
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
           @keyframes core-pulse {
             0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.55; }
             50%       { transform: translate(-50%, -50%) scale(1.22); opacity: 0.85; }
@@ -84,7 +87,9 @@ export default function HeroBackground({ imageSrc = "/images/clinic-hero.webp" }
             0%, 100% { opacity: 0.35; transform: scale(1); }
             50%       { opacity: 0.6;  transform: scale(1.08); }
           }
-        `}</style>
+        `,
+          }}
+        />
       )}
 
       {/* ── Foto (fallback/poster; fica sob o vídeo) ── */}
