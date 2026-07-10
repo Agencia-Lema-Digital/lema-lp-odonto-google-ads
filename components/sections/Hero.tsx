@@ -133,9 +133,12 @@ export default function Hero({ content }: HeroProps) {
     <>
     <header className={`relative overflow-hidden flex flex-col ${isGeneral ? "lg:min-h-[100dvh]" : "min-h-[100dvh]"}`} style={{ background: "#0C0F1A" }}>
       <style>{`
+        /* Sem fade de opacidade: elemento com opacity:0 não registra como candidato
+           a LCP no Chrome — o h1 precisa pintar visível no primeiro paint. O rise
+           escalonado mantém a sensação de entrada. */
         @keyframes hero-fade-up {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
+          from { transform: translateY(20px); }
+          to   { transform: translateY(0); }
         }
         @media (prefers-reduced-motion: reduce) {
           * { animation-duration: 0.01ms !important; animation-delay: 0ms !important; }

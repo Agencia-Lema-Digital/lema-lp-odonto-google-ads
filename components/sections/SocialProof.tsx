@@ -658,7 +658,7 @@ export default function SocialProof() {
                   fill
                   sizes="(min-width: 1024px) 640px, 100vw"
                   className="object-cover object-center"
-                  quality={92}
+                  quality={80}
                 />
                 {/* Leve overlay roxo para integrar à paleta */}
                 <div
