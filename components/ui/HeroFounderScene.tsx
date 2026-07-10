@@ -57,7 +57,7 @@ function CrmPanel() {
               style={{ width: "4.6cqw", height: "4.6cqw" }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={c.av} alt="" aria-hidden="true" className="w-full h-full object-cover" />
+              <img src={c.av} alt="" aria-hidden="true" loading="lazy" decoding="async" className="w-full h-full object-cover" />
             </span>
             <span className="min-w-0 flex flex-col" style={{ gap: "0.4cqw" }}>
               <span className="font-body font-semibold text-white truncate" style={{ fontSize: "1.9cqw" }}>
@@ -84,7 +84,9 @@ export default function HeroFounderScene() {
   return (
     <div className="relative w-full h-full" style={{ containerType: "inline-size" }}>
       <style>{`
-        @keyframes hfs-rise   { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: translateY(0); } }
+        /* Sem fade de opacidade: a foto é o provável elemento LCP no mobile e
+           opacity:0 inicial atrasa a métrica — só o rise já dá o movimento. */
+        @keyframes hfs-rise   { from { transform: translateY(34px); } to { transform: translateY(0); } }
         @keyframes hfs-slideL { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes hfs-fade   { from { opacity: 0; } to { opacity: 1; } }
         @keyframes hfs-floatA { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
@@ -102,6 +104,11 @@ export default function HeroFounderScene() {
           .hfs-anim { animation: none !important; opacity: 1 !important; transform: none !important; }
           .hfs-track { animation: none !important; }
         }
+        /* Mobile: float infinito + blur sobre elemento com backdrop-filter forçam
+           re-render por frame — caro em CPU fraca e concorre com o LCP. */
+        @media (max-width: 1023px) {
+          .hfs-crm-fx { animation: none !important; filter: none !important; }
+        }
       `}</style>
 
       {/* Painel CRM (CSS) — ATRÁS da foto, à esquerda, mais baixo */}
@@ -110,7 +117,7 @@ export default function HeroFounderScene() {
         style={{ animation: "hfs-slideL 0.8s ease-out 0.35s both" }}
       >
         {/* Leve desfoque — faz o painel recuar e não disputar atenção */}
-        <div style={{ animation: "hfs-floatA 7s ease-in-out infinite 1s", filter: "blur(1px)" }}>
+        <div className="hfs-crm-fx" style={{ animation: "hfs-floatA 7s ease-in-out infinite 1s", filter: "blur(1px)" }}>
           <CrmPanel />
         </div>
       </div>
@@ -127,6 +134,8 @@ export default function HeroFounderScene() {
             width={830}
             height={973}
             className="w-full h-auto"
+            // Sem `sizes`, o preload gerava srcset 1x/2x e o mobile baixava w=1920
+            sizes="(min-width: 1024px) 32vw, 70vw"
             priority
           />
         </div>
@@ -154,6 +163,7 @@ export default function HeroFounderScene() {
                   aria-hidden="true"
                   width={745}
                   height={153}
+                  sizes="(min-width: 1024px) 23vw, 60vw"
                   className="w-full h-auto drop-shadow-[0_10px_28px_rgba(0,0,0,0.4)]"
                 />
               </div>
