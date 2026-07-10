@@ -180,10 +180,10 @@ export default function Hero({ content }: HeroProps) {
         />
       </div>
 
-      {/* Mobile (general): o bloco de texto ocupa o viewport inteiro (100dvh menos a
-          barra superior, ~2.25rem) com o conteúdo centralizado — a cena do sócio fica
-          INTEIRA abaixo da primeira dobra, nunca cortada. Desktop: layout original. */}
-      <div className={`relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8 sm:pt-12 sm:pb-16 lg:pt-14 lg:pb-14 flex flex-col ${isGeneral ? "min-h-[calc(100dvh-2.25rem)] justify-center lg:min-h-0 lg:flex-1" : "flex-1 justify-center"}`}>
+      {/* Mobile (general): texto em fluxo com a cena do sócio logo abaixo — a foto
+          fica parcialmente na primeira dobra e ancora o LCP (imagem pinta cedo).
+          A variação com texto em 100dvh (foto abaixo da dobra) derrubou o LCP. */}
+      <div className={`relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8 sm:pt-12 sm:pb-16 lg:pt-14 lg:pb-14 flex flex-col ${isGeneral ? "justify-start lg:flex-1 lg:justify-center" : "flex-1 justify-center"}`}>
         <div className={isGeneral ? "" : "grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center"}>
           {/* Coluna principal */}
           <div className={`flex flex-col max-w-2xl ${isGeneral ? "gap-6 sm:gap-5 lg:gap-5" : "gap-4 sm:gap-5 lg:gap-5"}`}>
