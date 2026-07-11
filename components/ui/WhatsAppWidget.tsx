@@ -74,8 +74,10 @@ export default function WhatsAppWidget() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Observa os botões CTA ([data-cta]): enquanto algum estiver visível, o FAB
-  // some. MutationObserver re-observa CTAs de seções carregadas dinamicamente.
+  // Observa os botões CTA ([data-cta]) e a seção do formulário (#lead-form):
+  // enquanto qualquer um estiver visível, o FAB some — sobre o formulário ele
+  // desviaria a conversão principal. MutationObserver re-observa elementos de
+  // seções carregadas dinamicamente.
   useEffect(() => {
     if (typeof IntersectionObserver === "undefined") return;
     const visible = new Set<Element>();
@@ -91,7 +93,7 @@ export default function WhatsAppWidget() {
     );
     const observed = new WeakSet<Element>();
     const observeAll = () => {
-      document.querySelectorAll("[data-cta]").forEach((el) => {
+      document.querySelectorAll("[data-cta], #lead-form").forEach((el) => {
         if (!observed.has(el)) {
           observed.add(el);
           io.observe(el);
