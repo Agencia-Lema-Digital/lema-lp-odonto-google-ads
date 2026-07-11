@@ -16,8 +16,17 @@ const fadeUp = (delay: number): React.CSSProperties => ({
   animation: `hero-fade-up 0.55s ease-out ${delay}s both`,
 });
 
-// Destaca a palavra-chave dentro do h1 com gradient — busca a substring exata
-function H1WithAccent({ text, accentWord }: { text: string; accentWord?: string }) {
+// Destaca a palavra-chave dentro do h1 com gradient — busca a substring exata.
+// `gradient` opcional permite clarear o fim por rota (o padrão termina em azul-marinho).
+function H1WithAccent({
+  text,
+  accentWord,
+  gradient = "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
+}: {
+  text: string;
+  accentWord?: string;
+  gradient?: string;
+}) {
   if (!accentWord || !text.includes(accentWord)) {
     return <>{text}</>;
   }
@@ -27,7 +36,7 @@ function H1WithAccent({ text, accentWord }: { text: string; accentWord?: string 
       {before}
       <span
         style={{
-          background: "linear-gradient(135deg, #6A48F4 0%, #4C2FC4 45%, #143E66 100%)",
+          background: gradient,
           WebkitBackgroundClip: "text",
           backgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -79,7 +88,7 @@ const CLIENT_LOGOS: { name: string; monogram: string; gradient: string; src?: st
   { name: "ES Engenharia", monogram: "ES", gradient: "linear-gradient(135deg, #8B6EF8, #4C2FC4)", src: "/images/logos/es.webp", bg: "#1E47B0" },
 ];
 
-function HeroSocialProof() {
+function HeroSocialProof({ middle = "gerenciados" }: { middle?: string }) {
   return (
     <div
       className="inline-flex items-center gap-3 rounded-full py-1.5 pl-2 pr-4"
@@ -115,7 +124,7 @@ function HeroSocialProof() {
       </div>
       {/* Copy */}
       <p className="font-body text-gray-300 text-xs sm:text-sm leading-tight">
-        <span className="text-white font-semibold">+R$5 milhões</span> gerenciados
+        <span className="text-white font-semibold">+R$5 milhões</span> {middle}
         <br className="hidden sm:block" /> para empresas que crescem
       </p>
     </div>
@@ -224,7 +233,11 @@ export default function Hero({ content }: HeroProps) {
                 style={fadeUp(0.1)}
                 className="font-headline font-bold text-white text-[2.15rem] sm:text-4xl lg:text-[3.6rem] leading-[1.1] sm:leading-[1.1] lg:leading-[1.05] tracking-tight text-balance"
               >
-                <H1WithAccent text={content.h1} accentWord={content.h1AccentWord} />
+                <H1WithAccent
+                  text={content.h1}
+                  accentWord={content.h1AccentWord}
+                  gradient={content.h1AccentGradient}
+                />
               </h1>
 
               <p
@@ -246,7 +259,7 @@ export default function Hero({ content }: HeroProps) {
               {/* Prova social — faixa de logos de clientes (general) */}
               {isGeneral && (
                 <div style={fadeUp(0.42)}>
-                  <HeroSocialProof />
+                  <HeroSocialProof middle={content.proofMiddle} />
                 </div>
               )}
             </div>

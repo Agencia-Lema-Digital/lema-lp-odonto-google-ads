@@ -91,9 +91,12 @@ export default function StickyMobileCTA() {
       `}
     >
       <div className="bg-[#0C0F1A]/95 backdrop-blur-sm border-t border-white/10 px-4 py-3">
+        {/* data-sticky-cta (e não data-cta): o observer acima varre [data-cta] e
+            não pode observar o próprio botão; usado pelo override .page-trafego */}
         <button
           onClick={handleClick}
           tabIndex={show ? 0 : -1}
+          data-sticky-cta="true"
           className="
             w-full min-h-[48px] px-6 py-3
             rounded-[8px] bg-brand-primary text-white

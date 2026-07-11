@@ -6,7 +6,9 @@ import { createContext, useContext } from "react";
 // muda só a comunicação:
 //  - "assessoria"  → /assessoria-marketing-vendas (serviço/Método TRINO, CTA "Falar com um especialista")
 //  - "diagnostico" → raiz "/" (backup para Meta Ads, gancho do diagnóstico gratuito)
-export type CopyVariant = "assessoria" | "diagnostico";
+//  - "trafego"     → /gestao-de-trafego-pago (Grupo 2 do Google Ads: confirma o termo
+//                    buscado primeiro — gestão de tráfego — e eleva para tráfego que vira cliente)
+export type CopyVariant = "assessoria" | "diagnostico" | "trafego";
 
 export const CopyVariantContext = createContext<CopyVariant>("assessoria");
 

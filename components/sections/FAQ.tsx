@@ -35,9 +35,46 @@ const COPY = {
   ctaLabel: "Falar com um especialista",
 };
 
+// FAQs da variante "tráfego" (/gestao-de-trafego-pago) — perguntas pelo ângulo
+// de quem buscou "gestão de tráfego pago"
+const FAQS_TRAFEGO = [
+  {
+    question: "Vocês só fazem tráfego pago ou cuidam do resto também?",
+    answer:
+      "Fazemos o tráfego (Google Ads e Meta Ads) e, principalmente, conectamos ele ao seu processo comercial — CRM, atendimento e follow-up. É isso que faz o clique virar cliente. Tráfego isolado é justamente o que costuma não dar retorno.",
+  },
+  {
+    question: "Trabalham com Google Ads e Meta Ads?",
+    answer:
+      "Sim. Google Ads é nosso canal principal de captação de demanda qualificada, e o Meta Ads entra como apoio, conforme o perfil do seu negócio.",
+  },
+  {
+    question: "A verba dos anúncios está inclusa no valor da assessoria?",
+    answer:
+      "Não. A verba de mídia é paga por você diretamente nas plataformas. O valor da assessoria é a nossa gestão estratégica — planejamento, execução, otimização e a estrutura comercial em volta.",
+  },
+  {
+    question: "Quanto preciso investir em anúncios?",
+    answer:
+      "Depende do seu mercado e objetivo. Na conversa de diagnóstico, o sócio avalia seu cenário e indica um ponto de partida realista — sem promessa de número mágico.",
+  },
+  {
+    question: "Já rodei tráfego antes e não funcionou. Por que seria diferente?",
+    answer:
+      "Porque, na maioria das vezes, o tráfego não falhou sozinho — faltou o processo comercial pra converter o que ele trouxe. É exatamente esse vão que a gente resolve.",
+  },
+  {
+    question: "Em quanto tempo vejo resultado?",
+    answer:
+      "Os primeiros dados aparecem nas primeiras semanas, mas resultado consistente é construção. A gente trabalha com otimização contínua, não com promessa de resultado imediato.",
+  },
+];
+
 export default function FAQ() {
   const copyVariant = useCopyVariant();
+  const trafego = copyVariant === "trafego";
   const ctaLabel = ctaLabelFor(copyVariant);
+  const faqs = trafego ? FAQS_TRAFEGO : COPY.faqs;
   return (
     <section
       className="relative py-14 lg:py-28 overflow-hidden"
@@ -72,7 +109,7 @@ export default function FAQ() {
 
         <FadeInSection delay={0.1}>
           <Accordion className="space-y-3">
-            {COPY.faqs.map((faq, i) => (
+            {faqs.map((faq, i) => (
               <AccordionItem
                 key={i}
                 value={`faq-${i}`}
@@ -91,9 +128,19 @@ export default function FAQ() {
         </FadeInSection>
 
         <FadeInSection delay={0.2} className="text-center mt-12">
-          <p className="font-body text-gray-500 text-sm mb-5">
-            Ainda tem dúvidas? Tire todas em 30 minutos com a gente.
-          </p>
+          {trafego ? (
+            <p className="font-body text-gray-500 text-sm mb-5">
+              <strong className="font-headline font-bold text-brand-dark text-lg block mb-1.5">
+                Seu tráfego pode trazer cliente, não só clique.
+              </strong>
+              Agende uma conversa de 30 minutos com o sócio e veja onde seu investimento em anúncios
+              está travando — e como destravar.
+            </p>
+          ) : (
+            <p className="font-body text-gray-500 text-sm mb-5">
+              Ainda tem dúvidas? Tire todas em 30 minutos com a gente.
+            </p>
+          )}
           <CTAButton label={ctaLabel} size="lg" />
         </FadeInSection>
       </div>

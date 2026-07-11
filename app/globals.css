@@ -178,3 +178,21 @@
 .animate-bounce-soft {
   animation: bounce-soft 1.8s ease-in-out infinite;
 }
+
+/* ── CTAs verdes na /gestao-de-trafego-pago (experimento de conversão) ──
+   Escopo via .page-trafego no <main>: hero, seções e sticky mobile mudam
+   juntos; as demais rotas continuam com o roxo da marca. Esmeralda #16A34A
+   (texto branco legível; verde-WhatsApp claro reprovaria contraste). */
+.page-trafego [data-cta="true"],
+.page-trafego [data-sticky-cta="true"] {
+  background-color: #16a34a;
+}
+.page-trafego [data-cta="true"]:hover,
+.page-trafego [data-sticky-cta="true"]:hover {
+  background-color: #128a3e;
+  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.35);
+}
+.page-trafego [data-cta="true"]:focus-visible,
+.page-trafego [data-sticky-cta="true"]:focus-visible {
+  --tw-ring-color: #16a34a;
+}

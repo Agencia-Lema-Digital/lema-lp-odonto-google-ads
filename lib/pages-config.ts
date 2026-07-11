@@ -2,6 +2,7 @@ export interface PageHeroContent {
   kicker: string;
   h1: string;
   h1AccentWord?: string; // palavra dentro do h1 que recebe gradient
+  h1AccentGradient?: string; // gradient do accent; omitir usa o padrão da marca (termina em azul-marinho)
   subheadline: string;
   firstH2: string;
   agitationBody: string;
@@ -9,6 +10,7 @@ export interface PageHeroContent {
   heroImage?: string; // caminho em /public; omitir usa clinic-hero.webp
   isGeneral?: boolean; // variante generalista (assessoria) — muda layout/stat do Hero
   ctaLabel?: string; // label do botão principal da hero; omitir usa o padrão do CTAButton
+  proofMiddle?: string; // trecho entre "+R$5 milhões" e "para empresas..." na prova social da hero
 }
 
 export interface PageMeta {
@@ -71,6 +73,37 @@ export const PAGES_CONFIG: Record<string, PageConfig> = {
       description:
         "Assessoria de Marketing & Vendas para empresas que faturam +R$35k/mês. Conectamos suas campanhas ao processo comercial para gerar vendas reais e previsíveis.",
       canonical: `${BASE_URL}/assessoria-marketing-vendas`,
+    },
+  },
+
+  // Intenção "Gestão de Tráfego Pago" (Grupo 2 do Google Ads) — mesma página/layout
+  // da /assessoria, copy espelhando o termo buscado: confirma "tráfego pago" primeiro,
+  // eleva para "tráfego que vira cliente" depois.
+  "/gestao-de-trafego-pago": {
+    hero: {
+      topBanner: "Para empresas que faturam +R$35k/mês",
+      heroImage: "/images/nova-hero.webp",
+      isGeneral: true,
+      ctaLabel: "Falar com um especialista",
+      proofMiddle: "gerenciados em anúncios",
+      kicker: "Para empresas que faturam +R$35k/mês",
+      // NBSP ( ) prende "gera cliente" numa linha só: o gradiente quebrado
+      // entre linhas caía na ponta escura (azul-marinho) e sumia no fundo
+      h1: "Gestão de tráfego pago que gera cliente. Não só clique.",
+      h1AccentWord: "gera cliente",
+      // Fim em roxo vivo (não azul-marinho): "cliente" fica legível no fundo escuro
+      h1AccentGradient: "linear-gradient(135deg, #8B6EF8 0%, #6A48F4 45%, #4C2FC4 100%)",
+      subheadline:
+        "No Google Ads e no Meta Ads, a Lema conecta seus anúncios ao processo comercial pra cada real investido virar venda previsível — sem depender de indicação ou sorte.",
+      firstH2: "O que separa quem investe em anúncio de quem cresce de verdade",
+      agitationBody:
+        "A diferença não está em gastar mais com anúncio — está em ter um sistema. Tráfego que traz o cliente certo, um processo comercial que transforma conversa em venda, e dados que mostram exatamente onde crescer. É assim que o faturamento sobe com previsibilidade, mês após mês: sem depender de indicação, sem depender de sorte.",
+    },
+    meta: {
+      title: "Gestão de Tráfego Pago | Google Ads e Meta Ads — Lema Digital",
+      description:
+        "Gestão de tráfego pago no Google Ads e Meta Ads para empresas que faturam +R$35k/mês. Anúncios conectados ao processo comercial pra gerar venda, não só clique.",
+      canonical: `${BASE_URL}/gestao-de-trafego-pago`,
     },
   },
 };

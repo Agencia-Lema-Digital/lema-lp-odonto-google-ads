@@ -23,6 +23,32 @@ const FEATURED = {
   ],
 };
 
+// Variante "tráfego" (/gestao-de-trafego-pago) — mesmo case, ângulo de campanha
+const FEATURED_TRAFEGO = {
+  segment: "Venda de Produto Premium",
+  name: "Roboclean Brasil",
+  location: "São Paulo/SP",
+  tagline: "+465% em leads e R$95,9 mil em vendas em 15 dias",
+  stats: [
+    { value: "+465%", label: "em leads na Black Friday" },
+    { value: "R$95,9k", label: "em vendas em 15 dias" },
+    { value: "R$416", label: "investidos em anúncios" },
+  ],
+};
+
+// Variante "tráfego" do card CENUV — resultado pelo ângulo de busca/leads
+const CENUV_TRAFEGO = {
+  segment: "Clínica Veterinária",
+  name: "CENUV",
+  location: "Vila Velha/ES",
+  accentColor: "#7C5CFB",
+  stats: [
+    { value: "1ª", label: "posição no Google em +80% das buscas" },
+    { value: "100", label: "leads por mês em média" },
+    { value: "+R$6k", label: "faturados em 15 dias" },
+  ],
+};
+
 const OTHERS = [
   {
     segment: "Marcenaria & Móveis Sob Medida",
@@ -207,6 +233,9 @@ function BigNumber({ value }: { value: string }) {
 }
 
 function FeaturedCard() {
+  // Copy do case por variante — layout idêntico, muda só o texto/números
+  const FEATURED_COPY = useCopyVariant() === "trafego" ? FEATURED_TRAFEGO : FEATURED;
+  const [heroStat, ...restStats] = FEATURED_COPY.stats;
   return (
     <div
       className="relative rounded-3xl overflow-hidden flex flex-col justify-between min-h-[420px] lg:min-h-[480px] group"
@@ -233,18 +262,18 @@ function FeaturedCard() {
             </span>
           </div>
           <p className="font-body font-semibold text-[11px] uppercase tracking-[0.2em] mb-2" style={{ color: "#A78BFA" }}>
-            {FEATURED.segment}
+            {FEATURED_COPY.segment}
           </p>
-          <h3 className="font-headline font-bold text-white text-2xl lg:text-3xl leading-tight mb-1">{FEATURED.name}</h3>
-          <p className="font-body text-gray-400 text-xs">{FEATURED.location}</p>
+          <h3 className="font-headline font-bold text-white text-2xl lg:text-3xl leading-tight mb-1">{FEATURED_COPY.name}</h3>
+          <p className="font-body text-gray-400 text-xs">{FEATURED_COPY.location}</p>
         </div>
         <div className="-mb-2">
-          <BigNumber value="252×" />
-          <p className="font-body text-gray-400 text-sm mt-1">retorno sobre anúncios</p>
+          <BigNumber value={heroStat.value} />
+          <p className="font-body text-gray-400 text-sm mt-1">{heroStat.label}</p>
         </div>
         <div className="h-px w-full" style={{ background: "linear-gradient(90deg, rgba(106,72,244,0.4), transparent)" }} aria-hidden="true" />
         <div className="grid grid-cols-2 gap-3">
-          {FEATURED.stats.slice(1).map((s, i) => (
+          {restStats.map((s, i) => (
             <div key={i} className="rounded-2xl px-4 py-3" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)" }}>
               <p
                 className="font-headline italic text-2xl leading-none mb-1"
@@ -275,7 +304,7 @@ function FeaturedCard() {
           className="rounded-2xl px-5 py-3 mt-auto"
           style={{ background: "linear-gradient(135deg, rgba(106,72,244,0.20), rgba(20,62,102,0.20))", border: "1px solid rgba(106,72,244,0.25)" }}
         >
-          <p className="font-headline font-normal italic text-gray-200 text-sm lg:text-base text-center">&ldquo;{FEATURED.tagline}&rdquo;</p>
+          <p className="font-headline font-normal italic text-gray-200 text-sm lg:text-base text-center">&ldquo;{FEATURED_COPY.tagline}&rdquo;</p>
         </div>
       </div>
     </div>
@@ -581,7 +610,13 @@ function AnimatedCounter({
 
 export default function SocialProof() {
   const copyVariant = useCopyVariant();
+  const trafego = copyVariant === "trafego";
   const COPY = COPY_GENERAL;
+  // Heading por variante: a página de tráfego confirma o termo buscado no título
+  const headingMain = trafego ? "Tráfego que virou" : COPY.headingMain;
+  const headingAccent = trafego ? "venda de verdade." : COPY.headingAccent;
+  // CENUV ganha números pelo ângulo de busca/leads na variante tráfego
+  const others = trafego ? OTHERS.map((c) => (c.name === "CENUV" ? CENUV_TRAFEGO : c)) : OTHERS;
   return (
     <section
       id="cases-de-sucesso"
@@ -622,7 +657,7 @@ export default function SocialProof() {
                 {COPY.eyebrow}
               </p>
               <h2 className="font-headline font-bold text-3xl sm:text-4xl lg:text-[3.4rem] leading-tight text-white">
-                {COPY.headingMain}
+                {headingMain}
                 <br />
                 <span
                   style={{
@@ -633,7 +668,7 @@ export default function SocialProof() {
                     color: "transparent",
                   }}
                 >
-                  {COPY.headingAccent}
+                  {headingAccent}
                 </span>
               </h2>
             </div>
@@ -708,7 +743,7 @@ export default function SocialProof() {
         {(
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-5 lg:gap-6 mb-14">
             <FadeInSection className="flex flex-col gap-4 order-2 lg:order-1">
-              {OTHERS.map((c, i) => (
+              {others.map((c, i) => (
                 <SideCard key={i} c={c} index={i} />
               ))}
             </FadeInSection>

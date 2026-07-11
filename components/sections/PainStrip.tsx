@@ -7,7 +7,9 @@ import { useCopyVariant } from "@/lib/copy-variant-context";
 // logo após a hero. Duas versões de copy: "assessoria" (serviço) e "diagnostico"
 // (raiz backup, gancho do diagnóstico).
 export default function PainStrip() {
-  const diag = useCopyVariant() === "diagnostico";
+  const copyVariant = useCopyVariant();
+  const diag = copyVariant === "diagnostico";
+  const trafego = copyVariant === "trafego";
   return (
     <section
       className="relative py-10 lg:py-16 overflow-hidden"
@@ -24,7 +26,14 @@ export default function PainStrip() {
               className="font-headline text-brand-text text-xl sm:text-3xl lg:text-[2.4rem] leading-snug"
               style={{ fontWeight: 500 }}
             >
-              {diag ? (
+              {trafego ? (
+                <>
+                  Tráfego pago sozinho não resolve.{" "}
+                  <span className="gradient-text" style={{ fontWeight: 600 }}>
+                    Tráfego pago sem processo é o que faz você perder dinheiro.
+                  </span>
+                </>
+              ) : diag ? (
                 <>
                   Se os leads chegam mas não viram clientes, o problema não é o anúncio.{" "}
                   <span className="gradient-text" style={{ fontWeight: 600 }}>
@@ -41,7 +50,20 @@ export default function PainStrip() {
               )}
             </p>
             <p className="font-body font-light text-gray-500 text-base lg:text-lg leading-relaxed mt-4 sm:mt-5 max-w-2xl">
-              {diag ? (
+              {trafego ? (
+                <>
+                  Você provavelmente já investiu em anúncios — talvez com uma agência, talvez por conta
+                  própria. E talvez tenha visto o de sempre: cliques, alcance, &ldquo;leads&rdquo; que não respondem,
+                  relatório cheio de número e o faturamento no mesmo lugar.
+                  <br />
+                  <br />
+                  O problema quase nunca é o tráfego em si.{" "}
+                  <strong className="font-semibold text-brand-text">É o que acontece depois do clique.</strong>{" "}
+                  Sem qualificação, sem atendimento rápido, sem follow-up, o lead esfria no WhatsApp e a
+                  verba do anúncio evapora. Você não precisa de mais clique.{" "}
+                  <strong className="font-semibold text-brand-text">Precisa que o clique vire cliente.</strong>
+                </>
+              ) : diag ? (
                 <>
                   No <strong className="font-semibold text-brand-text">diagnóstico gratuito</strong>, o
                   sócio te mostra ao vivo <strong className="font-semibold text-brand-text">onde você

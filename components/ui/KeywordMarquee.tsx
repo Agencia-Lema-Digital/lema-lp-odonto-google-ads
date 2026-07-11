@@ -21,13 +21,13 @@ const KEYWORDS = [
   "Marketing e vendas",
 ];
 
-function Track({ ariaHidden = false }: { ariaHidden?: boolean }) {
+function Track({ ariaHidden = false, keywords }: { ariaHidden?: boolean; keywords: string[] }) {
   return (
     <ul
       className="flex items-center gap-8 px-4 shrink-0"
       aria-hidden={ariaHidden || undefined}
     >
-      {KEYWORDS.map((kw, i) => (
+      {keywords.map((kw, i) => (
         <li key={i} className="flex items-center gap-8 whitespace-nowrap">
           <span className="font-body text-sm text-gray-400">{kw}</span>
           <span aria-hidden="true" className="text-brand-primary/50 text-xs">
@@ -39,7 +39,9 @@ function Track({ ariaHidden = false }: { ariaHidden?: boolean }) {
   );
 }
 
-export default function KeywordMarquee() {
+// `keywords` opcional permite reordenar/trocar termos por rota (ex.: a página de
+// gestão de tráfego começa pelos termos de tráfego). Omitir usa a lista padrão.
+export default function KeywordMarquee({ keywords = KEYWORDS }: { keywords?: string[] }) {
   return (
     <div
       className="relative overflow-hidden py-4 border-y"
@@ -63,8 +65,8 @@ export default function KeywordMarquee() {
 
       {/* Duas trilhas idênticas em sequência criam o loop contínuo */}
       <div className="flex w-max animate-keyword-marquee">
-        <Track />
-        <Track ariaHidden />
+        <Track keywords={keywords} />
+        <Track keywords={keywords} ariaHidden />
       </div>
     </div>
   );

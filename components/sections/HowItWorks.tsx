@@ -39,6 +39,45 @@ const COPY_GENERAL = {
   ],
 };
 
+// Versão "tráfego" (/gestao-de-trafego-pago) — mesmos pilares TRINO pelo ângulo
+// da gestão de tráfego: espelha a linguagem do termo buscado (Google/Meta Ads)
+const COPY_GENERAL_TRAFEGO = {
+  eyebrow: "O Método TRINO",
+  headingMain: "Como a Lema transforma",
+  headingAccent: "tráfego pago em venda.",
+  subheading:
+    "O TRINO conecta o funil inteiro do seu negócio — do primeiro clique ao cliente que volta e indica.",
+  steps: [
+    {
+      icon: Magnet,
+      number: "01",
+      title: "Demanda Qualificada (Tráfego Pago)",
+      description:
+        "Campanhas no Google Ads e no Meta Ads desenhadas pra atrair quem tem perfil real de comprador — não volume vazio. Palavra-chave, criativo e segmentação pensados pra trazer o lead certo, não o lead barato.",
+    },
+    {
+      icon: Handshake,
+      number: "02",
+      title: "Estrutura Comercial (Processo)",
+      description:
+        "O que separa clique de cliente. CRM, script de atendimento e cadência de follow-up pra que cada lead que o tráfego traz seja atendido e convertido — não perdido no WhatsApp.",
+    },
+    {
+      icon: TrendingUp,
+      number: "03",
+      title: "Expansão Inteligente (Dados)",
+      description:
+        "Análise contínua do que importa: não só custo por lead, mas custo por cliente e retorno real. A gente otimiza o que traz venda, não o que traz número de vaidade.",
+    },
+  ],
+  outputTitle: "Por que vira um ciclo",
+  outputs: [
+    "Cliente satisfeito indica — e traz novos clientes com baixo custo",
+    "Avaliações e depoimentos viram prova social nos próximos anúncios",
+    "Quanto mais o ciclo roda, menor o custo de aquisição e maior o faturamento",
+  ],
+};
+
 // Versão "diagnóstico" (raiz backup / Meta Ads) — passo a passo do diagnóstico gratuito
 const COPY_GENERAL_DIAG = {
   eyebrow: "30 minutos · gratuito · sem compromisso",
@@ -79,7 +118,12 @@ const COPY_GENERAL_DIAG = {
 
 export default function HowItWorks() {
   const copyVariant = useCopyVariant();
-  const COPY = copyVariant === "diagnostico" ? COPY_GENERAL_DIAG : COPY_GENERAL;
+  const COPY =
+    copyVariant === "diagnostico"
+      ? COPY_GENERAL_DIAG
+      : copyVariant === "trafego"
+        ? COPY_GENERAL_TRAFEGO
+        : COPY_GENERAL;
   return (
     <section
       id="como-trabalhamos"
