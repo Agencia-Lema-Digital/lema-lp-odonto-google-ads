@@ -11,6 +11,9 @@ export interface PageHeroContent {
   isGeneral?: boolean; // variante generalista (assessoria) — muda layout/stat do Hero
   ctaLabel?: string; // label do botão principal da hero; omitir usa o padrão do CTAButton
   proofMiddle?: string; // trecho entre "+R$5 milhões" e "para empresas..." na prova social da hero
+  heroProof?: { lead: string; rest: string }; // sobrescreve a copy do card de prova social (lead em branco + resto)
+  hideHeroMicrocopy?: boolean; // oculta a microcopy "30 min com o sócio." abaixo do CTA
+  hideNotifsMobile?: boolean; // esconde o carrossel de notificações do WhatsApp no mobile (mantém o painel CRM)
 }
 
 export interface PageMeta {
@@ -60,10 +63,16 @@ export const PAGES_CONFIG: Record<string, PageConfig> = {
       isGeneral: true,
       ctaLabel: "Falar com um especialista",
       kicker: "Para empresas que faturam +R$35k/mês",
-      h1: "O marketing que atrai clientes e gera vendas previsíveis pro seu negócio.",
-      h1AccentWord: "vendas previsíveis",
+      // Headline pergunta-dor curta (tensão nos 1ºs segundos); accent na keyword "cliente"
+      // com gradient claro (fim em roxo vivo) — evita o tom escuro no fim da palavra.
+      h1: "Seu marketing traz cliente ou só curiosos?",
+      h1AccentWord: "cliente",
+      h1AccentGradient: "linear-gradient(135deg, #8B6EF8 0%, #6A48F4 45%, #4C2FC4 100%)",
       subheadline:
-        "Conectamos anúncios, conteúdo e vendas num sistema só. Sem depender de indicação ou sorte.",
+        "A Lema conecta anúncios, conteúdo e processo comercial pra cada real investido virar faturamento previsível. Sem depender de indicação ou sorte.",
+      heroProof: { lead: "Mais de 10 anos", rest: "estruturando marketing e vendas" },
+      hideHeroMicrocopy: true,
+      hideNotifsMobile: true,
       firstH2: "O que separa quem investe em anúncio de quem cresce de verdade",
       agitationBody:
         "A diferença não está em gastar mais com anúncio — está em ter um sistema. Tráfego que traz o cliente certo, um processo comercial que transforma conversa em venda, e dados que mostram exatamente onde crescer. É assim que o faturamento sobe com previsibilidade, mês após mês: sem depender de indicação, sem depender de sorte.",

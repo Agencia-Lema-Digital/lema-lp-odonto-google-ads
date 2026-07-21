@@ -80,7 +80,7 @@ function CrmPanel() {
   );
 }
 
-export default function HeroFounderScene() {
+export default function HeroFounderScene({ hideNotifsMobile = false }: { hideNotifsMobile?: boolean }) {
   return (
     <div className="relative w-full h-full" style={{ containerType: "inline-size" }}>
       {/* dangerouslySetInnerHTML evita mismatch de hydration em <style> (ver Hero) */}
@@ -153,9 +153,10 @@ export default function HeroFounderScene() {
         </div>
       </div>
 
-      {/* Notificações — carrossel vertical em loop, à frente, mais baixo e curto */}
+      {/* Notificações — carrossel vertical em loop, à frente, mais baixo e curto.
+          hideNotifsMobile: escondidas < lg (mobile fica só com a foto + painel CRM). */}
       <div
-        className="hfs-anim absolute right-0 bottom-[7%] w-[60%] z-30 lg:right-[-2%] lg:bottom-[16%] lg:w-[50%]"
+        className={`hfs-anim absolute right-0 bottom-[7%] w-[60%] z-30 lg:right-[-2%] lg:bottom-[16%] lg:w-[50%] ${hideNotifsMobile ? "hidden lg:block" : ""}`}
         style={{ animation: "hfs-fade 0.6s ease-out 0.7s both" }}
       >
         <div

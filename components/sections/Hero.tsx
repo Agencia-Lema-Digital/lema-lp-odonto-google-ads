@@ -88,7 +88,13 @@ const CLIENT_LOGOS: { name: string; monogram: string; gradient: string; src?: st
   { name: "ES Engenharia", monogram: "ES", gradient: "linear-gradient(135deg, #8B6EF8, #4C2FC4)", src: "/images/logos/es.webp", bg: "#1E47B0" },
 ];
 
-function HeroSocialProof({ middle = "gerenciados" }: { middle?: string }) {
+function HeroSocialProof({
+  middle = "gerenciados",
+  proof,
+}: {
+  middle?: string;
+  proof?: { lead: string; rest: string };
+}) {
   return (
     <div
       className="inline-flex items-center gap-3 rounded-full py-1.5 pl-2 pr-4"
@@ -122,10 +128,19 @@ function HeroSocialProof({ middle = "gerenciados" }: { middle?: string }) {
           </span>
         ))}
       </div>
-      {/* Copy */}
+      {/* Copy — `proof` sobrescreve o texto padrão por rota (ex.: /assessoria) */}
       <p className="font-body text-gray-300 text-xs sm:text-sm leading-tight">
-        <span className="text-white font-semibold">+R$5 milhões</span> {middle}
-        <br className="hidden sm:block" /> para empresas que crescem
+        {proof ? (
+          <>
+            <span className="text-white font-semibold">{proof.lead}</span>
+            <br className="hidden sm:block" /> {proof.rest}
+          </>
+        ) : (
+          <>
+            <span className="text-white font-semibold">+R$5 milhões</span> {middle}
+            <br className="hidden sm:block" /> para empresas que crescem
+          </>
+        )}
       </p>
     </div>
   );
@@ -249,17 +264,19 @@ export default function Hero({ content }: HeroProps) {
 
               <div style={fadeUp(0.3)}>
                 <CTAButton size="lg" label={content.ctaLabel} />
-                <p className="mt-3 text-gray-400 text-xs font-body">
-                  {isGeneral
-                    ? "30 min com o sócio."
-                    : "Poucas vagas por semana — 30 min com o sócio"}
-                </p>
+                {!content.hideHeroMicrocopy && (
+                  <p className="mt-3 text-gray-400 text-xs font-body">
+                    {isGeneral
+                      ? "30 min com o sócio."
+                      : "Poucas vagas por semana — 30 min com o sócio"}
+                  </p>
+                )}
               </div>
 
               {/* Prova social — faixa de logos de clientes (general) */}
               {isGeneral && (
                 <div style={fadeUp(0.42)}>
-                  <HeroSocialProof middle={content.proofMiddle} />
+                  <HeroSocialProof middle={content.proofMiddle} proof={content.heroProof} />
                 </div>
               )}
             </div>
@@ -314,7 +331,7 @@ export default function Hero({ content }: HeroProps) {
         <div
           className="relative z-[4] w-full aspect-[1.1] mt-1 lg:mt-0 lg:aspect-auto lg:absolute lg:inset-y-0 lg:right-0 lg:w-[46%]"
         >
-          <HeroFounderScene />
+          <HeroFounderScene hideNotifsMobile={content.hideNotifsMobile} />
         </div>
       )}
     </header>
